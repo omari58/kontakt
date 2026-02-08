@@ -98,6 +98,42 @@ describe('QrController', () => {
       ).rejects.toThrow(NotFoundException);
     });
 
+    it('should throw BadRequestException when size is below minimum (99)', async () => {
+      await expect(
+        controller.getQr('john-doe', 'png', 99, mockResponse),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw BadRequestException when size exceeds maximum (1001)', async () => {
+      await expect(
+        controller.getQr('john-doe', 'png', 1001, mockResponse),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should accept size at lower boundary (100)', async () => {
+      const pngBuffer = Buffer.from('fake-png');
+      (qrService.generateQr as jest.Mock).mockResolvedValue({
+        data: pngBuffer,
+        contentType: 'image/png',
+      });
+
+      await controller.getQr('john-doe', 'png', 100, mockResponse);
+
+      expect(qrService.generateQr).toHaveBeenCalledWith('john-doe', 'png', 100);
+    });
+
+    it('should accept size at upper boundary (1000)', async () => {
+      const pngBuffer = Buffer.from('fake-png');
+      (qrService.generateQr as jest.Mock).mockResolvedValue({
+        data: pngBuffer,
+        contentType: 'image/png',
+      });
+
+      await controller.getQr('john-doe', 'png', 1000, mockResponse);
+
+      expect(qrService.generateQr).toHaveBeenCalledWith('john-doe', 'png', 1000);
+    });
+
     it('should propagate BadRequestException for invalid format', async () => {
       (qrService.generateQr as jest.Mock).mockRejectedValue(
         new BadRequestException('Invalid format'),

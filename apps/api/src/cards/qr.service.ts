@@ -16,7 +16,7 @@ export class QrService {
     private readonly cardsService: CardsService,
     private readonly configService: ConfigService,
   ) {
-    this.appUrl = this.configService.get<string>('APP_URL')!;
+    this.appUrl = this.configService.get<string>('APP_URL') || 'http://localhost:4000';
   }
 
   async generateQr(
