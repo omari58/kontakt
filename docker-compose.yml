@@ -3,9 +3,9 @@ services:
     image: postgres:17-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: kontakt
-      POSTGRES_PASSWORD: kontakt
-      POSTGRES_DB: kontakt
+      POSTGRES_USER: ${POSTGRES_USER:-kontakt}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kontakt}
+      POSTGRES_DB: ${POSTGRES_DB:-kontakt}
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -17,7 +17,7 @@ services:
     depends_on:
       - postgres
     environment:
-      DATABASE_URL: postgresql://kontakt:kontakt@postgres:5432/kontakt?schema=public
+      DATABASE_URL: postgresql://${POSTGRES_USER:-kontakt}:${POSTGRES_PASSWORD:-kontakt}@postgres:5432/${POSTGRES_DB:-kontakt}?schema=public
       NODE_ENV: production
     env_file:
       - path: .env
