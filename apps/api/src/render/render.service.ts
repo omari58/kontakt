@@ -85,15 +85,15 @@ export class RenderService {
   }
 
   private buildCssVars(
-    bgColor: string | null,
-    primaryColor: string | null,
-    textColor: string | null,
+    bgColor: string,
+    primaryColor: string,
+    textColor: string,
   ): string {
-    const vars: string[] = [];
-    if (bgColor) vars.push(`--bg-color: ${bgColor}`);
-    if (primaryColor) vars.push(`--primary-color: ${primaryColor}`);
-    if (textColor) vars.push(`--text-color: ${textColor}`);
-    return vars.join('; ');
+    return [
+      `--bg-color: ${bgColor}`,
+      `--primary-color: ${primaryColor}`,
+      `--text-color: ${textColor}`,
+    ].join('; ');
   }
 
   private buildJsonLd(

@@ -99,6 +99,16 @@ describe('resolveCardTheme', () => {
       expect(result.textColor).toBe('#000000');
     });
 
+    it('should handle 3-digit hex colors correctly', () => {
+      const card = { ...cardWithoutOverrides };
+      const settings = new Map(defaultSettings);
+      settings.set('default_bg_color', '#fff');
+
+      const result = resolveCardTheme(card, settings);
+
+      expect(result.textColor).toBe('#000000');
+    });
+
     it('should use explicit text color when provided', () => {
       const card = { ...cardWithoutOverrides, textColor: '#ABCDEF' };
 
