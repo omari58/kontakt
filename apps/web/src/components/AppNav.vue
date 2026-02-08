@@ -3,10 +3,6 @@ import { useAuth } from '@/composables/useAuth';
 
 const { isAdmin } = useAuth();
 
-defineProps<{
-  collapsed?: boolean;
-}>();
-
 defineEmits<{
   navigate: [];
 }>();
@@ -48,7 +44,7 @@ defineEmits<{
   background: #f0f0f0;
 }
 
-.app-nav__link.router-link-active {
+.app-nav__link.router-link-exact-active {
   background: #e8e8e8;
   font-weight: 600;
 }

@@ -23,8 +23,9 @@ function closeMobileMenu() {
         <span class="shell__hamburger-line" />
       </button>
       <span class="shell__brand">Kontakt</span>
-      <UserMenu />
     </header>
+
+    <UserMenu />
 
     <!-- Sidebar (desktop) -->
     <aside class="shell__sidebar">
@@ -55,6 +56,7 @@ function closeMobileMenu() {
 .shell {
   display: flex;
   min-height: 100vh;
+  position: relative;
 }
 
 /* Sidebar - desktop only */
@@ -148,6 +150,12 @@ function closeMobileMenu() {
 @media (max-width: 767px) {
   .shell {
     flex-direction: column;
+  }
+  .shell :deep(.user-menu) {
+    position: absolute;
+    top: 0.75rem;
+    right: 1rem;
+    z-index: 31;
   }
 }
 
