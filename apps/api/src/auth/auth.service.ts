@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@prisma/client';
 import * as oidc from 'openid-client';
-import { PrismaService } from '../prisma/prisma.service';
+import { UsersService } from '../users/users.service';
 import { AuthorizationUrlResult, AuthResult } from './dto/auth.dto';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class AuthService implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    private readonly prisma: PrismaService,
+    private readonly usersService: UsersService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -73,19 +73,11 @@ export class AuthService implements OnModuleInit {
     const name = (claims.name as string) ?? '';
     const role = this.extractRole(claims);
 
-    const user = await this.prisma.user.upsert({
-      where: { oidcSub: sub },
-      create: {
-        oidcSub: sub,
-        email,
-        name,
-        role,
-      },
-      update: {
-        email,
-        name,
-        role,
-      },
+    const user = await this.usersService.upsertFromOidc({
+      sub,
+      email,
+      name,
+      role,
     });
 
     const token = this.generateToken(user);
@@ -141,8 +133,6 @@ export class AuthService implements OnModuleInit {
   }
 
   async getUserById(id: string) {
-    return this.prisma.user.findUnique({
-      where: { id },
-    });
+    return this.usersService.findById(id);
   }
 }

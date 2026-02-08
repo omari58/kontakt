@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { UsersService } from '../users/users.service';
 
 // Mock openid-client
 jest.mock('openid-client', () => ({
@@ -51,12 +51,10 @@ describe('AuthService - Role Extraction', () => {
           },
         },
         {
-          provide: PrismaService,
+          provide: UsersService,
           useValue: {
-            user: {
-              upsert: jest.fn(),
-              findUnique: jest.fn(),
-            },
+            upsertFromOidc: jest.fn(),
+            findById: jest.fn(),
           },
         },
       ],

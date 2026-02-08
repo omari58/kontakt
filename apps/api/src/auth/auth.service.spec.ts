@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
-import { PrismaService } from '../prisma/prisma.service';
+import { UsersService } from '../users/users.service';
 
 // Mock openid-client
 jest.mock('openid-client', () => ({
@@ -22,7 +22,7 @@ describe('AuthService', () => {
   let service: AuthService;
   let configService: ConfigService;
   let jwtService: JwtService;
-  let prismaService: PrismaService;
+  let usersService: UsersService;
 
   const mockConfig = {
     OIDC_ISSUER: 'https://auth.example.com',
@@ -30,6 +30,16 @@ describe('AuthService', () => {
     OIDC_CLIENT_SECRET: 'test-client-secret',
     OIDC_CALLBACK_URL: 'http://localhost:3000/api/auth/callback',
     JWT_SECRET: 'test-jwt-secret',
+  };
+
+  const mockUser = {
+    id: 'user-uuid',
+    oidcSub: 'oidc-sub-123',
+    email: 'test@example.com',
+    name: 'Test User',
+    role: 'USER',
+    createdAt: new Date(),
+    updatedAt: new Date(),
   };
 
   const mockOidcConfig = {
@@ -71,24 +81,10 @@ describe('AuthService', () => {
           },
         },
         {
-          provide: PrismaService,
+          provide: UsersService,
           useValue: {
-            user: {
-              upsert: jest.fn().mockResolvedValue({
-                id: 'user-uuid',
-                oidcSub: 'oidc-sub-123',
-                email: 'test@example.com',
-                name: 'Test User',
-                role: 'USER',
-              }),
-              findUnique: jest.fn().mockResolvedValue({
-                id: 'user-uuid',
-                oidcSub: 'oidc-sub-123',
-                email: 'test@example.com',
-                name: 'Test User',
-                role: 'USER',
-              }),
-            },
+            upsertFromOidc: jest.fn().mockResolvedValue(mockUser),
+            findById: jest.fn().mockResolvedValue(mockUser),
           },
         },
       ],
@@ -97,7 +93,7 @@ describe('AuthService', () => {
     service = module.get<AuthService>(AuthService);
     configService = module.get<ConfigService>(ConfigService);
     jwtService = module.get<JwtService>(JwtService);
-    prismaService = module.get<PrismaService>(PrismaService);
+    usersService = module.get<UsersService>(UsersService);
   });
 
   afterEach(() => {
@@ -156,7 +152,7 @@ describe('AuthService', () => {
   });
 
   describe('handleCallback', () => {
-    it('should exchange code for tokens and upsert user', async () => {
+    it('should exchange code for tokens and upsert user via UsersService', async () => {
       await service.onModuleInit();
 
       const mockTokens = {
@@ -174,19 +170,11 @@ describe('AuthService', () => {
       );
 
       expect(mockedOidc.authorizationCodeGrant).toHaveBeenCalled();
-      expect(prismaService.user.upsert).toHaveBeenCalledWith({
-        where: { oidcSub: 'oidc-sub-123' },
-        create: {
-          oidcSub: 'oidc-sub-123',
-          email: 'test@example.com',
-          name: 'Test User',
-          role: 'USER',
-        },
-        update: {
-          email: 'test@example.com',
-          name: 'Test User',
-          role: 'USER',
-        },
+      expect(usersService.upsertFromOidc).toHaveBeenCalledWith({
+        sub: 'oidc-sub-123',
+        email: 'test@example.com',
+        name: 'Test User',
+        role: 'USER',
       });
       expect(result.token).toBe('mock-jwt-token');
       expect(result.user.oidcSub).toBe('oidc-sub-123');
@@ -231,12 +219,10 @@ describe('AuthService', () => {
   });
 
   describe('getUserById', () => {
-    it('should return user by id', async () => {
+    it('should delegate to UsersService.findById', async () => {
       const user = await service.getUserById('user-uuid');
 
-      expect(prismaService.user.findUnique).toHaveBeenCalledWith({
-        where: { id: 'user-uuid' },
-      });
+      expect(usersService.findById).toHaveBeenCalledWith('user-uuid');
       expect(user?.email).toBe('test@example.com');
     });
   });
