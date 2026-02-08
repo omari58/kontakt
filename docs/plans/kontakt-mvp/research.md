@@ -44,4 +44,19 @@
 - [2026-02-08]: Root `pnpm lint` requires both `apps/api` and `apps/web` to have `lint` scripts — web uses `vue-tsc --noEmit`, api uses `tsc --noEmit`
 - [2026-02-08]: pnpm runtime stage in Dockerfiles adds unnecessary attack surface — only include in deps/build stages, runtime runs `node` directly
 
+## Phase 2 Implementation Learnings
+
+- [2026-02-08]: openid-client v6 has function-based API (not class-based) — uses `discovery()`, `buildAuthorizationUrl()`, `authorizationCodeGrant()`. Works with CommonJS via require()
+- [2026-02-08]: JwtAuthGuard implemented as custom guard reading JWT from cookies (not Passport's AuthGuard with Authorization header) — simpler and more appropriate for cookie-based sessions
+- [2026-02-08]: Passport jwt.strategy.ts file unnecessary when using custom JwtAuthGuard with JwtService.verify() directly — removed dead code
+- [2026-02-08]: OIDC state parameter must be validated in callback for CSRF protection — compare state cookie against query param
+- [2026-02-08]: Cookie `clearCookie()` must include matching options (httpOnly, secure, sameSite) or browsers won't actually clear the cookie
+- [2026-02-08]: JWT verify should specify `algorithms: ['HS256']` to prevent algorithm confusion attacks
+- [2026-02-08]: Cookie maxAge must be derived from JWT_EXPIRY config, not hardcoded — mismatch causes browser to send expired JWTs
+- [2026-02-08]: `ConfigModule.forRoot()` needs explicit `envFilePath` pointing to monorepo root `.env` — NestJS CWD is `apps/api`, not project root
+- [2026-02-08]: Keycloak runs on `auth.localhost.dev` with self-signed certs — Node.js needs `NODE_TLS_REJECT_UNAUTHORIZED=0` in dev
+- [2026-02-08]: API runs on port 4000 (3000 range occupied by other projects)
+- [2026-02-08]: Keycloak realm config imported via `adorsys/keycloak-config-cli` Docker image — realm JSON + clients JSON pattern from tuumideed project
+- [2026-02-08]: Role extraction from OIDC claims supports nested dot-paths (e.g., `realm_access.roles`) and both scalar and array values
+
 <!-- Subagents append learnings below this line -->

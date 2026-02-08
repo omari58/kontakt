@@ -64,21 +64,21 @@ requirements:
   - id: REQ-004
     name: "OIDC authentication"
     description: "Users authenticate via any OIDC-compliant provider. The backend handles login redirect, callback, token exchange, and session management via HTTP-only JWT cookies."
-    status: pending
+    status: done
     plan: "plans/02-authentication.md"
     depends_on: [REQ-002]
 
   - id: REQ-005
     name: "Role-based access control"
     description: "Users are assigned USER or ADMIN roles based on a configurable JWT claim from the OIDC provider. Admin routes are protected by a role guard."
-    status: pending
+    status: done
     plan: "plans/02-authentication.md"
     depends_on: [REQ-004]
 
   - id: REQ-006
     name: "User auto-provisioning"
     description: "On first login, a User record is created from OIDC claims (sub, email, name). On subsequent logins, the record is updated if claims changed."
-    status: pending
+    status: done
     plan: "plans/02-authentication.md"
     depends_on: [REQ-004]
 

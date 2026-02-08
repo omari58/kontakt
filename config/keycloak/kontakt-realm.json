@@ -1,0 +1,21 @@
+{
+  "realm": "kontakt",
+  "enabled": true,
+  "registrationAllowed": false,
+  "resetPasswordAllowed": false,
+  "verifyEmail": false,
+  "editUsernameAllowed": false,
+  "rememberMe": true,
+  "accessTokenLifespan": 3600,
+  "ssoSessionIdleTimeout": 1209600,
+  "ssoSessionMaxLifespan": 1209600,
+  "sslRequired": "none",
+  "roles": {
+    "realm": [
+      {
+        "name": "kontakt-admin",
+        "description": "Kontakt platform administrator"
+      }
+    ]
+  }
+}
