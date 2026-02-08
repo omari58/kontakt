@@ -87,6 +87,31 @@ describe('SettingsController', () => {
 
       expect(settingsService.bulkUpdate).toHaveBeenCalledWith(dto.settings);
     });
+
+    it('should reject unknown setting keys with 400', async () => {
+      const dto = {
+        settings: [{ key: 'unknown_key', value: 'some value' }],
+      };
+
+      await expect(controller.updateSettings(dto)).rejects.toThrow(
+        BadRequestException,
+      );
+      expect(settingsService.bulkUpdate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('guard metadata', () => {
+    it('should have ADMIN role metadata on admin endpoints', () => {
+      const reflector = new Reflector();
+      const roles = reflector.get<string[]>('roles', SettingsController.prototype.getAllSettings);
+      expect(roles).toContain('ADMIN');
+    });
+
+    it('should NOT have role metadata on public endpoint', () => {
+      const reflector = new Reflector();
+      const roles = reflector.get<string[]>('roles', SettingsController.prototype.getPublicSettings);
+      expect(roles).toBeUndefined();
+    });
   });
 
   describe('POST /settings/logo (uploadLogo)', () => {

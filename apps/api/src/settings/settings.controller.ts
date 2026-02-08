@@ -20,6 +20,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { SettingsService } from './settings.service';
 import { UpdateSettingsDto } from './dto/update-settings.dto';
+import { SETTINGS_KEYS } from './settings.constants';
 
 const ALLOWED_IMAGE_MIMES = [
   'image/jpeg',
@@ -27,6 +28,10 @@ const ALLOWED_IMAGE_MIMES = [
   'image/webp',
   'image/svg+xml',
 ];
+
+const KNOWN_KEYS = new Set<string>(
+  Object.values(SETTINGS_KEYS).map((s) => s.key),
+);
 
 const PUBLIC_SETTINGS_KEYS = [
   'org_name',
@@ -77,6 +82,14 @@ export class SettingsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   async updateSettings(@Body() dto: UpdateSettingsDto): Promise<void> {
+    const unknownKeys = dto.settings
+      .map((s) => s.key)
+      .filter((k) => !KNOWN_KEYS.has(k));
+    if (unknownKeys.length > 0) {
+      throw new BadRequestException(
+        `Unknown setting keys: ${unknownKeys.join(', ')}`,
+      );
+    }
     await this.settingsService.bulkUpdate(dto.settings);
   }
 
