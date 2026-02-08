@@ -75,3 +75,19 @@
 - [2026-02-08]: ConfigService should be required (not optional) in constructors to keep config testable
 
 <!-- Subagents append learnings below this line -->
+
+## Phase 4 Implementation Learnings
+
+- [2026-02-08]: Handlebars auto-escapes with `{{}}` by default — safe against XSS. Triple braces `{{{...}}}` only used for JSON-LD (from JSON.stringify) and layout blocks
+- [2026-02-08]: `/c/:slug` route excluded from global `/api` prefix via `setGlobalPrefix('api', { exclude: [...] })` in main.ts
+- [2026-02-08]: `CardNotFoundFilter` (NestJS exception filter) renders 404 template for NotFoundException — proper pattern for server-rendered error pages
+- [2026-02-08]: Upload service converts all images to WebP — vCard PHOTO MIME type must be `image/webp`, not `image/jpeg`
+- [2026-02-08]: Content-Disposition `filename` from user input must be sanitized — strip double quotes to prevent malformed headers
+- [2026-02-08]: Use `fs.promises.access` + `fs.promises.readFile` (not sync variants) on public endpoints to avoid blocking the event loop
+- [2026-02-08]: vCard 4.0 (RFC 6350) PHOTO format: `PHOTO:data:image/webp;base64,{data}` (not v3.0's `PHOTO;ENCODING=b;TYPE=`)
+- [2026-02-08]: vCard `buildStructuredName` must escape name parts (commas, semicolons) before placing in `N:` field
+- [2026-02-08]: Deviation: QR code uses separate `QrController` instead of adding to `CardsController` — single responsibility, same route prefix
+- [2026-02-08]: `APP_URL` consolidated as the single env var for the app's public base URL (was inconsistent with `BASE_URL` in render service)
+- [2026-02-08]: ConfigService.get() should always have a fallback default (`|| 'http://localhost:4000'`) — non-null assertions risk undefined URLs
+- [2026-02-08]: SHA-256 IP hashing with daily date salt (`YYYY-MM-DD`) for privacy-conscious view deduplication — rotates daily so IPs can't be tracked across days
+- [2026-02-08]: Analytics endpoint uses PrismaService directly (not CardsService) for silent failure pattern — avoids NotFoundException propagation

@@ -108,28 +108,28 @@ requirements:
   - id: REQ-010
     name: "Server-rendered public card page"
     description: "Card recipients view cards at /c/:slug as server-rendered HTML with correct OpenGraph/Twitter meta tags, structured data, and no JavaScript dependency."
-    status: pending
+    status: done
     plan: "plans/04-public-card.md"
     depends_on: [REQ-007]
 
   - id: REQ-011
     name: "vCard download"
     description: "Recipients can download a card's contact information as a vCard 4.0 (.vcf) file compliant with RFC 6350, triggering the phone's contact import flow."
-    status: pending
+    status: done
     plan: "plans/04-public-card.md"
     depends_on: [REQ-007]
 
   - id: REQ-012
     name: "QR code generation"
     description: "Each card has a QR code encoding its public URL, available as PNG or SVG via an API endpoint."
-    status: pending
+    status: done
     plan: "plans/04-public-card.md"
     depends_on: [REQ-007]
 
   - id: REQ-013
     name: "View event tracking"
     description: "When a public card page loads, a view event is recorded via a POST endpoint for basic analytics."
-    status: pending
+    status: done
     plan: "plans/04-public-card.md"
     depends_on: [REQ-010]
 
