@@ -170,7 +170,7 @@ describe('VCardBuilder', () => {
       const avatarBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk';
       const result = VCardBuilder.build(card, avatarBase64);
 
-      expect(result).toContain('PHOTO:data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk');
+      expect(result).toContain('PHOTO:data:image/webp;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk');
     });
 
     it('should not include PHOTO when no avatar data provided', () => {
@@ -213,6 +213,28 @@ describe('VCardBuilder', () => {
       expect(lines.length).toBeGreaterThan(3);
       // The last element after split on \r\n should be empty (trailing \r\n)
       expect(lines[lines.length - 1]).toBe('');
+    });
+
+    it('should escape special characters in structured name parts', () => {
+      const card = {
+        name: 'Jean-Pierre, De; La Fontaine',
+        jobTitle: null,
+        company: null,
+        phones: null,
+        emails: null,
+        address: null,
+        websites: null,
+        socialLinks: null,
+        bio: null,
+        avatarPath: null,
+      };
+
+      const result = VCardBuilder.build(card);
+
+      // Name parts: ["Jean-Pierre,", "De;", "La", "Fontaine"]
+      // lastName="Fontaine", firstName="Jean-Pierre," -> escaped "Jean-Pierre\,"
+      // middle="De; La" -> escaped "De\; La"
+      expect(result).toContain('N:Fontaine;Jean-Pierre\\,;De\\; La;;');
     });
 
     it('should escape backslashes in values', () => {

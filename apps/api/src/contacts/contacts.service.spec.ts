@@ -6,7 +6,13 @@ import { CardsService } from '../cards/cards.service';
 import { Visibility } from '@prisma/client';
 import * as fs from 'fs';
 
-jest.mock('fs');
+jest.mock('fs', () => ({
+  ...jest.requireActual('fs'),
+  promises: {
+    access: jest.fn(),
+    readFile: jest.fn(),
+  },
+}));
 
 describe('ContactsService', () => {
   let service: ContactsService;
@@ -98,23 +104,23 @@ describe('ContactsService', () => {
     });
 
     it('should embed avatar as base64 when avatarPath exists', async () => {
-      const cardWithAvatar = { ...mockCard, avatarPath: 'avatars/test.jpg' };
+      const cardWithAvatar = { ...mockCard, avatarPath: 'avatars/test.webp' };
       (cardsService.findBySlug as jest.Mock).mockResolvedValue(cardWithAvatar);
 
       const mockBuffer = Buffer.from('fake-image-data');
-      (fs.existsSync as jest.Mock).mockReturnValue(true);
-      (fs.readFileSync as jest.Mock).mockReturnValue(mockBuffer);
+      (fs.promises.access as jest.Mock).mockResolvedValue(undefined);
+      (fs.promises.readFile as jest.Mock).mockResolvedValue(mockBuffer);
 
       const result = await service.generateVCard('john-doe');
 
-      expect(result.vcf).toContain('PHOTO:data:image/jpeg;base64,');
+      expect(result.vcf).toContain('PHOTO:data:image/webp;base64,');
       expect(result.vcf).toContain(mockBuffer.toString('base64'));
     });
 
     it('should skip avatar when file does not exist on disk', async () => {
-      const cardWithAvatar = { ...mockCard, avatarPath: 'avatars/missing.jpg' };
+      const cardWithAvatar = { ...mockCard, avatarPath: 'avatars/missing.webp' };
       (cardsService.findBySlug as jest.Mock).mockResolvedValue(cardWithAvatar);
-      (fs.existsSync as jest.Mock).mockReturnValue(false);
+      (fs.promises.access as jest.Mock).mockRejectedValue(new Error('ENOENT'));
 
       const result = await service.generateVCard('john-doe');
 

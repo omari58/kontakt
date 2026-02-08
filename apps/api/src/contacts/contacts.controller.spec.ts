@@ -56,6 +56,26 @@ describe('ContactsController', () => {
       expect(mockRes.send).toHaveBeenCalledWith(mockVcfResult.vcf);
     });
 
+    it('should sanitize quotes in filename for Content-Disposition', async () => {
+      const resultWithQuotes = {
+        vcf: 'BEGIN:VCARD\r\nEND:VCARD\r\n',
+        filename: 'John "The Dev" Doe.vcf',
+      };
+      (contactsService.generateVCard as jest.Mock).mockResolvedValue(resultWithQuotes);
+
+      const mockRes = {
+        set: jest.fn(),
+        send: jest.fn(),
+      };
+
+      await controller.getVCard('john-doe', mockRes as any);
+
+      // The filename should not contain raw double quotes
+      const disposition = mockRes.set.mock.calls[0][0]['Content-Disposition'];
+      expect(disposition).not.toContain('"The Dev"');
+      expect(disposition).toContain('filename="John The Dev Doe.vcf"');
+    });
+
     it('should propagate NotFoundException for non-existent slug', async () => {
       (contactsService.generateVCard as jest.Mock).mockRejectedValue(
         new NotFoundException('Card not found'),

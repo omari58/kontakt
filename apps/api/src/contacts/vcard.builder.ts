@@ -66,7 +66,7 @@ export class VCardBuilder {
     }
 
     if (avatarBase64 && card.avatarPath) {
-      lines.push(`PHOTO:data:image/jpeg;base64,${avatarBase64}`);
+      lines.push(`PHOTO:data:image/webp;base64,${avatarBase64}`);
     }
 
     lines.push('END:VCARD');
@@ -87,12 +87,12 @@ function buildStructuredName(fullName: string): string {
   const parts = fullName.trim().split(/\s+/);
 
   if (parts.length === 1) {
-    return `${parts[0]};;;;`;
+    return `${escape(parts[0])};;;;`;
   }
 
-  const lastName = parts[parts.length - 1];
-  const firstName = parts[0];
-  const middleNames = parts.slice(1, -1).join(' ');
+  const lastName = escape(parts[parts.length - 1]);
+  const firstName = escape(parts[0]);
+  const middleNames = escape(parts.slice(1, -1).join(' '));
 
   return `${lastName};${firstName};${middleNames};;`;
 }

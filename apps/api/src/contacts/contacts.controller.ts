@@ -10,9 +10,10 @@ export class ContactsController {
   async getVCard(@Param('slug') slug: string, @Res() res: Response): Promise<void> {
     const { vcf, filename } = await this.contactsService.generateVCard(slug);
 
+    const safeFilename = filename.replace(/"/g, '');
     res.set({
       'Content-Type': 'text/vcard',
-      'Content-Disposition': `attachment; filename="${filename}"`,
+      'Content-Disposition': `attachment; filename="${safeFilename}"`,
     });
     res.send(vcf);
   }

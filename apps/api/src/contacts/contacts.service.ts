@@ -19,9 +19,12 @@ export class ContactsService {
     if (card.avatarPath) {
       const uploadDir = this.configService.get<string>('UPLOAD_DIR', 'uploads');
       const avatarFullPath = join(process.cwd(), uploadDir, card.avatarPath);
-      if (fs.existsSync(avatarFullPath)) {
-        const buffer = fs.readFileSync(avatarFullPath);
+      try {
+        await fs.promises.access(avatarFullPath);
+        const buffer = await fs.promises.readFile(avatarFullPath);
         avatarBase64 = buffer.toString('base64');
+      } catch {
+        // File does not exist on disk, skip avatar
       }
     }
 
