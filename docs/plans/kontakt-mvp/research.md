@@ -33,6 +33,15 @@
 - [2026-02-08]: NestJS file uploads: `MulterModule` from `@nestjs/platform-express`, paired with `FileInterceptor` on endpoints
 - [2026-02-08]: Prisma NestJS integration: create `PrismaService extends PrismaClient` as injectable, wrap in global `PrismaModule`
 - [2026-02-08]: Vue 3 recommended: `<script setup>` syntax with Composition API, Pinia for state, Vue Router for navigation
-- [2026-02-08]: Tailwind CSS v4 uses `@tailwindcss/vite` plugin instead of PostCSS plugin
+- [2026-02-08]: ~~Tailwind CSS v4 uses `@tailwindcss/vite` plugin instead of PostCSS plugin~~ — Tailwind removed from project per user decision
+
+## Phase 1 Implementation Learnings
+
+- [2026-02-08]: Prisma 7 requires ESM-only (`"type": "module"`) which conflicts with NestJS CommonJS. Downgraded to Prisma 6 (v6.19.2) for compatibility. Revisit when NestJS ESM support matures
+- [2026-02-08]: Tailwind CSS removed from project — user preference for plain CSS
+- [2026-02-08]: With `shamefully-hoist=true`, Prisma generates client to root `node_modules/.prisma` not `apps/api/node_modules/.prisma` — Docker COPY paths must target root
+- [2026-02-08]: Docker Compose `environment:` keys override `env_file` values — use variable interpolation (`${VAR:-default}`) to allow user overrides via `.env`
+- [2026-02-08]: Root `pnpm lint` requires both `apps/api` and `apps/web` to have `lint` scripts — web uses `vue-tsc --noEmit`, api uses `tsc --noEmit`
+- [2026-02-08]: pnpm runtime stage in Dockerfiles adds unnecessary attack surface — only include in deps/build stages, runtime runs `node` directly
 
 <!-- Subagents append learnings below this line -->

@@ -9,9 +9,9 @@
     "start": "node dist/main",
     "start:prod": "node dist/main",
     "lint": "tsc --noEmit",
-    "db:migrate": "prisma migrate dev",
-    "db:generate": "prisma generate",
-    "db:studio": "prisma studio"
+    "db:migrate": "dotenv -e ../../.env -- prisma migrate dev",
+    "db:generate": "dotenv -e ../../.env -- prisma generate",
+    "db:studio": "dotenv -e ../../.env -- prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.13",
@@ -28,6 +28,7 @@
     "@nestjs/cli": "^11.0.16",
     "@nestjs/testing": "^11.1.13",
     "@types/express": "^5.0.6",
+    "dotenv-cli": "^11.0.0",
     "prisma": "^6.19.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
