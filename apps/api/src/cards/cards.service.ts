@@ -39,6 +39,35 @@ export class CardsService {
     }
   }
 
+  async findAll(options: {
+    page: number;
+    limit: number;
+    search?: string;
+  }): Promise<{ data: Card[]; total: number; page: number; limit: number }> {
+    const { page, limit, search } = options;
+    const where: Prisma.CardWhereInput = search
+      ? {
+          OR: [
+            { name: { contains: search, mode: 'insensitive' as const } },
+            { company: { contains: search, mode: 'insensitive' as const } },
+          ],
+        }
+      : {};
+
+    const [data, total] = await Promise.all([
+      this.prisma.card.findMany({
+        where,
+        include: { user: { select: { name: true, email: true } } },
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      this.prisma.card.count({ where }),
+    ]);
+
+    return { data: data as Card[], total, page, limit };
+  }
+
   async findAllByUser(userId: string): Promise<Card[]> {
     return this.prisma.card.findMany({
       where: { userId },

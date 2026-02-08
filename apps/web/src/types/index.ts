@@ -63,6 +63,17 @@ export interface Card {
   updatedAt: string;
 }
 
+export interface AdminCard extends Card {
+  user: { name: string; email: string };
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface Setting {
   key: string;
   value: string;

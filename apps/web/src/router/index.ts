@@ -11,10 +11,22 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/cards/new',
+      name: 'card-new',
+      component: () => import('@/views/CardEditorView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/cards/:id/edit',
       name: 'card-edit',
-      component: () => import('@/views/CardEditView.vue'),
+      component: () => import('@/views/CardEditorView.vue'),
       meta: { requiresAuth: true },
+    },
+    {
+      path: '/admin/cards',
+      name: 'admin-cards',
+      component: () => import('@/views/AdminCardsView.vue'),
+      meta: { requiresAuth: true, requiresAdmin: true },
     },
     {
       path: '/admin/settings',

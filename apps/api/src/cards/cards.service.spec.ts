@@ -53,6 +53,7 @@ describe('CardsService', () => {
               findFirst: jest.fn().mockResolvedValue(null),
               update: jest.fn().mockResolvedValue(mockCard),
               delete: jest.fn().mockResolvedValue(mockCard),
+              count: jest.fn().mockResolvedValue(1),
             },
           },
         },
@@ -128,6 +129,58 @@ describe('CardsService', () => {
         orderBy: { createdAt: 'desc' },
       });
       expect(result).toEqual([mockCard]);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return paginated cards with total count', async () => {
+      const cardWithUser = { ...mockCard, user: { name: 'John Doe', email: 'john@example.com' } };
+      (prisma.card.findMany as jest.Mock).mockResolvedValue([cardWithUser]);
+      (prisma.card.count as jest.Mock).mockResolvedValue(1);
+
+      const result = await service.findAll({ page: 1, limit: 20 });
+
+      expect(prisma.card.findMany).toHaveBeenCalledWith({
+        where: {},
+        include: { user: { select: { name: true, email: true } } },
+        orderBy: { createdAt: 'desc' },
+        skip: 0,
+        take: 20,
+      });
+      expect(prisma.card.count).toHaveBeenCalledWith({ where: {} });
+      expect(result).toEqual({ data: [cardWithUser], total: 1, page: 1, limit: 20 });
+    });
+
+    it('should apply search filter across name and company', async () => {
+      (prisma.card.findMany as jest.Mock).mockResolvedValue([]);
+      (prisma.card.count as jest.Mock).mockResolvedValue(0);
+
+      await service.findAll({ page: 1, limit: 20, search: 'acme' });
+
+      expect(prisma.card.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: {
+            OR: [
+              { name: { contains: 'acme', mode: 'insensitive' } },
+              { company: { contains: 'acme', mode: 'insensitive' } },
+            ],
+          },
+        }),
+      );
+    });
+
+    it('should handle pagination offset correctly', async () => {
+      (prisma.card.findMany as jest.Mock).mockResolvedValue([]);
+      (prisma.card.count as jest.Mock).mockResolvedValue(50);
+
+      await service.findAll({ page: 3, limit: 10 });
+
+      expect(prisma.card.findMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          skip: 20,
+          take: 10,
+        }),
+      );
     });
   });
 
