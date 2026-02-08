@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { CardsController, MyCardsController } from './cards.controller';
 import { CardsService } from './cards.service';
+import { CardResponseDto } from './dto/card-response.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Visibility } from '@prisma/client';
 import { JwtPayload } from '../auth/dto/auth.dto';
@@ -81,11 +82,13 @@ describe('MyCardsController', () => {
   });
 
   describe('findMyCards', () => {
-    it('should return all cards for the current user', async () => {
+    it('should return CardResponseDto array for the current user', async () => {
       const result = await controller.findMyCards(mockUser);
 
       expect(service.findAllByUser).toHaveBeenCalledWith('user-uuid-1');
-      expect(result).toEqual([mockCard]);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toBeInstanceOf(CardResponseDto);
+      expect(result[0].id).toBe(mockCard.id);
     });
   });
 });
@@ -113,21 +116,24 @@ describe('CardsController', () => {
   });
 
   describe('create', () => {
-    it('should create a card and return it', async () => {
+    it('should create a card and return a CardResponseDto', async () => {
       const dto = { name: 'John Doe' };
       const result = await controller.create(mockUser, dto);
 
       expect(service.create).toHaveBeenCalledWith('user-uuid-1', dto);
-      expect(result).toEqual(mockCard);
+      expect(result).toBeInstanceOf(CardResponseDto);
+      expect(result.id).toBe(mockCard.id);
+      expect(result.name).toBe(mockCard.name);
     });
   });
 
   describe('findOne', () => {
-    it('should return a card by ID', async () => {
+    it('should return a CardResponseDto by ID', async () => {
       const result = await controller.findOne('card-uuid-1', mockUser);
 
       expect(service.findOne).toHaveBeenCalledWith('card-uuid-1', 'user-uuid-1');
-      expect(result).toEqual(mockCard);
+      expect(result).toBeInstanceOf(CardResponseDto);
+      expect(result.id).toBe(mockCard.id);
     });
 
     it('should propagate NotFoundException from service', async () => {
@@ -148,11 +154,12 @@ describe('CardsController', () => {
   });
 
   describe('findBySlug', () => {
-    it('should return a card by slug (public)', async () => {
+    it('should return a CardResponseDto by slug (public)', async () => {
       const result = await controller.findBySlug('john-doe');
 
       expect(service.findBySlug).toHaveBeenCalledWith('john-doe');
-      expect(result).toEqual(mockCard);
+      expect(result).toBeInstanceOf(CardResponseDto);
+      expect(result.slug).toBe('john-doe');
     });
 
     it('should propagate NotFoundException for unknown slug', async () => {
@@ -163,7 +170,7 @@ describe('CardsController', () => {
   });
 
   describe('update', () => {
-    it('should update a card and return the result', async () => {
+    it('should update a card and return a CardResponseDto', async () => {
       const dto = { name: 'Updated Name' };
       const updatedCard = { ...mockCard, name: 'Updated Name' };
       (service.update as jest.Mock).mockResolvedValue(updatedCard);
@@ -171,6 +178,7 @@ describe('CardsController', () => {
       const result = await controller.update('card-uuid-1', mockUser, dto);
 
       expect(service.update).toHaveBeenCalledWith('card-uuid-1', 'user-uuid-1', dto);
+      expect(result).toBeInstanceOf(CardResponseDto);
       expect(result.name).toBe('Updated Name');
     });
 

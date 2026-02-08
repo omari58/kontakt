@@ -13,10 +13,10 @@ import {
 import { CardsService } from './cards.service';
 import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
+import { CardResponseDto } from './dto/card-response.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { JwtPayload } from '../auth/dto/auth.dto';
-import { Card } from '@prisma/client';
 
 @Controller('me')
 export class MyCardsController {
@@ -24,8 +24,9 @@ export class MyCardsController {
 
   @Get('cards')
   @UseGuards(JwtAuthGuard)
-  async findMyCards(@CurrentUser() user: JwtPayload): Promise<Card[]> {
-    return this.cardsService.findAllByUser(user.sub);
+  async findMyCards(@CurrentUser() user: JwtPayload): Promise<CardResponseDto[]> {
+    const cards = await this.cardsService.findAllByUser(user.sub);
+    return cards.map(CardResponseDto.fromCard);
   }
 }
 
@@ -39,13 +40,15 @@ export class CardsController {
   async create(
     @CurrentUser() user: JwtPayload,
     @Body() dto: CreateCardDto,
-  ): Promise<Card> {
-    return this.cardsService.create(user.sub, dto);
+  ): Promise<CardResponseDto> {
+    const card = await this.cardsService.create(user.sub, dto);
+    return CardResponseDto.fromCard(card);
   }
 
   @Get('slug/:slug')
-  async findBySlug(@Param('slug') slug: string): Promise<Card> {
-    return this.cardsService.findBySlug(slug);
+  async findBySlug(@Param('slug') slug: string): Promise<CardResponseDto> {
+    const card = await this.cardsService.findBySlug(slug);
+    return CardResponseDto.fromCard(card);
   }
 
   @Get(':id')
@@ -53,8 +56,9 @@ export class CardsController {
   async findOne(
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
-  ): Promise<Card> {
-    return this.cardsService.findOne(id, user.sub);
+  ): Promise<CardResponseDto> {
+    const card = await this.cardsService.findOne(id, user.sub);
+    return CardResponseDto.fromCard(card);
   }
 
   @Put(':id')
@@ -63,8 +67,9 @@ export class CardsController {
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
     @Body() dto: UpdateCardDto,
-  ): Promise<Card> {
-    return this.cardsService.update(id, user.sub, dto);
+  ): Promise<CardResponseDto> {
+    const card = await this.cardsService.update(id, user.sub, dto);
+    return CardResponseDto.fromCard(card);
   }
 
   @Delete(':id')
