@@ -1,10 +1,193 @@
 meta:
-  title: "Kontakt — Digital Business Card Platform"
+  title: "Kontakt — Digital Business Card Platform (MVP)"
   design_doc: "./design.md"
   research_doc: "./research.md"
-  status: draft
+  status: ready
   created: "2026-02-08"
   updated: "2026-02-08"
 
-requirements: []
-# Requirements added during /plan phase
+# Design Decisions (resolving open questions from design.md)
+decisions:
+  shared_types: "Co-locate types in each app. Shared types package adds complexity for MVP — extract later if duplication becomes painful."
+  template_engine: "Use Handlebars via @nestjs/hbs for server-rendered card pages. Better separation of concerns than raw HTML strings, well-supported in NestJS."
+  image_processing: "Resize and compress on upload using sharp. Keeps storage and bandwidth predictable. Store originals alongside processed versions for future re-processing."
+  cards_per_user: "Unlimited for MVP. Add configurable limit as an instance setting in Phase 2 if needed."
+
+# Implementation Phases (execute in order)
+phases:
+  - name: "Project Scaffolding & Data Layer"
+    plan: "plans/01-project-scaffolding.md"
+    requirements: [REQ-001, REQ-002, REQ-003]
+  - name: "OIDC Authentication"
+    plan: "plans/02-authentication.md"
+    requirements: [REQ-004, REQ-005, REQ-006]
+  - name: "Cards API & Uploads"
+    plan: "plans/03-cards-api.md"
+    requirements: [REQ-007, REQ-008, REQ-009]
+  - name: "Public Card Experience"
+    plan: "plans/04-public-card.md"
+    requirements: [REQ-010, REQ-011, REQ-012, REQ-013]
+  - name: "Settings & Theming"
+    plan: "plans/05-settings.md"
+    requirements: [REQ-014, REQ-015, REQ-016]
+  - name: "Frontend SPA"
+    plan: "plans/06-frontend-spa.md"
+    requirements: [REQ-017, REQ-018, REQ-019, REQ-020]
+  - name: "Docker Deployment"
+    plan: "plans/07-deployment.md"
+    requirements: [REQ-021]
+
+requirements:
+  # --- Project Foundation ---
+  - id: REQ-001
+    name: "Monorepo project structure"
+    description: "The project is organized as a pnpm monorepo with apps/api (NestJS) and apps/web (Vue 3 SPA), sharing a root package.json for workspace scripts."
+    status: pending
+    plan: "plans/01-project-scaffolding.md"
+    depends_on: []
+
+  - id: REQ-002
+    name: "PostgreSQL database with Prisma ORM"
+    description: "The application uses PostgreSQL as its sole database, managed via Prisma ORM with typed models for User, Card, Setting, and AnalyticsEvent."
+    status: pending
+    plan: "plans/01-project-scaffolding.md"
+    depends_on: [REQ-001]
+
+  - id: REQ-003
+    name: "Docker Compose development environment"
+    description: "Developers can start the full stack (API, web, PostgreSQL, Caddy) with a single docker-compose command. A separate dev compose file supports hot-reload."
+    status: pending
+    plan: "plans/01-project-scaffolding.md"
+    depends_on: [REQ-001]
+
+  # --- Authentication ---
+  - id: REQ-004
+    name: "OIDC authentication"
+    description: "Users authenticate via any OIDC-compliant provider. The backend handles login redirect, callback, token exchange, and session management via HTTP-only JWT cookies."
+    status: pending
+    plan: "plans/02-authentication.md"
+    depends_on: [REQ-002]
+
+  - id: REQ-005
+    name: "Role-based access control"
+    description: "Users are assigned USER or ADMIN roles based on a configurable JWT claim from the OIDC provider. Admin routes are protected by a role guard."
+    status: pending
+    plan: "plans/02-authentication.md"
+    depends_on: [REQ-004]
+
+  - id: REQ-006
+    name: "User auto-provisioning"
+    description: "On first login, a User record is created from OIDC claims (sub, email, name). On subsequent logins, the record is updated if claims changed."
+    status: pending
+    plan: "plans/02-authentication.md"
+    depends_on: [REQ-004]
+
+  # --- Card Management ---
+  - id: REQ-007
+    name: "Card CRUD operations"
+    description: "Authenticated users can create, read, update, and delete their own cards. Each card includes name, job title, company, phones, emails, address, websites, social links, bio, and styling options."
+    status: pending
+    plan: "plans/03-cards-api.md"
+    depends_on: [REQ-002, REQ-004]
+
+  - id: REQ-008
+    name: "Slug generation and management"
+    description: "Each card gets a unique slug auto-generated from the user's name. Users can edit slugs. The system enforces uniqueness and handles conflicts with incrementing suffixes."
+    status: pending
+    plan: "plans/03-cards-api.md"
+    depends_on: [REQ-007]
+
+  - id: REQ-009
+    name: "Image uploads for cards"
+    description: "Users can upload avatar, banner, and background images for their cards. Images are validated (MIME type, size), resized/compressed via sharp, and stored on the local filesystem."
+    status: pending
+    plan: "plans/03-cards-api.md"
+    depends_on: [REQ-007]
+
+  # --- Public Card Experience ---
+  - id: REQ-010
+    name: "Server-rendered public card page"
+    description: "Card recipients view cards at /c/:slug as server-rendered HTML with correct OpenGraph/Twitter meta tags, structured data, and no JavaScript dependency."
+    status: pending
+    plan: "plans/04-public-card.md"
+    depends_on: [REQ-007]
+
+  - id: REQ-011
+    name: "vCard download"
+    description: "Recipients can download a card's contact information as a vCard 4.0 (.vcf) file compliant with RFC 6350, triggering the phone's contact import flow."
+    status: pending
+    plan: "plans/04-public-card.md"
+    depends_on: [REQ-007]
+
+  - id: REQ-012
+    name: "QR code generation"
+    description: "Each card has a QR code encoding its public URL, available as PNG or SVG via an API endpoint."
+    status: pending
+    plan: "plans/04-public-card.md"
+    depends_on: [REQ-007]
+
+  - id: REQ-013
+    name: "View event tracking"
+    description: "When a public card page loads, a view event is recorded via a POST endpoint for basic analytics."
+    status: pending
+    plan: "plans/04-public-card.md"
+    depends_on: [REQ-010]
+
+  # --- Instance Settings ---
+  - id: REQ-014
+    name: "Admin-managed instance settings"
+    description: "Admins can configure organization name, logo, favicon, default colors, default theme, avatar shape, override toggles, and footer text via the API."
+    status: pending
+    plan: "plans/05-settings.md"
+    depends_on: [REQ-005]
+
+  - id: REQ-015
+    name: "Public settings endpoint"
+    description: "A public API endpoint exposes non-sensitive instance settings (name, logo, colors) for the public card page and SPA theming."
+    status: pending
+    plan: "plans/05-settings.md"
+    depends_on: [REQ-014]
+
+  - id: REQ-016
+    name: "Card theming with instance defaults"
+    description: "Cards inherit instance default colors, theme mode, and avatar shape. Users can override these if the admin allows it via override toggles."
+    status: pending
+    plan: "plans/05-settings.md"
+    depends_on: [REQ-007, REQ-014]
+
+  # --- Frontend SPA ---
+  - id: REQ-017
+    name: "Dashboard with card list"
+    description: "Authenticated users see a dashboard listing their cards with quick stats and actions (edit, preview, share, delete)."
+    status: pending
+    plan: "plans/06-frontend-spa.md"
+    depends_on: [REQ-007]
+
+  - id: REQ-018
+    name: "Card editor"
+    description: "Users create and edit cards through a form-based editor with live preview, covering all card fields including contact info, social links, images, and styling."
+    status: pending
+    plan: "plans/06-frontend-spa.md"
+    depends_on: [REQ-007, REQ-009]
+
+  - id: REQ-019
+    name: "Admin settings page"
+    description: "Admins can view and modify instance settings through a dedicated settings page in the SPA."
+    status: pending
+    plan: "plans/06-frontend-spa.md"
+    depends_on: [REQ-014]
+
+  - id: REQ-020
+    name: "Admin card overview"
+    description: "Admins can view all cards across all users from an admin panel."
+    status: pending
+    plan: "plans/06-frontend-spa.md"
+    depends_on: [REQ-005, REQ-007]
+
+  # --- Deployment ---
+  - id: REQ-021
+    name: "Production Docker deployment"
+    description: "The application deploys via Docker Compose with Caddy as reverse proxy providing automatic HTTPS, routing /c/:slug and /api/* to NestJS and /* to Vue static files."
+    status: pending
+    plan: "plans/07-deployment.md"
+    depends_on: [REQ-001, REQ-003]
