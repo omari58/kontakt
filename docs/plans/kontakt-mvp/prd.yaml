@@ -42,21 +42,21 @@ requirements:
   - id: REQ-001
     name: "Monorepo project structure"
     description: "The project is organized as a pnpm monorepo with apps/api (NestJS) and apps/web (Vue 3 SPA), sharing a root package.json for workspace scripts."
-    status: pending
+    status: done
     plan: "plans/01-project-scaffolding.md"
     depends_on: []
 
   - id: REQ-002
     name: "PostgreSQL database with Prisma ORM"
     description: "The application uses PostgreSQL as its sole database, managed via Prisma ORM with typed models for User, Card, Setting, and AnalyticsEvent."
-    status: pending
+    status: done
     plan: "plans/01-project-scaffolding.md"
     depends_on: [REQ-001]
 
   - id: REQ-003
     name: "Docker Compose development environment"
     description: "Developers can start the full stack (API, web, PostgreSQL, Caddy) with a single docker-compose command. A separate dev compose file supports hot-reload."
-    status: pending
+    status: done
     plan: "plans/01-project-scaffolding.md"
     depends_on: [REQ-001]
 
@@ -86,21 +86,21 @@ requirements:
   - id: REQ-007
     name: "Card CRUD operations"
     description: "Authenticated users can create, read, update, and delete their own cards. Each card includes name, job title, company, phones, emails, address, websites, social links, bio, and styling options."
-    status: pending
+    status: done
     plan: "plans/03-cards-api.md"
     depends_on: [REQ-002, REQ-004]
 
   - id: REQ-008
     name: "Slug generation and management"
     description: "Each card gets a unique slug auto-generated from the user's name. Users can edit slugs. The system enforces uniqueness and handles conflicts with incrementing suffixes."
-    status: pending
+    status: done
     plan: "plans/03-cards-api.md"
     depends_on: [REQ-007]
 
   - id: REQ-009
     name: "Image uploads for cards"
     description: "Users can upload avatar, banner, and background images for their cards. Images are validated (MIME type, size), resized/compressed via sharp, and stored on the local filesystem."
-    status: pending
+    status: done
     plan: "plans/03-cards-api.md"
     depends_on: [REQ-007]
 
