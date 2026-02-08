@@ -1,7 +1,8 @@
-export interface OidcClaims {
+export interface JwtPayload {
   sub: string;
-  email?: string;
-  name?: string;
+  email: string;
+  name: string;
+  role: string;
 }
 
 export interface AuthResult {

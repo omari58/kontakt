@@ -115,6 +115,14 @@ describe('AuthService', () => {
       );
     });
 
+    it('should throw with clear message if OIDC discovery fails', async () => {
+      mockedOidc.discovery.mockRejectedValue(new Error('ECONNREFUSED'));
+
+      await expect(service.onModuleInit()).rejects.toThrow(
+        /Failed to discover OIDC issuer/,
+      );
+    });
+
     it('should throw if OIDC_ISSUER is not configured', async () => {
       const configGet = configService.getOrThrow as jest.Mock;
       configGet.mockImplementation((key: string) => {

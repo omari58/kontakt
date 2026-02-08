@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from '@prisma/client';
+import { Role, User } from '@prisma/client';
 import * as oidc from 'openid-client';
 import { UsersService } from '../users/users.service';
 import { AuthorizationUrlResult, AuthResult } from './dto/auth.dto';
@@ -24,11 +24,17 @@ export class AuthService implements OnModuleInit {
 
     this.logger.log(`Discovering OIDC issuer: ${issuer}`);
 
-    this.oidcConfig = await oidc.discovery(
-      new URL(issuer),
-      clientId,
-      clientSecret,
-    );
+    try {
+      this.oidcConfig = await oidc.discovery(
+        new URL(issuer),
+        clientId,
+        clientSecret,
+      );
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Failed to discover OIDC issuer at ${issuer}: ${message}`);
+      throw new Error(`Failed to discover OIDC issuer at ${issuer}: ${message}`);
+    }
 
     this.logger.log('OIDC discovery complete');
   }
@@ -132,7 +138,7 @@ export class AuthService implements OnModuleInit {
     return current;
   }
 
-  async getUserById(id: string) {
+  async getUserById(id: string): Promise<User | null> {
     return this.usersService.findById(id);
   }
 }

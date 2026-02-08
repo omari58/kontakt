@@ -1,17 +1,22 @@
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 describe('JwtAuthGuard', () => {
   let guard: JwtAuthGuard;
   let jwtService: JwtService;
+  let configService: ConfigService;
 
   beforeEach(() => {
     jwtService = {
       verify: jest.fn(),
       sign: jest.fn().mockReturnValue('refreshed-token'),
     } as any;
-    guard = new JwtAuthGuard(jwtService);
+    configService = {
+      get: jest.fn().mockReturnValue('24h'),
+    } as any;
+    guard = new JwtAuthGuard(jwtService, configService);
   });
 
   const createMockContext = (
@@ -47,7 +52,7 @@ describe('JwtAuthGuard', () => {
     const result = guard.canActivate(context);
 
     expect(result).toBe(true);
-    expect(jwtService.verify).toHaveBeenCalledWith('valid-jwt-token');
+    expect(jwtService.verify).toHaveBeenCalledWith('valid-jwt-token', { algorithms: ['HS256'] });
     expect(request.user).toEqual(payload);
   });
 
@@ -94,6 +99,7 @@ describe('JwtAuthGuard', () => {
       expect.objectContaining({
         httpOnly: true,
         sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000, // derived from config '24h'
       }),
     );
   });
@@ -115,5 +121,34 @@ describe('JwtAuthGuard', () => {
 
     expect(jwtService.sign).not.toHaveBeenCalled();
     expect(response.cookie).not.toHaveBeenCalled();
+  });
+
+  it('should use configured JWT_EXPIRY for session maxAge', () => {
+    const customConfigService = {
+      get: jest.fn().mockReturnValue('1h'),
+    } as any;
+    const customGuard = new JwtAuthGuard(jwtService, customConfigService);
+
+    const now = Math.floor(Date.now() / 1000);
+    const payload = {
+      sub: 'user-id',
+      email: 'test@example.com',
+      name: 'Test',
+      role: 'USER',
+      iat: now - 50000,
+      exp: now + 36400,
+    };
+    (jwtService.verify as jest.Mock).mockReturnValue(payload);
+
+    const { context, response } = createMockContext({ kontakt_session: 'old-token' });
+    customGuard.canActivate(context);
+
+    expect(response.cookie).toHaveBeenCalledWith(
+      'kontakt_session',
+      'refreshed-token',
+      expect.objectContaining({
+        maxAge: 60 * 60 * 1000, // 1 hour from config
+      }),
+    );
   });
 });

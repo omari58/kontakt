@@ -4,14 +4,25 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
+import { JwtPayload } from '../dto/auth.dto';
+import { parseExpiryToMs, sessionCookieOptions } from '../cookie-utils';
 
 export const SESSION_COOKIE = 'kontakt_session';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly jwtService: JwtService) {}
+  private readonly sessionMaxAge: number;
+
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {
+    const jwtExpiry = this.configService.get<string>('JWT_EXPIRY', '24h');
+    this.sessionMaxAge = parseExpiryToMs(jwtExpiry);
+  }
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<Request>();
@@ -23,8 +34,8 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      const payload = this.jwtService.verify(token);
-      (request as any).user = payload;
+      const payload = this.jwtService.verify(token, { algorithms: ['HS256'] });
+      (request as Request & { user: JwtPayload }).user = payload;
 
       this.refreshTokenIfNeeded(payload, response);
 
@@ -52,12 +63,7 @@ export class JwtAuthGuard implements CanActivate {
         role: payload.role,
       });
 
-      response.cookie(SESSION_COOKIE, newToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        maxAge: totalLifetime * 1000,
-      });
+      response.cookie(SESSION_COOKIE, newToken, sessionCookieOptions(this.sessionMaxAge));
     }
   }
 }
