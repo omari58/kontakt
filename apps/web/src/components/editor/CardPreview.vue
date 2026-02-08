@@ -12,7 +12,7 @@ const props = defineProps<{
 const cardStyle = computed(() => ({
   backgroundColor: props.form.bgColor || '#ffffff',
   color: props.form.textColor || '#111111',
-  backgroundImage: props.backgroundUrl ? `url(${props.backgroundUrl})` : undefined,
+  backgroundImage: props.backgroundUrl ? `url("${props.backgroundUrl}")` : undefined,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
 }));

@@ -60,7 +60,7 @@ async function handleSave() {
   if (id) {
     savedCardId.value = id;
     if (!isEditMode.value) {
-      router.replace({ name: 'card-edit', params: { id } });
+      router.push({ name: 'card-edit', params: { id } });
     }
   }
 }
