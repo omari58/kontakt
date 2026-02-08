@@ -151,7 +151,7 @@ describe('CardsService', () => {
       expect(result).toEqual({ data: [cardWithUser], total: 1, page: 1, limit: 20 });
     });
 
-    it('should apply search filter across name and company', async () => {
+    it('should apply search filter across name, company, and email', async () => {
       (prisma.card.findMany as jest.Mock).mockResolvedValue([]);
       (prisma.card.count as jest.Mock).mockResolvedValue(0);
 
@@ -163,6 +163,7 @@ describe('CardsService', () => {
             OR: [
               { name: { contains: 'acme', mode: 'insensitive' } },
               { company: { contains: 'acme', mode: 'insensitive' } },
+              { user: { email: { contains: 'acme', mode: 'insensitive' } } },
             ],
           },
         }),

@@ -115,5 +115,15 @@ describe('AdminCardsController', () => {
         search: 'acme',
       });
     });
+
+    it('should preserve user info in admin card response', async () => {
+      const result = await controller.findAll();
+
+      expect(result.data[0]).toHaveProperty('user');
+      expect(result.data[0].user).toEqual({
+        name: 'John Doe',
+        email: 'john@example.com',
+      });
+    });
   });
 });

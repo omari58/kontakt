@@ -10,6 +10,8 @@ import { CreateCardDto } from './dto/create-card.dto';
 import { UpdateCardDto } from './dto/update-card.dto';
 import { generateSlug } from './slug.util';
 
+export type CardWithUser = Card & { user: { name: string; email: string } };
+
 @Injectable()
 export class CardsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -43,13 +45,14 @@ export class CardsService {
     page: number;
     limit: number;
     search?: string;
-  }): Promise<{ data: Card[]; total: number; page: number; limit: number }> {
+  }): Promise<{ data: CardWithUser[]; total: number; page: number; limit: number }> {
     const { page, limit, search } = options;
     const where: Prisma.CardWhereInput = search
       ? {
           OR: [
             { name: { contains: search, mode: 'insensitive' as const } },
             { company: { contains: search, mode: 'insensitive' as const } },
+            { user: { email: { contains: search, mode: 'insensitive' as const } } },
           ],
         }
       : {};
@@ -65,7 +68,7 @@ export class CardsService {
       this.prisma.card.count({ where }),
     ]);
 
-    return { data: data as Card[], total, page, limit };
+    return { data: data as CardWithUser[], total, page, limit };
   }
 
   async findAllByUser(userId: string): Promise<Card[]> {
