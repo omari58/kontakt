@@ -13,7 +13,9 @@ const IMAGE_CONFIGS: Record<ImageType, { width: number; height?: number; fit: ke
   background: { width: 1920, fit: 'inside' },
 };
 
-const DB_FIELD_MAP: Record<ImageType, string> = {
+import { Card } from '@prisma/client';
+
+const DB_FIELD_MAP: Record<ImageType, keyof Pick<Card, 'avatarPath' | 'bannerPath' | 'bgImagePath'>> = {
   avatar: 'avatarPath',
   banner: 'bannerPath',
   background: 'bgImagePath',
@@ -47,11 +49,11 @@ export class UploadsService {
     const filePath = path.join(cardDir, filename);
     const publicPath = `/uploads/cards/${cardId}/${filename}`;
 
-    // Delete old image if it exists
+    // Delete old image if it exists (construct path deterministically)
     const dbField = DB_FIELD_MAP[type];
-    const oldPath = (card as any)[dbField];
+    const oldPath = card[dbField];
     if (oldPath) {
-      const oldFilePath = path.join(this.uploadDir, '..', oldPath);
+      const oldFilePath = path.join(cardDir, `${type}.webp`);
       await this.deleteFileIfExists(oldFilePath);
     }
 

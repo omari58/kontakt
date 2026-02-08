@@ -24,10 +24,10 @@ export class UploadsController {
 
   constructor(
     private readonly uploadsService: UploadsService,
-    configService?: ConfigService,
+    private readonly configService: ConfigService,
   ) {
     this.maxFileSize = parseInt(
-      configService?.get<string>('MAX_FILE_SIZE', '5242880') ?? '5242880',
+      this.configService.get<string>('MAX_FILE_SIZE', '5242880'),
       10,
     );
   }

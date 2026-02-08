@@ -1,10 +1,12 @@
 import { UploadsController } from './uploads.controller';
 import { UploadsService } from './uploads.service';
 import { BadRequestException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 describe('UploadsController', () => {
   let controller: UploadsController;
   let uploadsService: jest.Mocked<UploadsService>;
+  let configService: jest.Mocked<ConfigService>;
 
   const userId = 'user-uuid-1';
   const cardId = 'card-uuid-1';
@@ -15,7 +17,11 @@ describe('UploadsController', () => {
       upload: jest.fn().mockResolvedValue({ path: '/uploads/cards/card-uuid-1/avatar.webp' }),
     } as any;
 
-    controller = new UploadsController(uploadsService);
+    configService = {
+      get: jest.fn().mockReturnValue('5242880'),
+    } as any;
+
+    controller = new UploadsController(uploadsService, configService);
   });
 
   function makeFile(mimetype = 'image/jpeg'): Express.Multer.File {
