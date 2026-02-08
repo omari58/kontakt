@@ -266,7 +266,7 @@ describe('RenderService', () => {
 
       const result = await service.getCardViewData('john-doe');
 
-      expect(result.vcfUrl).toContain('/c/john-doe/vcf');
+      expect(result.vcfUrl).toContain('/api/cards/john-doe/vcf');
     });
 
     it('should include theme class', async () => {

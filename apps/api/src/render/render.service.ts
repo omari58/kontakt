@@ -19,7 +19,7 @@ export class RenderService {
 
     const baseUrl = this.configService.get<string>('BASE_URL') || 'http://localhost:4000';
     const cardUrl = `${baseUrl}/c/${card.slug}`;
-    const vcfUrl = `${baseUrl}/c/${card.slug}/vcf`;
+    const vcfUrl = `${baseUrl}/api/cards/${card.slug}/vcf`;
 
     const noIndex = card.noIndex || card.visibility === Visibility.UNLISTED;
 

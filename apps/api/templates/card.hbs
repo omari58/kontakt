@@ -390,11 +390,7 @@
     // View tracking
     (function() {
       try {
-        fetch('/api/analytics/view', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cardId: '{{card.id}}' })
-        });
+        fetch('/api/cards/{{card.slug}}/view', { method: 'POST' });
       } catch (e) { /* silent */ }
     })();
 

@@ -43,9 +43,10 @@ export class VCardBuilder {
     if (card.address) {
       const street = card.address.street || '';
       const city = card.address.city || '';
+      const zip = card.address.zip || '';
       const country = card.address.country || '';
       // ADR: PO Box;Extended;Street;City;Region;Postal Code;Country
-      lines.push(`ADR;TYPE=work:;;${escape(street)};${escape(city)};;;${escape(country)}`);
+      lines.push(`ADR;TYPE=work:;;${escape(street)};${escape(city)};;${escape(zip)};${escape(country)}`);
     }
 
     if (card.websites) {
@@ -65,7 +66,7 @@ export class VCardBuilder {
     }
 
     if (avatarBase64 && card.avatarPath) {
-      lines.push(`PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}`);
+      lines.push(`PHOTO:data:image/jpeg;base64,${avatarBase64}`);
     }
 
     lines.push('END:VCARD');

@@ -65,7 +65,7 @@ describe('VCardBuilder', () => {
       expect(result).toContain('TEL;TYPE=home:+1-555-0200');
       expect(result).toContain('EMAIL;TYPE=work:john@acme.com');
       expect(result).toContain('EMAIL;TYPE=home:john@personal.com');
-      expect(result).toContain('ADR;TYPE=work:;;123 Main St;Springfield;;;US');
+      expect(result).toContain('ADR;TYPE=work:;;123 Main St;Springfield;;62701;US');
       expect(result).toContain('URL:https://johndoe.com');
       expect(result).toContain('URL:https://blog.johndoe.com');
       expect(result).toContain('X-SOCIALPROFILE;TYPE=twitter:https://twitter.com/johndoe');
@@ -134,6 +134,25 @@ describe('VCardBuilder', () => {
       expect(result).toContain('ADR;TYPE=work:;;;Springfield;;;US');
     });
 
+    it('should include zip code in ADR postal code position', () => {
+      const card = {
+        name: 'John Doe',
+        jobTitle: null,
+        company: null,
+        phones: null,
+        emails: null,
+        address: { street: '123 Main St', city: 'Springfield', country: 'US', zip: '62701' },
+        websites: null,
+        socialLinks: null,
+        bio: null,
+        avatarPath: null,
+      };
+
+      const result = VCardBuilder.build(card);
+
+      expect(result).toContain('ADR;TYPE=work:;;123 Main St;Springfield;;62701;US');
+    });
+
     it('should embed avatar as base64 PHOTO when avatarBase64 is provided', () => {
       const card = {
         name: 'John Doe',
@@ -151,7 +170,7 @@ describe('VCardBuilder', () => {
       const avatarBase64 = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk';
       const result = VCardBuilder.build(card, avatarBase64);
 
-      expect(result).toContain('PHOTO;ENCODING=b;TYPE=JPEG:iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk');
+      expect(result).toContain('PHOTO:data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk');
     });
 
     it('should not include PHOTO when no avatar data provided', () => {

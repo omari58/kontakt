@@ -107,7 +107,7 @@ describe('ContactsService', () => {
 
       const result = await service.generateVCard('john-doe');
 
-      expect(result.vcf).toContain('PHOTO;ENCODING=b;TYPE=JPEG:');
+      expect(result.vcf).toContain('PHOTO:data:image/jpeg;base64,');
       expect(result.vcf).toContain(mockBuffer.toString('base64'));
     });
 
