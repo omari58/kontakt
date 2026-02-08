@@ -1,1 +1,1 @@
-export { createPinia } from 'pinia'
+// Pinia store modules will be added here as features are implemented.
