@@ -137,21 +137,21 @@ requirements:
   - id: REQ-014
     name: "Admin-managed instance settings"
     description: "Admins can configure organization name, logo, favicon, default colors, default theme, avatar shape, override toggles, and footer text via the API."
-    status: pending
+    status: done
     plan: "plans/05-settings.md"
     depends_on: [REQ-005]
 
   - id: REQ-015
     name: "Public settings endpoint"
     description: "A public API endpoint exposes non-sensitive instance settings (name, logo, colors) for the public card page and SPA theming."
-    status: pending
+    status: done
     plan: "plans/05-settings.md"
     depends_on: [REQ-014]
 
   - id: REQ-016
     name: "Card theming with instance defaults"
     description: "Cards inherit instance default colors, theme mode, and avatar shape. Users can override these if the admin allows it via override toggles."
-    status: pending
+    status: done
     plan: "plans/05-settings.md"
     depends_on: [REQ-007, REQ-014]
 

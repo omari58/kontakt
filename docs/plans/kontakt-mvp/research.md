@@ -91,3 +91,15 @@
 - [2026-02-08]: ConfigService.get() should always have a fallback default (`|| 'http://localhost:4000'`) — non-null assertions risk undefined URLs
 - [2026-02-08]: SHA-256 IP hashing with daily date salt (`YYYY-MM-DD`) for privacy-conscious view deduplication — rotates daily so IPs can't be tracked across days
 - [2026-02-08]: Analytics endpoint uses PrismaService directly (not CardsService) for silent failure pattern — avoids NotFoundException propagation
+
+## Phase 5 Implementation Learnings
+
+- [2026-02-08]: Settings stored as key-value pairs (`Setting` model with `key: String @id, value: String`) — simple, flexible, cache-friendly
+- [2026-02-08]: `SettingsService` uses `Map<string, string>` in-memory cache loaded on `onModuleInit` — avoids DB queries on every settings read
+- [2026-02-08]: `SettingsModule` must be `@Global()` since settings are needed across multiple modules (render, cards, future modules)
+- [2026-02-08]: Settings controller uses method-level guards (not class-level) because `GET /api/settings/public` is unauthenticated — same pattern as `CardsController` where `findBySlug` is public
+- [2026-02-08]: `PUT /api/settings` validates incoming keys against `SETTINGS_KEYS` constants — prevents arbitrary key injection into DB
+- [2026-02-08]: `autoTextColor` must handle 3-digit hex colors (`#fff`) — expand to 6-digit before parsing RGB values, otherwise `parseInt` returns NaN
+- [2026-02-08]: `resolveCardTheme` is a pure function (no class, no side effects) — makes testing trivial and keeps the render service clean
+- [2026-02-08]: After theme resolver integration, `buildCssVars` parameters are guaranteed non-null — update type signatures to match (`string` not `string | null`) to avoid dead code paths
+- [2026-02-08]: ITU-R BT.601 luma formula `(0.299*R + 0.587*G + 0.114*B)/255` with threshold 0.5 for text color contrast — standard approach, works well for UI
