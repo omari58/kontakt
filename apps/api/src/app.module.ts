@@ -19,7 +19,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
       ],
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', '..', process.env.UPLOAD_DIR || 'uploads'),
+      rootPath: join(process.cwd(), process.env.UPLOAD_DIR || 'uploads'),
       serveRoot: '/uploads',
     }),
     PrismaModule,
