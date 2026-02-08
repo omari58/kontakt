@@ -180,10 +180,12 @@ describe('AuthService', () => {
           oidcSub: 'oidc-sub-123',
           email: 'test@example.com',
           name: 'Test User',
+          role: 'USER',
         },
         update: {
           email: 'test@example.com',
           name: 'Test User',
+          role: 'USER',
         },
       });
       expect(result.token).toBe('mock-jwt-token');
@@ -221,6 +223,7 @@ describe('AuthService', () => {
       expect(jwtService.sign).toHaveBeenCalledWith({
         sub: 'user-uuid',
         email: 'test@example.com',
+        name: 'Test User',
         role: 'USER',
       });
       expect(token).toBe('mock-jwt-token');
