@@ -9,6 +9,7 @@ import { CardsModule } from './cards/cards.module';
 import { UploadsModule } from './uploads/uploads.module';
 import { RenderModule } from './render/render.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
@@ -31,6 +32,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     UploadsModule,
     RenderModule,
     ContactsModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
 })
