@@ -17,7 +17,7 @@ export class RenderService {
       throw new NotFoundException('Card not found');
     }
 
-    const baseUrl = this.configService.get<string>('BASE_URL') || 'http://localhost:4000';
+    const baseUrl = this.configService.get<string>('APP_URL') || 'http://localhost:4000';
     const cardUrl = `${baseUrl}/c/${card.slug}`;
     const vcfUrl = `${baseUrl}/api/cards/${card.slug}/vcf`;
 
