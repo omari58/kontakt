@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" class="{{themeClass}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{og.title}} | Kontakt</title>
+
+  {{#if noIndex}}
+  <meta name="robots" content="noindex, nofollow">
+  {{/if}}
+
+  <!-- OpenGraph -->
+  <meta property="og:title" content="{{og.title}}">
+  <meta property="og:description" content="{{og.description}}">
+  <meta property="og:url" content="{{og.url}}">
+  <meta property="og:type" content="{{og.type}}">
+  {{#if og.image}}
+  <meta property="og:image" content="{{og.image}}">
+  {{/if}}
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{og.title}}">
+  <meta name="twitter:description" content="{{og.description}}">
+  {{#if og.image}}
+  <meta name="twitter:image" content="{{og.image}}">
+  {{/if}}
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">{{{jsonLd}}}</script>
+
+  <style>
+    :root {
+      {{cssVars}};
+      --avatar-size: 96px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: var(--bg-color, #f5f5f5);
+      color: var(--text-color, #1a1a1a);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px;
+    }
+
+    .theme-dark body,
+    html.theme-dark body {
+      background-color: var(--bg-color, #1a1a1a);
+      color: var(--text-color, #f5f5f5);
+    }
+
+    .card-container {
+      max-width: 480px;
+      width: 100%;
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+
+    .theme-dark .card-container,
+    html.theme-dark .card-container {
+      background: #2a2a2a;
+    }
+
+    {{#if card.bgImagePath}}
+    .card-container {
+      background-image: url('{{card.bgImagePath}}');
+      background-size: cover;
+      background-position: center;
+    }
+    {{/if}}
+
+    .banner {
+      width: 100%;
+      height: 160px;
+      background: var(--primary-color, #0066cc);
+      overflow: hidden;
+    }
+
+    .banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-section {
+      padding: 0 24px 24px;
+      text-align: center;
+      margin-top: -48px;
+      position: relative;
+    }
+
+    .avatar {
+      width: var(--avatar-size);
+      height: var(--avatar-size);
+      border: 4px solid white;
+      object-fit: cover;
+      display: inline-block;
+    }
+
+    .avatar.circle {
+      border-radius: 50%;
+    }
+
+    .avatar.rounded-square {
+      border-radius: 16px;
+    }
+
+    .avatar-placeholder {
+      width: var(--avatar-size);
+      height: var(--avatar-size);
+      border: 4px solid white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--primary-color, #0066cc);
+      color: white;
+      font-size: 36px;
+      font-weight: 600;
+    }
+
+    .avatar-placeholder.circle {
+      border-radius: 50%;
+    }
+
+    .avatar-placeholder.rounded-square {
+      border-radius: 16px;
+    }
+
+    .name {
+      font-size: 24px;
+      font-weight: 700;
+      margin-top: 12px;
+      line-height: 1.2;
+    }
+
+    .title-company {
+      font-size: 16px;
+      color: var(--text-color, #666);
+      margin-top: 4px;
+      opacity: 0.8;
+    }
+
+    .bio {
+      font-size: 14px;
+      line-height: 1.6;
+      margin-top: 16px;
+      opacity: 0.9;
+    }
+
+    .contact-section {
+      padding: 0 24px 24px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .contact-item:last-child {
+      border-bottom: none;
+    }
+
+    .contact-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.6;
+      min-width: 60px;
+    }
+
+    .contact-value {
+      font-size: 14px;
+      color: var(--primary-color, #0066cc);
+      word-break: break-all;
+    }
+
+    .social-section {
+      padding: 0 24px 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.04);
+      text-decoration: none;
+      color: var(--text-color, #333);
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .social-link:hover {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    .actions {
+      padding: 16px 24px 24px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+    }
+
+    .btn-primary {
+      background: var(--primary-color, #0066cc);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--text-color, #333);
+    }
+
+    .websites-section {
+      padding: 0 24px 24px;
+    }
+
+    .website-link {
+      display: block;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      text-decoration: none;
+      color: var(--primary-color, #0066cc);
+      font-size: 14px;
+      word-break: break-all;
+    }
+
+    .website-link:last-child {
+      border-bottom: none;
+    }
+
+    .address-section {
+      padding: 0 24px 24px;
+      font-size: 14px;
+      opacity: 0.8;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+      opacity: 0.5;
+      margin-bottom: 12px;
+      padding: 0 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-container">
+    <!-- Banner -->
+    <div class="banner">
+      {{#if card.bannerPath}}
+      <img src="{{card.bannerPath}}" alt="Banner">
+      {{/if}}
+    </div>
+
+    <!-- Profile -->
+    <div class="profile-section">
+      {{#if card.avatarPath}}
+      <img
+        src="{{card.avatarPath}}"
+        alt="{{card.name}}"
+        class="avatar {{card.avatarShapeClass}}"
+      >
+      {{else}}
+      <div class="avatar-placeholder {{card.avatarShapeClass}}">
+        {{card.nameInitial}}
+      </div>
+      {{/if}}
+
+      <h1 class="name">{{card.name}}</h1>
+
+      {{#if card.jobTitle}}
+      <p class="title-company">
+        {{card.jobTitle}}{{#if card.company}} at {{card.company}}{{/if}}
+      </p>
+      {{else}}
+        {{#if card.company}}
+        <p class="title-company">{{card.company}}</p>
+        {{/if}}
+      {{/if}}
+
+      {{#if card.bio}}
+      <p class="bio">{{card.bio}}</p>
+      {{/if}}
+    </div>
+
+    <!-- Phones -->
+    {{#if card.phones}}
+    <div class="contact-section">
+      {{#each card.phones}}
+      <a href="tel:{{this.number}}" class="contact-item">
+        <span class="contact-label">{{#if this.label}}{{this.label}}{{else}}Phone{{/if}}</span>
+        <span class="contact-value">{{this.number}}</span>
+      </a>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <!-- Emails -->
+    {{#if card.emails}}
+    <div class="contact-section">
+      {{#each card.emails}}
+      <a href="mailto:{{this.email}}" class="contact-item">
+        <span class="contact-label">{{#if this.label}}{{this.label}}{{else}}Email{{/if}}</span>
+        <span class="contact-value">{{this.email}}</span>
+      </a>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <!-- Websites -->
+    {{#if card.websites}}
+    <div class="websites-section">
+      <p class="section-title">Websites</p>
+      {{#each card.websites}}
+      <a href="{{this}}" target="_blank" rel="noopener noreferrer" class="website-link">{{this}}</a>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <!-- Address -->
+    {{#if card.address}}
+    <div class="address-section">
+      <p class="section-title">Address</p>
+      {{#if card.address.street}}<span>{{card.address.street}}</span><br>{{/if}}
+      {{#if card.address.city}}<span>{{card.address.city}}</span>{{/if}}
+      {{#if card.address.zip}} <span>{{card.address.zip}}</span>{{/if}}
+      {{#if card.address.country}}<br><span>{{card.address.country}}</span>{{/if}}
+    </div>
+    {{/if}}
+
+    <!-- Social Links -->
+    {{#if card.socialLinks}}
+    <div class="social-section">
+      {{#each card.socialLinks}}
+      <a href="{{this.url}}" target="_blank" rel="noopener noreferrer" class="social-link">
+        {{this.platform}}
+      </a>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    <!-- Actions -->
+    <div class="actions">
+      <a href="{{vcfUrl}}" class="btn btn-primary" download>Save Contact</a>
+      <button type="button" class="btn btn-secondary" id="share-btn">Share</button>
+    </div>
+  </div>
+
+  <script>
+    // View tracking
+    (function() {
+      try {
+        fetch('/api/analytics/view', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cardId: '{{card.id}}' })
+        });
+      } catch (e) { /* silent */ }
+    })();
+
+    // Share functionality
+    document.getElementById('share-btn').addEventListener('click', function() {
+      var url = '{{cardUrl}}';
+      var title = '{{og.title}}';
+      if (navigator.share) {
+        navigator.share({ title: title, url: url }).catch(function() {});
+      } else {
+        navigator.clipboard.writeText(url).then(function() {
+          var btn = document.getElementById('share-btn');
+          btn.textContent = 'Copied!';
+          setTimeout(function() { btn.textContent = 'Share'; }, 2000);
+        }).catch(function() {
+          prompt('Copy this link:', url);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

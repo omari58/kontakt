@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { ValidationPipe } from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
 import { join } from 'path';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
@@ -10,7 +10,9 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: 'c/(.*)', method: RequestMethod.GET }],
+  });
 
   app.enableCors({
     origin: ['http://localhost:5173'],
@@ -25,9 +27,10 @@ async function bootstrap() {
     }),
   );
 
-  // Static assets and views for future Handlebars templates
+  // Static assets and views
   app.useStaticAssets(join(__dirname, '..', 'public'), { prefix: '/public' });
   app.setBaseViewsDir(join(__dirname, '..', 'templates'));
+  app.setViewEngine('hbs');
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
