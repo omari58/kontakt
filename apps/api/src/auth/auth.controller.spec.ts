@@ -113,7 +113,7 @@ describe('AuthController', () => {
       expect(mockAuthService.handleCallback).toHaveBeenCalled();
       // Session cookie should be set
       expect(mockRes.cookie).toHaveBeenCalledWith(
-        'session',
+        'kontakt_session',
         'jwt-token',
         expect.objectContaining({
           httpOnly: true,
@@ -176,7 +176,7 @@ describe('AuthController', () => {
 
       controller.logout(mockRes as any);
 
-      expect(mockRes.clearCookie).toHaveBeenCalledWith('session');
+      expect(mockRes.clearCookie).toHaveBeenCalledWith('kontakt_session');
       expect(mockRes.json).toHaveBeenCalledWith({ message: 'Logged out' });
     });
   });
@@ -192,11 +192,9 @@ describe('AuthController', () => {
 
       mockAuthService.getUserById.mockResolvedValue(mockUser);
 
-      const mockReq = {
-        user: { sub: 'user-uuid', email: 'test@example.com', role: 'USER' },
-      };
+      const jwtPayload = { sub: 'user-uuid', email: 'test@example.com', name: 'Test User', role: 'USER' };
 
-      const result = await controller.me(mockReq as any);
+      const result = await controller.me(jwtPayload);
 
       expect(mockAuthService.getUserById).toHaveBeenCalledWith('user-uuid');
       expect(result).toEqual(mockUser);
@@ -205,11 +203,9 @@ describe('AuthController', () => {
     it('should throw 401 when user not found', async () => {
       mockAuthService.getUserById.mockResolvedValue(null);
 
-      const mockReq = {
-        user: { sub: 'nonexistent-id', email: 'test@example.com', role: 'USER' },
-      };
+      const jwtPayload = { sub: 'nonexistent-id', email: 'test@example.com', name: 'Test', role: 'USER' };
 
-      await expect(controller.me(mockReq as any)).rejects.toThrow(UnauthorizedException);
+      await expect(controller.me(jwtPayload)).rejects.toThrow(UnauthorizedException);
     });
   });
 });

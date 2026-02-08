@@ -9,7 +9,8 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtAuthGuard, SESSION_COOKIE } from './guards/jwt-auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @Controller()
 export class AuthController {
@@ -52,7 +53,7 @@ export class AuthController {
     const { token } = await this.authService.handleCallback(currentUrl, codeVerifier);
 
     // Set session JWT in HTTP-only cookie
-    res.cookie('session', token, {
+    res.cookie(SESSION_COOKIE, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -69,15 +70,14 @@ export class AuthController {
 
   @Post('auth/logout')
   logout(@Res() res: Response): void {
-    res.clearCookie('session');
+    res.clearCookie(SESSION_COOKIE);
     res.json({ message: 'Logged out' });
   }
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async me(@Req() req: Request): Promise<any> {
-    const jwtPayload = (req as any).user;
-    const user = await this.authService.getUserById(jwtPayload.sub);
+  async me(@CurrentUser() currentUser: any): Promise<any> {
+    const user = await this.authService.getUserById(currentUser.sub);
 
     if (!user) {
       throw new UnauthorizedException('User not found');
