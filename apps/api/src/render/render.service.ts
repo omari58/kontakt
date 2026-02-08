@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CardsService } from '../cards/cards.service';
+import { SettingsService } from '../settings/settings.service';
+import { resolveCardTheme } from '../cards/theme.resolver';
 import { Visibility, AvatarShape, Theme } from '@prisma/client';
 
 @Injectable()
@@ -8,6 +10,7 @@ export class RenderService {
   constructor(
     private readonly cardsService: CardsService,
     private readonly configService: ConfigService,
+    private readonly settingsService: SettingsService,
   ) {}
 
   async getCardViewData(slug: string) {
@@ -27,17 +30,19 @@ export class RenderService {
     const ogDescription = this.buildDescription(card.jobTitle, card.company);
     const ogImage = card.avatarPath ? `${baseUrl}${card.avatarPath}` : null;
 
-    const avatarShapeClass = card.avatarShape === AvatarShape.ROUNDED_SQUARE
+    const resolved = resolveCardTheme(card, this.settingsService.getAll());
+
+    const avatarShapeClass = resolved.avatarShape === 'ROUNDED_SQUARE'
       ? 'rounded-square'
       : 'circle';
 
-    const themeClass = card.theme === Theme.DARK
+    const themeClass = resolved.theme === 'DARK' || resolved.theme === Theme.DARK
       ? 'theme-dark'
-      : card.theme === Theme.AUTO
+      : resolved.theme === 'AUTO' || resolved.theme === Theme.AUTO
         ? 'theme-auto'
         : 'theme-light';
 
-    const cssVars = this.buildCssVars(card.bgColor, card.primaryColor, card.textColor);
+    const cssVars = this.buildCssVars(resolved.bgColor, resolved.primaryColor, resolved.textColor);
 
     const jsonLd = this.buildJsonLd(card, cardUrl, ogImage);
 
@@ -46,6 +51,7 @@ export class RenderService {
     return {
       card: {
         ...card,
+        bgImagePath: resolved.bgImagePath,
         avatarShapeClass,
         nameInitial,
       },

@@ -3,6 +3,7 @@ import { NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { RenderService } from './render.service';
 import { CardsService } from '../cards/cards.service';
+import { SettingsService } from '../settings/settings.service';
 import { Visibility, Theme, AvatarShape } from '@prisma/client';
 
 describe('RenderService', () => {
@@ -80,6 +81,22 @@ describe('RenderService', () => {
           provide: ConfigService,
           useValue: {
             get: jest.fn().mockReturnValue('http://localhost:4000'),
+          },
+        },
+        {
+          provide: SettingsService,
+          useValue: {
+            getAll: jest.fn().mockReturnValue(
+              new Map<string, string | null>([
+                ['default_primary_color', '#0F172A'],
+                ['default_secondary_color', '#3B82F6'],
+                ['default_bg_color', '#FFFFFF'],
+                ['default_theme', 'light'],
+                ['default_avatar_shape', 'circle'],
+                ['allow_user_color_override', 'true'],
+                ['allow_user_background_image', 'true'],
+              ]),
+            ),
           },
         },
       ],
