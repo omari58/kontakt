@@ -63,4 +63,15 @@ describe('CardResponseDto', () => {
     const dto = CardResponseDto.fromCard(mockCard);
     expect(dto).toBeInstanceOf(CardResponseDto);
   });
+
+  it('should exclude relation fields (user, events) from mapping', () => {
+    const cardWithRelations = {
+      ...mockCard,
+      user: { id: 'user-uuid-1', name: 'John' },
+      events: [{ id: 'event-1' }],
+    };
+    const dto = CardResponseDto.fromCard(cardWithRelations as any);
+    expect(dto).not.toHaveProperty('user');
+    expect(dto).not.toHaveProperty('events');
+  });
 });

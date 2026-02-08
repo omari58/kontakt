@@ -1,4 +1,5 @@
 import { Card } from '@prisma/client';
+import { PhoneDto, EmailDto, AddressDto, SocialLinkDto } from './create-card.dto';
 
 export class CardResponseDto {
   id!: string;
@@ -7,11 +8,11 @@ export class CardResponseDto {
   name!: string;
   jobTitle!: string | null;
   company!: string | null;
-  phones!: unknown;
-  emails!: unknown;
-  address!: unknown;
-  websites!: unknown;
-  socialLinks!: unknown;
+  phones!: PhoneDto[] | null;
+  emails!: EmailDto[] | null;
+  address!: AddressDto | null;
+  websites!: string[] | null;
+  socialLinks!: SocialLinkDto[] | null;
   bio!: string | null;
   avatarPath!: string | null;
   bannerPath!: string | null;
@@ -27,33 +28,10 @@ export class CardResponseDto {
   createdAt!: Date;
   updatedAt!: Date;
 
-  static fromCard(card: Card): CardResponseDto {
+  static fromCard(card: Card & Record<string, unknown>): CardResponseDto {
+    const { user, events, ...cardFields } = card as Card & { user?: unknown; events?: unknown };
     const dto = new CardResponseDto();
-    dto.id = card.id;
-    dto.slug = card.slug;
-    dto.userId = card.userId;
-    dto.name = card.name;
-    dto.jobTitle = card.jobTitle;
-    dto.company = card.company;
-    dto.phones = card.phones;
-    dto.emails = card.emails;
-    dto.address = card.address;
-    dto.websites = card.websites;
-    dto.socialLinks = card.socialLinks;
-    dto.bio = card.bio;
-    dto.avatarPath = card.avatarPath;
-    dto.bannerPath = card.bannerPath;
-    dto.bgImagePath = card.bgImagePath;
-    dto.bgColor = card.bgColor;
-    dto.primaryColor = card.primaryColor;
-    dto.textColor = card.textColor;
-    dto.avatarShape = card.avatarShape;
-    dto.theme = card.theme;
-    dto.visibility = card.visibility;
-    dto.noIndex = card.noIndex;
-    dto.obfuscate = card.obfuscate;
-    dto.createdAt = card.createdAt;
-    dto.updatedAt = card.updatedAt;
+    Object.assign(dto, cardFields);
     return dto;
   }
 }

@@ -60,6 +60,13 @@ describe('UpdateCardDto', () => {
     expect(errors).toHaveLength(0);
   });
 
+  it('should fail with slug containing consecutive hyphens', async () => {
+    const dto = toDto({ slug: 'john--doe' });
+    const errors = await validate(dto);
+    const err = errors.find((e) => e.property === 'slug');
+    expect(err).toBeDefined();
+  });
+
   it('should still validate inherited fields like hex colors', async () => {
     const dto = toDto({ bgColor: 'not-hex' });
     const errors = await validate(dto);

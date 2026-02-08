@@ -1,14 +1,28 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { IsOptional, IsString, Matches } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  Validate,
+} from 'class-validator';
 import { CreateCardDto } from './create-card.dto';
+import { validateSlug } from '../slug.util';
 
-const SLUG_REGEX = /^[a-z0-9][a-z0-9-]{0,98}[a-z0-9]$/;
+@ValidatorConstraint({ name: 'isValidSlug', async: false })
+class IsValidSlugConstraint implements ValidatorConstraintInterface {
+  validate(slug: string): boolean {
+    return validateSlug(slug);
+  }
+
+  defaultMessage(): string {
+    return 'slug must be 2-100 chars, lowercase alphanumeric + hyphens, no leading/trailing or consecutive hyphens';
+  }
+}
 
 export class UpdateCardDto extends PartialType(CreateCardDto) {
   @IsOptional()
   @IsString()
-  @Matches(SLUG_REGEX, {
-    message: 'slug must be 2-100 chars, lowercase alphanumeric + hyphens, no leading/trailing hyphens',
-  })
+  @Validate(IsValidSlugConstraint)
   slug?: string;
 }

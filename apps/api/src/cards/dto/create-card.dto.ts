@@ -12,6 +12,7 @@ import {
   IsIn,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { AvatarShape, Theme, Visibility } from '@prisma/client';
 
 const SOCIAL_PLATFORMS = [
   'github',
@@ -149,16 +150,16 @@ export class CreateCardDto {
   textColor?: string;
 
   @IsOptional()
-  @IsEnum(['CIRCLE', 'ROUNDED_SQUARE'])
-  avatarShape?: string;
+  @IsEnum(AvatarShape)
+  avatarShape?: AvatarShape;
 
   @IsOptional()
-  @IsEnum(['LIGHT', 'DARK', 'AUTO'])
-  theme?: string;
+  @IsEnum(Theme)
+  theme?: Theme;
 
   @IsOptional()
-  @IsEnum(['PUBLIC', 'UNLISTED', 'DISABLED'])
-  visibility?: string;
+  @IsEnum(Visibility)
+  visibility?: Visibility;
 
   @IsOptional()
   @IsBoolean()
