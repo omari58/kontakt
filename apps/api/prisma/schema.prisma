@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  oidcSub   String   @unique
+  email     String
+  name      String
+  role      Role     @default(USER)
+  cards     Card[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Card {
+  id           String       @id @default(uuid())
+  slug         String       @unique
+  userId       String
+  user         User         @relation(fields: [userId], references: [id])
+  name         String
+  jobTitle     String?
+  company      String?
+  phones       Json?        // [{number, label}]
+  emails       Json?        // [{email, label}]
+  address      Json?        // {street, city, country, zip}
+  websites     Json?        // [url]
+  socialLinks  Json?        // [{platform, url}]
+  bio          String?
+  avatarPath   String?
+  bannerPath   String?
+  bgImagePath  String?
+  bgColor      String?
+  primaryColor String?
+  textColor    String?
+  avatarShape  AvatarShape?
+  theme        Theme?
+  visibility   Visibility   @default(PUBLIC)
+  noIndex      Boolean      @default(false)
+  obfuscate    Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  events       AnalyticsEvent[]
+
+  @@index([userId])
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model AnalyticsEvent {
+  id        String    @id @default(uuid())
+  cardId    String
+  card      Card      @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  type      EventType
+  metadata  Json?
+  ipHash    String?
+  createdAt DateTime  @default(now())
+
+  @@index([cardId, type])
+  @@index([cardId, createdAt])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  AUTO
+}
+
+enum AvatarShape {
+  CIRCLE
+  ROUNDED_SQUARE
+}
+
+enum Visibility {
+  PUBLIC
+  UNLISTED
+  DISABLED
+}
+
+enum EventType {
+  VIEW
+  CLICK_PHONE
+  CLICK_EMAIL
+  CLICK_WEBSITE
+  CLICK_SOCIAL
+  VCF_DOWNLOAD
+  WALLET_ADD_APPLE
+  WALLET_ADD_GOOGLE
+}
