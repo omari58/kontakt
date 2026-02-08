@@ -4,6 +4,7 @@ import {
   Put,
   Post,
   Body,
+  Header,
   UseGuards,
   UseInterceptors,
   UploadedFile,
@@ -27,9 +28,20 @@ const ALLOWED_IMAGE_MIMES = [
   'image/svg+xml',
 ];
 
+const PUBLIC_SETTINGS_KEYS = [
+  'org_name',
+  'org_logo',
+  'org_favicon',
+  'default_primary_color',
+  'default_secondary_color',
+  'default_bg_color',
+  'default_theme',
+  'default_avatar_shape',
+  'footer_text',
+  'footer_link',
+];
+
 @Controller('settings')
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('ADMIN')
 export class SettingsController {
   private readonly uploadDir: string;
 
@@ -40,18 +52,37 @@ export class SettingsController {
     this.uploadDir = this.configService.get<string>('UPLOAD_DIR', './uploads');
   }
 
+  @Get('public')
+  @Header('Cache-Control', 'public, max-age=300')
+  getPublicSettings(): Record<string, string | null> {
+    const all = this.settingsService.getAll();
+    const result: Record<string, string | null> = {};
+    for (const key of PUBLIC_SETTINGS_KEYS) {
+      if (all.has(key)) {
+        result[key] = all.get(key)!;
+      }
+    }
+    return result;
+  }
+
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   getAllSettings(): Record<string, string | null> {
     const all = this.settingsService.getAll();
     return Object.fromEntries(all);
   }
 
   @Put()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   async updateSettings(@Body() dto: UpdateSettingsDto): Promise<void> {
     await this.settingsService.bulkUpdate(dto.settings);
   }
 
   @Post('logo')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @UseInterceptors(FileInterceptor('file'))
   async uploadLogo(
     @UploadedFile() file: Express.Multer.File,
@@ -76,6 +107,8 @@ export class SettingsController {
   }
 
   @Post('favicon')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFavicon(
     @UploadedFile() file: Express.Multer.File,

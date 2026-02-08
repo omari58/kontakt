@@ -147,6 +147,60 @@ describe('SettingsController', () => {
     });
   });
 
+  describe('GET /settings/public (getPublicSettings)', () => {
+    it('should return only whitelisted public settings', () => {
+      settingsService.getAll.mockReturnValue(
+        new Map([
+          ['org_name', 'Test Org'],
+          ['org_logo', '/uploads/settings/logo.webp'],
+          ['org_favicon', '/uploads/settings/favicon-32.png'],
+          ['default_primary_color', '#0F172A'],
+          ['default_secondary_color', '#3B82F6'],
+          ['default_bg_color', '#FFFFFF'],
+          ['default_theme', 'light'],
+          ['default_avatar_shape', 'circle'],
+          ['allow_user_color_override', 'true'],
+          ['allow_user_background_image', 'true'],
+          ['default_visibility', 'public'],
+          ['footer_text', 'Powered by Kontakt'],
+          ['footer_link', 'https://kontakt.dev'],
+        ]),
+      );
+
+      const result = controller.getPublicSettings();
+
+      expect(result).toEqual({
+        org_name: 'Test Org',
+        org_logo: '/uploads/settings/logo.webp',
+        org_favicon: '/uploads/settings/favicon-32.png',
+        default_primary_color: '#0F172A',
+        default_secondary_color: '#3B82F6',
+        default_bg_color: '#FFFFFF',
+        default_theme: 'light',
+        default_avatar_shape: 'circle',
+        footer_text: 'Powered by Kontakt',
+        footer_link: 'https://kontakt.dev',
+      });
+    });
+
+    it('should NOT expose admin-only settings', () => {
+      settingsService.getAll.mockReturnValue(
+        new Map([
+          ['org_name', 'Test Org'],
+          ['allow_user_color_override', 'true'],
+          ['allow_user_background_image', 'true'],
+          ['default_visibility', 'public'],
+        ]),
+      );
+
+      const result = controller.getPublicSettings();
+
+      expect(result).not.toHaveProperty('allow_user_color_override');
+      expect(result).not.toHaveProperty('allow_user_background_image');
+      expect(result).not.toHaveProperty('default_visibility');
+    });
+  });
+
   describe('POST /settings/favicon (uploadFavicon)', () => {
     it('should process and store favicon images', async () => {
       const mockFile: Express.Multer.File = {
