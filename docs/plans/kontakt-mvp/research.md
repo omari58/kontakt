@@ -59,4 +59,19 @@
 - [2026-02-08]: Keycloak realm config imported via `adorsys/keycloak-config-cli` Docker image — realm JSON + clients JSON pattern from tuumideed project
 - [2026-02-08]: Role extraction from OIDC claims supports nested dot-paths (e.g., `realm_access.roles`) and both scalar and array values
 
+## Phase 3 Implementation Learnings
+
+- [2026-02-08]: Slug utility uses manual transliteration map for Latin extended chars — consider `transliteration` npm package if more scripts needed
+- [2026-02-08]: Prisma JSON fields require `as unknown as Prisma.InputJsonValue` double-cast — accepted community pattern, data validated upstream by class-validator
+- [2026-02-08]: Deviation: Public card slug route is `/api/cards/slug/:slug` instead of `/api/cards/:slug` — NestJS can't distinguish two parameterized routes at the same path level, so `/slug/:slug` prefix avoids ambiguity with `/cards/:id`
+- [2026-02-08]: `@nestjs/mapped-types` needed for `PartialType()` in DTOs — not included in base NestJS install
+- [2026-02-08]: Controller split into `CardsController` (`/cards`) and `MyCardsController` (`/me`) due to different route prefixes
+- [2026-02-08]: DTO slug validation should delegate to the same `validateSlug()` utility used elsewhere — custom class-validator constraint wraps the utility for single source of truth
+- [2026-02-08]: CardResponseDto must be used in controllers to prevent leaking raw Prisma models — `fromCard()` with `Object.assign` + destructured exclusions for maintainability
+- [2026-02-08]: Global prefix `app.setGlobalPrefix('api')` means controllers should use bare paths (`@Controller('cards')` not `@Controller('api/cards')`)
+- [2026-02-08]: `@nestjs/serve-static` used for serving upload files instead of manual Express middleware — cleaner NestJS integration
+- [2026-02-08]: Image file deletion should construct path deterministically from known structure, not derive from stored public URL — avoids fragile path.join assumptions
+- [2026-02-08]: DB_FIELD_MAP should use `keyof Pick<Card, ...>` for type-safe dynamic property access instead of `string` + `as any` cast
+- [2026-02-08]: ConfigService should be required (not optional) in constructors to keep config testable
+
 <!-- Subagents append learnings below this line -->
