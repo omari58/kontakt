@@ -112,6 +112,7 @@ export class RenderService {
       cardUrl,
       vcfUrl,
       themeClass,
+      themeIsAuto: themeClass === 'theme-auto',
       cssVars,
       fontUrl,
       jsonLd,

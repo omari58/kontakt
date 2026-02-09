@@ -438,6 +438,46 @@
       width: 100%;
     }
 
+    /* ===== Theme toggle ===== */
+    .card__theme-toggle {
+      display: flex;
+      align-items: center;
+      background: var(--primary-soft);
+      border-radius: 10px;
+      padding: 2px;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+
+    .card__theme-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      padding: 0;
+    }
+
+    .card__theme-btn:hover {
+      color: var(--primary-color, #0066cc);
+    }
+
+    .card__theme-btn--active {
+      background: var(--primary-color, #0066cc);
+      color: white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    }
+
+    .card__theme-btn--active:hover {
+      color: white;
+    }
+
     .btn {
       flex: 1;
       padding: 13px 20px;
@@ -475,6 +515,17 @@
 
     .btn-secondary:hover {
       background: var(--primary-medium);
+    }
+
+    /* ===== Dark theme: full variable overrides ===== */
+    html.theme-dark {
+      --bg-color: var(--bg-color-dark, #1e1e1e);
+      --text-color: var(--text-color-dark, #ffffff);
+      --primary-soft: color-mix(in srgb, var(--primary-color, #0066cc) 10%, var(--bg-color));
+      --primary-medium: color-mix(in srgb, var(--primary-color, #0066cc) 18%, var(--bg-color));
+      --divider: color-mix(in srgb, var(--text-color) 10%, var(--bg-color));
+      --text-secondary: color-mix(in srgb, var(--text-color) 65%, var(--bg-color));
+      --text-tertiary: color-mix(in srgb, var(--text-color) 45%, var(--bg-color));
     }
 
     /* ===== AUTO theme: follow system preference ===== */
@@ -693,6 +744,13 @@
     <div class="card__actions-inner">
       <a href="{{vcfUrl}}" class="btn btn-primary" download>Save Contact</a>
       <button type="button" class="btn btn-secondary" id="share-btn">Share</button>
+      {{#if themeIsAuto}}
+      <div class="card__theme-toggle" id="theme-toggle">
+        <button type="button" class="card__theme-btn" data-theme="theme-light" title="Light"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+        <button type="button" class="card__theme-btn card__theme-btn--active" data-theme="theme-auto" title="System"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></button>
+        <button type="button" class="card__theme-btn" data-theme="theme-dark" title="Dark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+      </div>
+      {{/if}}
     </div>
   </div>
 
@@ -752,6 +810,21 @@
         });
       }
     });
+
+    // Theme toggle
+    var toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', function(e) {
+        var btn = e.target.closest('.card__theme-btn');
+        if (!btn) return;
+        var theme = btn.getAttribute('data-theme');
+        document.documentElement.className = theme;
+        toggle.querySelectorAll('.card__theme-btn').forEach(function(b) {
+          b.classList.remove('card__theme-btn--active');
+        });
+        btn.classList.add('card__theme-btn--active');
+      });
+    }
   </script>
 </body>
 </html>
