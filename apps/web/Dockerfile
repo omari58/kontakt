@@ -1,6 +1,6 @@
 # --- Dependencies ---
 FROM node:22-alpine AS deps
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.11.0 --activate
 WORKDIR /app
 
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
@@ -9,7 +9,7 @@ RUN pnpm install --frozen-lockfile --filter web
 
 # --- Build ---
 FROM node:22-alpine AS build
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@10.11.0 --activate
 WORKDIR /app
 
 COPY --from=deps /app/node_modules ./node_modules
