@@ -1,0 +1,196 @@
+{
+  "common": {
+    "save": "Salvesta",
+    "cancel": "Tühista",
+    "delete": "Kustuta",
+    "loading": "Laadimine...",
+    "back": "Tagasi",
+    "change": "Muuda",
+    "remove": "Eemalda",
+    "previous": "Eelmine",
+    "next": "Järgmine",
+    "saving": "Salvestamine...",
+    "chooseFile": "Vali fail"
+  },
+  "nav": {
+    "dashboard": "Töölaud",
+    "allCards": "Kõik kaardid",
+    "settings": "Seaded"
+  },
+  "auth": {
+    "logOut": "Logi välja"
+  },
+  "theme": {
+    "light": "Hele",
+    "dark": "Tume",
+    "auto": "Auto",
+    "lightMode": "Hele režiim",
+    "darkMode": "Tume režiim",
+    "autoMode": "Automaatne režiim"
+  },
+  "dashboard": {
+    "title": "Minu kaardid",
+    "subtitle": "Halda ja jaga oma digitaalseid visiitkaarte",
+    "createNew": "Loo uus kaart",
+    "createFirst": "Loo oma esimene kaart",
+    "noCards": "Kaarte pole veel",
+    "noCardsHint": "Loo oma esimene digitaalne visiitkaart, et alustada.",
+    "deleteCard": "Kustuta kaart",
+    "deleteConfirm": "Kas oled kindel, et soovid selle kaardi kustutada? Seda toimingut ei saa tagasi võtta."
+  },
+  "cardList": {
+    "copyUrl": "Klõpsa URL-i kopeerimiseks",
+    "downloadQr": "Laadi QR alla",
+    "open": "Ava"
+  },
+  "editor": {
+    "editCard": "Muuda kaarti",
+    "createCard": "Loo kaart",
+    "loadingCard": "Kaardi laadimine...",
+    "saveCard": "Salvesta kaart",
+    "livePreview": "Reaalajas eelvaade",
+    "openCard": "Ava kaart",
+    "unsavedChanges": "Sul on salvestamata muudatusi. Kas oled kindel, et soovid lahkuda?",
+    "saveBeforeUpload": "Palun salvesta kaart enne piltide üleslaadimist.",
+    "saveFirst": "Salvesta kõigepealt kaart, et pilte üles laadida.",
+    "basicInfo": {
+      "title": "Põhiandmed",
+      "nameRequired": "Nimi *",
+      "namePlaceholder": "Täisnimi",
+      "jobTitle": "Ametinimetus",
+      "jobTitlePlaceholder": "nt Tarkvarainsener",
+      "company": "Ettevõte",
+      "companyPlaceholder": "Ettevõtte nimi",
+      "bio": "Lühitutvustus",
+      "bioPlaceholder": "Lühike tutvustus või kirjeldus"
+    },
+    "contact": {
+      "title": "Kontakt",
+      "phoneNumbers": "Telefoninumbrid",
+      "phonePlaceholder": "Telefoninumber",
+      "phoneLabelPlaceholder": "Silt (nt Töö)",
+      "addPhone": "Lisa telefon",
+      "emailAddresses": "E-posti aadressid",
+      "emailPlaceholder": "E-posti aadress",
+      "emailLabelPlaceholder": "Silt (nt Isiklik)",
+      "addEmail": "Lisa e-post",
+      "address": "Aadress",
+      "street": "Tänav",
+      "city": "Linn",
+      "zip": "Postiindeks",
+      "country": "Riik"
+    },
+    "webSocial": {
+      "title": "Veeb ja sotsiaalmeedia",
+      "websites": "Veebilehed",
+      "label": "Silt",
+      "addWebsite": "Lisa veebileht",
+      "socialLinks": "Sotsiaalmeedia lingid",
+      "addSocialLink": "Lisa sotsiaalmeedia link"
+    },
+    "images": {
+      "title": "Pildid",
+      "dragDrop": "Lohista pilt siia või klõpsa sirvimiseks",
+      "avatar": "Avatar",
+      "banner": "Banner",
+      "background": "Taust"
+    },
+    "appearance": {
+      "title": "Välimus ja seaded",
+      "theme": "Teema",
+      "background": "Taust",
+      "text": "Tekst",
+      "accent": "Aktsent",
+      "accentColor": "Aktsentvärv",
+      "resetDefaults": "Lähtesta vaikeväärtused",
+      "style": "Stiil",
+      "nameFont": "Nime font",
+      "defaultFont": "Vaikimisi (Outfit)",
+      "avatarShape": "Avatari kuju",
+      "circle": "Ring",
+      "roundedSquare": "Ümarate nurkadega ruut"
+    },
+    "settings": {
+      "title": "Kaardi seaded",
+      "slug": "Slug",
+      "slugPlaceholder": "minu-kaardi-slug",
+      "visibility": "Nähtavus",
+      "public": "Avalik",
+      "unlisted": "Peidetud",
+      "disabled": "Keelatud",
+      "noIndex": "Keela indekseerimine (takista otsimootoritel indekseerimast)",
+      "obfuscate": "Peida kontaktandmed (robotite kaitse)"
+    }
+  },
+  "preview": {
+    "phone": "Telefon",
+    "email": "E-post",
+    "website": "Veebileht",
+    "address": "Aadress"
+  },
+  "admin": {
+    "settings": {
+      "title": "Administraatori seaded",
+      "saveChanges": "Salvesta muudatused",
+      "loadingSettings": "Seadete laadimine..."
+    },
+    "branding": {
+      "title": "Bränding",
+      "orgName": "Organisatsiooni nimi",
+      "logo": "Logo",
+      "orgLogoAlt": "Organisatsiooni logo",
+      "noLogo": "Logo pole üles laaditud",
+      "favicon": "Favicon",
+      "faviconAlt": "Favicon",
+      "noFavicon": "Favicon pole üles laaditud"
+    },
+    "themeDefaults": {
+      "title": "Teema vaikeväärtused",
+      "primaryColor": "Põhivärv",
+      "secondaryColor": "Teisene värv",
+      "backgroundColor": "Taustavärv",
+      "themeMode": "Teema režiim",
+      "defaultAvatarShape": "Vaikimisi avatari kuju"
+    },
+    "features": {
+      "title": "Funktsiooni lülitid",
+      "allowColors": "Luba kasutajatel kaardi värve kohandada",
+      "allowBgImages": "Luba kaartidel taustapilte",
+      "defaultVisibility": "Kaardi vaikenähtavus"
+    },
+    "footer": {
+      "title": "Jalus",
+      "footerText": "Jaluse tekst",
+      "footerLink": "Jaluse link"
+    },
+    "cards": {
+      "title": "Kõik kaardid",
+      "searchPlaceholder": "Otsi nime või ettevõtte järgi...",
+      "name": "Nimi",
+      "owner": "Omanik",
+      "company": "Ettevõte",
+      "slug": "Slug",
+      "visibility": "Nähtavus",
+      "created": "Loodud",
+      "noCards": "Kaarte ei leitud."
+    }
+  },
+  "errors": {
+    "failedLoadCard": "Kaardi laadimine ebaõnnestus",
+    "failedSaveCard": "Kaardi salvestamine ebaõnnestus",
+    "failedUpload": "{type} üleslaadimine ebaõnnestus: {detail}",
+    "failedDelete": "{type} kustutamine ebaõnnestus",
+    "failedLoadCards": "Kaartide laadimine ebaõnnestus",
+    "failedLoadSettings": "Seadete laadimine ebaõnnestus",
+    "failedSaveSettings": "Seadete salvestamine ebaõnnestus",
+    "uploadFailed": "Üleslaadimine ebaõnnestus",
+    "unauthorized": "Volitamata",
+    "requestFailed": "Päring ebaõnnestus"
+  },
+  "success": {
+    "settingsSaved": "Seaded edukalt salvestatud"
+  },
+  "home": {
+    "tagline": "Digitaalsete visiitkaartide platvorm"
+  }
+}

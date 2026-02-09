@@ -1,196 +1,196 @@
 {
   "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "loading": "Loading...",
-    "back": "Back",
-    "change": "Change",
-    "remove": "Remove",
-    "previous": "Previous",
-    "next": "Next",
-    "saving": "Saving...",
-    "chooseFile": "Choose File"
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "loading": "Laden...",
+    "back": "Zurück",
+    "change": "Ändern",
+    "remove": "Entfernen",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "saving": "Wird gespeichert...",
+    "chooseFile": "Datei auswählen"
   },
   "nav": {
-    "dashboard": "Dashboard",
-    "allCards": "All Cards",
-    "settings": "Settings"
+    "dashboard": "Übersicht",
+    "allCards": "Alle Karten",
+    "settings": "Einstellungen"
   },
   "auth": {
-    "logOut": "Log out"
+    "logOut": "Abmelden"
   },
   "theme": {
-    "light": "Light",
-    "dark": "Dark",
+    "light": "Hell",
+    "dark": "Dunkel",
     "auto": "Auto",
-    "lightMode": "Light mode",
-    "darkMode": "Dark mode",
-    "autoMode": "Auto mode"
+    "lightMode": "Heller Modus",
+    "darkMode": "Dunkler Modus",
+    "autoMode": "Automatischer Modus"
   },
   "dashboard": {
-    "title": "My Cards",
-    "subtitle": "Manage and share your digital business cards",
-    "createNew": "Create New Card",
-    "createFirst": "Create Your First Card",
-    "noCards": "No cards yet",
-    "noCardsHint": "Create your first digital business card to get started.",
-    "deleteCard": "Delete Card",
-    "deleteConfirm": "Are you sure you want to delete this card? This action cannot be undone."
+    "title": "Meine Karten",
+    "subtitle": "Verwalten und teilen Sie Ihre digitalen Visitenkarten",
+    "createNew": "Neue Karte erstellen",
+    "createFirst": "Erstellen Sie Ihre erste Karte",
+    "noCards": "Noch keine Karten",
+    "noCardsHint": "Erstellen Sie Ihre erste digitale Visitenkarte, um loszulegen.",
+    "deleteCard": "Karte löschen",
+    "deleteConfirm": "Sind Sie sicher, dass Sie diese Karte löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
   },
   "cardList": {
-    "copyUrl": "Click to copy URL",
-    "downloadQr": "Download QR",
-    "open": "Open"
+    "copyUrl": "Klicken, um URL zu kopieren",
+    "downloadQr": "QR herunterladen",
+    "open": "Öffnen"
   },
   "editor": {
-    "editCard": "Edit Card",
-    "createCard": "Create Card",
-    "loadingCard": "Loading card...",
-    "saveCard": "Save Card",
-    "livePreview": "Live Preview",
-    "openCard": "Open card",
-    "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
-    "saveBeforeUpload": "Please save the card before uploading images.",
-    "saveFirst": "Save the card first to upload images.",
+    "editCard": "Karte bearbeiten",
+    "createCard": "Karte erstellen",
+    "loadingCard": "Karte wird geladen...",
+    "saveCard": "Karte speichern",
+    "livePreview": "Live-Vorschau",
+    "openCard": "Karte öffnen",
+    "unsavedChanges": "Sie haben ungespeicherte Änderungen. Möchten Sie die Seite wirklich verlassen?",
+    "saveBeforeUpload": "Bitte speichern Sie die Karte, bevor Sie Bilder hochladen.",
+    "saveFirst": "Speichern Sie zuerst die Karte, um Bilder hochzuladen.",
     "basicInfo": {
-      "title": "Basic Info",
+      "title": "Grundinformationen",
       "nameRequired": "Name *",
-      "namePlaceholder": "Full name",
-      "jobTitle": "Job Title",
-      "jobTitlePlaceholder": "e.g. Software Engineer",
-      "company": "Company",
-      "companyPlaceholder": "Company name",
+      "namePlaceholder": "Vollständiger Name",
+      "jobTitle": "Berufsbezeichnung",
+      "jobTitlePlaceholder": "z. B. Software-Ingenieur",
+      "company": "Unternehmen",
+      "companyPlaceholder": "Unternehmensname",
       "bio": "Bio",
-      "bioPlaceholder": "A short bio or description"
+      "bioPlaceholder": "Eine kurze Biografie oder Beschreibung"
     },
     "contact": {
-      "title": "Contact",
-      "phoneNumbers": "Phone Numbers",
-      "phonePlaceholder": "Phone number",
-      "phoneLabelPlaceholder": "Label (e.g. Work)",
-      "addPhone": "Add Phone",
-      "emailAddresses": "Email Addresses",
-      "emailPlaceholder": "Email address",
-      "emailLabelPlaceholder": "Label (e.g. Personal)",
-      "addEmail": "Add Email",
-      "address": "Address",
-      "street": "Street",
-      "city": "City",
-      "zip": "ZIP / Postal Code",
-      "country": "Country"
+      "title": "Kontakt",
+      "phoneNumbers": "Telefonnummern",
+      "phonePlaceholder": "Telefonnummer",
+      "phoneLabelPlaceholder": "Bezeichnung (z. B. Arbeit)",
+      "addPhone": "Telefon hinzufügen",
+      "emailAddresses": "E-Mail-Adressen",
+      "emailPlaceholder": "E-Mail-Adresse",
+      "emailLabelPlaceholder": "Bezeichnung (z. B. Privat)",
+      "addEmail": "E-Mail hinzufügen",
+      "address": "Adresse",
+      "street": "Straße",
+      "city": "Stadt",
+      "zip": "PLZ",
+      "country": "Land"
     },
     "webSocial": {
-      "title": "Web & Social",
-      "websites": "Websites",
-      "label": "Label",
-      "addWebsite": "Add Website",
-      "socialLinks": "Social Links",
-      "addSocialLink": "Add Social Link"
+      "title": "Web & Social Media",
+      "websites": "Webseiten",
+      "label": "Bezeichnung",
+      "addWebsite": "Webseite hinzufügen",
+      "socialLinks": "Soziale Links",
+      "addSocialLink": "Sozialen Link hinzufügen"
     },
     "images": {
-      "title": "Images",
-      "dragDrop": "Drag and drop an image here, or click to browse",
+      "title": "Bilder",
+      "dragDrop": "Bild hierher ziehen oder klicken, um zu durchsuchen",
       "avatar": "Avatar",
       "banner": "Banner",
-      "background": "Background"
+      "background": "Hintergrund"
     },
     "appearance": {
-      "title": "Appearance & Settings",
-      "theme": "Theme",
-      "background": "Background",
+      "title": "Aussehen & Einstellungen",
+      "theme": "Thema",
+      "background": "Hintergrund",
       "text": "Text",
-      "accent": "Accent",
-      "accentColor": "Accent Color",
-      "resetDefaults": "Reset to theme defaults",
-      "style": "Style",
-      "nameFont": "Name Font",
-      "defaultFont": "Default (Outfit)",
-      "avatarShape": "Avatar Shape",
-      "circle": "Circle",
-      "roundedSquare": "Rounded Square"
+      "accent": "Akzent",
+      "accentColor": "Akzentfarbe",
+      "resetDefaults": "Auf Standardwerte zurücksetzen",
+      "style": "Stil",
+      "nameFont": "Namensschrift",
+      "defaultFont": "Standard (Outfit)",
+      "avatarShape": "Avatarform",
+      "circle": "Kreis",
+      "roundedSquare": "Abgerundetes Quadrat"
     },
     "settings": {
-      "title": "Card Settings",
+      "title": "Karteneinstellungen",
       "slug": "Slug",
-      "slugPlaceholder": "my-card-slug",
-      "visibility": "Visibility",
-      "public": "Public",
-      "unlisted": "Unlisted",
-      "disabled": "Disabled",
-      "noIndex": "No Index (prevent search engines from indexing)",
-      "obfuscate": "Obfuscate contact info (bot protection)"
+      "slugPlaceholder": "mein-karten-slug",
+      "visibility": "Sichtbarkeit",
+      "public": "Öffentlich",
+      "unlisted": "Nicht gelistet",
+      "disabled": "Deaktiviert",
+      "noIndex": "Keine Indexierung (Suchmaschinen-Indexierung verhindern)",
+      "obfuscate": "Kontaktdaten verschleiern (Bot-Schutz)"
     }
   },
   "preview": {
-    "phone": "Phone",
-    "email": "Email",
-    "website": "Website",
-    "address": "Address"
+    "phone": "Telefon",
+    "email": "E-Mail",
+    "website": "Webseite",
+    "address": "Adresse"
   },
   "admin": {
     "settings": {
-      "title": "Admin Settings",
-      "saveChanges": "Save Changes",
-      "loadingSettings": "Loading settings..."
+      "title": "Admin-Einstellungen",
+      "saveChanges": "Änderungen speichern",
+      "loadingSettings": "Einstellungen werden geladen..."
     },
     "branding": {
       "title": "Branding",
-      "orgName": "Organization Name",
+      "orgName": "Organisationsname",
       "logo": "Logo",
-      "orgLogoAlt": "Organization logo",
-      "noLogo": "No logo uploaded",
+      "orgLogoAlt": "Organisationslogo",
+      "noLogo": "Kein Logo hochgeladen",
       "favicon": "Favicon",
       "faviconAlt": "Favicon",
-      "noFavicon": "No favicon uploaded"
+      "noFavicon": "Kein Favicon hochgeladen"
     },
     "themeDefaults": {
-      "title": "Theme Defaults",
-      "primaryColor": "Primary Color",
-      "secondaryColor": "Secondary Color",
-      "backgroundColor": "Background Color",
-      "themeMode": "Theme Mode",
-      "defaultAvatarShape": "Default Avatar Shape"
+      "title": "Thema-Standardwerte",
+      "primaryColor": "Primärfarbe",
+      "secondaryColor": "Sekundärfarbe",
+      "backgroundColor": "Hintergrundfarbe",
+      "themeMode": "Thema-Modus",
+      "defaultAvatarShape": "Standard-Avatarform"
     },
     "features": {
-      "title": "Feature Toggles",
-      "allowColors": "Allow users to customize card colors",
-      "allowBgImages": "Allow background images on cards",
-      "defaultVisibility": "Default Card Visibility"
+      "title": "Funktionsschalter",
+      "allowColors": "Benutzern erlauben, Kartenfarben anzupassen",
+      "allowBgImages": "Hintergrundbilder auf Karten erlauben",
+      "defaultVisibility": "Standard-Kartensichtbarkeit"
     },
     "footer": {
-      "title": "Footer",
-      "footerText": "Footer Text",
-      "footerLink": "Footer Link"
+      "title": "Fußzeile",
+      "footerText": "Fußzeilentext",
+      "footerLink": "Fußzeilen-Link"
     },
     "cards": {
-      "title": "All Cards",
-      "searchPlaceholder": "Search by name or company...",
+      "title": "Alle Karten",
+      "searchPlaceholder": "Nach Name oder Unternehmen suchen...",
       "name": "Name",
-      "owner": "Owner",
-      "company": "Company",
+      "owner": "Besitzer",
+      "company": "Unternehmen",
       "slug": "Slug",
-      "visibility": "Visibility",
-      "created": "Created",
-      "noCards": "No cards found."
+      "visibility": "Sichtbarkeit",
+      "created": "Erstellt",
+      "noCards": "Keine Karten gefunden."
     }
   },
   "errors": {
-    "failedLoadCard": "Failed to load card",
-    "failedSaveCard": "Failed to save card",
-    "failedUpload": "Failed to upload {type}: {detail}",
-    "failedDelete": "Failed to delete {type}",
-    "failedLoadCards": "Failed to load cards",
-    "failedLoadSettings": "Failed to load settings",
-    "failedSaveSettings": "Failed to save settings",
-    "uploadFailed": "Upload failed",
-    "unauthorized": "Unauthorized",
-    "requestFailed": "Request failed"
+    "failedLoadCard": "Karte konnte nicht geladen werden",
+    "failedSaveCard": "Karte konnte nicht gespeichert werden",
+    "failedUpload": "Hochladen von {type} fehlgeschlagen: {detail}",
+    "failedDelete": "Löschen von {type} fehlgeschlagen",
+    "failedLoadCards": "Karten konnten nicht geladen werden",
+    "failedLoadSettings": "Einstellungen konnten nicht geladen werden",
+    "failedSaveSettings": "Einstellungen konnten nicht gespeichert werden",
+    "uploadFailed": "Hochladen fehlgeschlagen",
+    "unauthorized": "Nicht autorisiert",
+    "requestFailed": "Anfrage fehlgeschlagen"
   },
   "success": {
-    "settingsSaved": "Settings saved successfully"
+    "settingsSaved": "Einstellungen erfolgreich gespeichert"
   },
   "home": {
-    "tagline": "Digital business card platform"
+    "tagline": "Plattform für digitale Visitenkarten"
   }
 }

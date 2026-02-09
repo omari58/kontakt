@@ -10,6 +10,7 @@ const localeLabels: Record<SupportedLocale, string> = {
   fr: 'Français',
   de: 'Deutsch',
   es: 'Español',
+  et: 'Eesti',
 }
 
 function setLocale(newLocale: SupportedLocale) {

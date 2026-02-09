@@ -3,10 +3,11 @@ import en from './locales/en.json'
 import fr from './locales/fr.json'
 import de from './locales/de.json'
 import es from './locales/es.json'
+import et from './locales/et.json'
 
 export type MessageSchema = typeof en
 
-export const SUPPORTED_LOCALES = ['en', 'fr', 'de', 'es'] as const
+export const SUPPORTED_LOCALES = ['en', 'fr', 'de', 'es', 'et'] as const
 export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number]
 
 function getStoredLocale(): SupportedLocale {
@@ -27,7 +28,7 @@ const i18n = createI18n({
   legacy: false,
   locale: initialLocale,
   fallbackLocale: 'en',
-  messages: { en, fr, de, es },
+  messages: { en, fr, de, es, et },
 })
 
 document.documentElement.lang = initialLocale
