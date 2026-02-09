@@ -28,11 +28,14 @@ export class AuthService implements OnModuleInit {
 
     this.logger.log(`Discovering OIDC issuer: ${issuer}`);
 
+    const isDev = issuer.startsWith('http://');
     try {
       this.oidcConfig = await oidc.discovery(
         new URL(issuer),
         clientId,
         clientSecret,
+        undefined,
+        isDev ? { execute: [oidc.allowInsecureRequests] } : undefined,
       );
       this.logger.log('OIDC discovery complete');
     } catch (error) {

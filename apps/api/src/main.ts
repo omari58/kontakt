@@ -118,7 +118,11 @@ async function bootstrap() {
 
   // Enable graceful shutdown so NestJS properly closes the HTTP server
   // and runs OnModuleDestroy hooks (e.g. Prisma disconnect) on SIGTERM/SIGINT.
-  app.enableShutdownHooks();
+  // Skipped in watch mode: the watcher kills the old process before shutdown
+  // completes, causing EADDRINUSE when the new process binds the same port.
+  if (process.env.NODE_ENV === 'production') {
+    app.enableShutdownHooks();
+  }
 
   // Seed default settings on first run
   const prisma = app.get(PrismaService);

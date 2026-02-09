@@ -12,6 +12,7 @@ jest.mock('openid-client', () => ({
   randomPKCECodeVerifier: jest.fn(),
   calculatePKCECodeChallenge: jest.fn(),
   randomState: jest.fn(),
+  allowInsecureRequests: jest.fn(),
 }));
 
 import * as oidc from 'openid-client';
@@ -112,6 +113,8 @@ describe('AuthService', () => {
         new URL('https://auth.example.com'),
         'test-client-id',
         'test-client-secret',
+        undefined,
+        undefined,
       );
     });
 
