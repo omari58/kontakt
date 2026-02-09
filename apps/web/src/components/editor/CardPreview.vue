@@ -51,7 +51,7 @@ onMounted(() => {
   if (props.form.fontFamily) loadGoogleFont(props.form.fontFamily);
 });
 
-const cardStyle = computed(() => {
+const wrapperStyle = computed(() => {
   const s: Record<string, string> = {
     '--p-bg': bgColor.value,
     '--p-primary': primaryColor.value,
@@ -112,7 +112,8 @@ const platformLabels: Record<string, string> = {
 </script>
 
 <template>
-  <div class="card" :class="{ 'card--dark': isDark }" :style="cardStyle">
+  <div class="card-wrapper" :class="{ 'card-wrapper--dark': isDark }" :style="wrapperStyle">
+  <div class="card" :class="{ 'card--dark': isDark }">
     <!-- Banner -->
     <div class="card__banner">
       <img v-if="bannerUrl" :src="bannerUrl" alt="Banner" />
@@ -206,10 +207,11 @@ const platformLabels: Record<string, string> = {
       </div>
     </template>
   </div>
+  </div>
 </template>
 
 <style scoped>
-.card {
+.card-wrapper {
   --p-bg: #ffffff;
   --p-primary: #0066cc;
   --p-text: #111111;
@@ -219,9 +221,15 @@ const platformLabels: Record<string, string> = {
   --p-divider: color-mix(in srgb, var(--p-text) 10%, var(--p-bg));
   --p-primary-soft: color-mix(in srgb, var(--p-primary) 10%, var(--p-bg));
 
+  padding: 24px 16px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
   max-width: 400px;
   width: 100%;
-  margin: 0 auto;
   background: var(--p-bg);
   border-radius: 20px;
   overflow: hidden;
@@ -240,6 +248,10 @@ const platformLabels: Record<string, string> = {
     0 0 0 1px rgba(255,255,255,0.06),
     0 8px 24px rgba(0,0,0,0.3),
     0 24px 48px rgba(0,0,0,0.2);
+}
+
+.card-wrapper--dark {
+  background-color: #1a1a1a;
 }
 
 /* ===== Banner ===== */

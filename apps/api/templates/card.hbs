@@ -96,10 +96,11 @@
     }
 
     {{#if card.bgImagePath}}
-    .card {
+    body {
       background-image: url('{{card.bgImagePath}}');
       background-size: cover;
       background-position: center;
+      background-attachment: fixed;
     }
     {{/if}}
 
@@ -327,6 +328,24 @@
       color: var(--primary-color, #0066cc);
       background: var(--primary-soft);
       transform: translateY(-1px);
+    }
+
+    /* ===== Footer ===== */
+    .card__footer {
+      padding: 16px 28px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .card__footer a {
+      color: var(--primary-color, #0066cc);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .card__footer a:hover {
+      text-decoration: underline;
     }
 
     /* ===== Actions ===== */
@@ -564,6 +583,23 @@
       </a>
       {{/each}}
     </div>
+    {{/if}}
+
+    <!-- Footer -->
+    {{#if footerText}}
+    <div class="card__footer">
+      {{#if footerLink}}
+        <a href="{{footerLink}}" target="_blank" rel="noopener noreferrer">{{footerText}}</a>
+      {{else}}
+        <span>{{footerText}}</span>
+      {{/if}}
+    </div>
+    {{else}}
+      {{#if footerLink}}
+      <div class="card__footer">
+        <a href="{{footerLink}}" target="_blank" rel="noopener noreferrer">{{footerLink}}</a>
+      </div>
+      {{/if}}
     {{/if}}
   </div>
 

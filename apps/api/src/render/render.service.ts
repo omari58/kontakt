@@ -41,7 +41,11 @@ export class RenderService {
     const ogDescription = this.buildDescription(card.jobTitle, card.company);
     const ogImage = card.avatarPath ? `${baseUrl}${card.avatarPath}` : null;
 
-    const resolved = resolveCardTheme(card, this.settingsService.getAll());
+    const allSettings = this.settingsService.getAll();
+    const resolved = resolveCardTheme(card, allSettings);
+
+    const footerText = allSettings.get('footer_text') || null;
+    const footerLink = allSettings.get('footer_link') || null;
 
     const avatarShapeClass = resolved.avatarShape === 'ROUNDED_SQUARE'
       ? 'rounded-square'
@@ -85,6 +89,8 @@ export class RenderService {
       cssVars,
       fontUrl,
       jsonLd,
+      footerText,
+      footerLink,
     };
   }
 
