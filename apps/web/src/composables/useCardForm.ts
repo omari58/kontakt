@@ -1,5 +1,6 @@
 import { reactive, ref, computed, watch } from 'vue';
 import { useApi } from './useApi';
+import i18n from '@/i18n';
 import type { Card, Phone, Email, Website, Address, SocialLink, AvatarShape, Theme, Visibility } from '@/types';
 
 export interface CardFormData {
@@ -56,6 +57,7 @@ const THEME_DEFAULTS = {
 
 export function useCardForm(cardId?: string) {
   const api = useApi();
+  const t = i18n.global.t;
 
   const form = reactive<CardFormData>(createEmptyForm());
   const loading = ref(false);
@@ -127,7 +129,7 @@ export function useCardForm(cardId?: string) {
 
       takeSnapshot();
     } catch (e: unknown) {
-      error.value = e instanceof Error ? e.message : 'Failed to load card';
+      error.value = e instanceof Error ? e.message : t('errors.failedLoadCard');
     } finally {
       loading.value = false;
     }
@@ -174,7 +176,7 @@ export function useCardForm(cardId?: string) {
         return card.id;
       }
     } catch (e: unknown) {
-      error.value = e instanceof Error ? e.message : 'Failed to save card';
+      error.value = e instanceof Error ? e.message : t('errors.failedSaveCard');
       return null;
     } finally {
       saving.value = false;
@@ -196,7 +198,7 @@ export function useCardForm(cardId?: string) {
       });
       if (!response.ok) {
         const text = await response.text().catch(() => '');
-        throw new Error(`Failed to upload ${type}: ${response.status} ${text}`);
+        throw new Error(t('errors.failedUpload', { type, detail: `${response.status} ${text}` }));
       }
       const result = await response.json() as { path: string };
       if (type === 'avatar') {
@@ -208,7 +210,7 @@ export function useCardForm(cardId?: string) {
       }
       return result.path;
     } catch (e: unknown) {
-      error.value = e instanceof Error ? e.message : `Failed to upload ${type}`;
+      error.value = e instanceof Error ? e.message : t('errors.failedUpload', { type, detail: '' });
       return null;
     }
   }
@@ -223,7 +225,7 @@ export function useCardForm(cardId?: string) {
       else if (type === 'banner') bannerUrl.value = null;
       else backgroundUrl.value = null;
     } catch (e: unknown) {
-      error.value = e instanceof Error ? e.message : `Failed to delete ${type}`;
+      error.value = e instanceof Error ? e.message : t('errors.failedDelete', { type });
     }
   }
 

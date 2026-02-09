@@ -9,6 +9,7 @@ import ImageUploader from '@/components/editor/ImageUploader.vue';
 import StyleSettings from '@/components/editor/StyleSettings.vue';
 import CardPreview from '@/components/editor/CardPreview.vue';
 import { useSettingsStore } from '@/stores/settings';
+import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
 const router = useRouter();
@@ -53,7 +54,9 @@ function toggleSection(section: string) {
   expandedSections.value[section] = !expandedSections.value[section];
 }
 
-const pageTitle = computed(() => isEditMode.value ? 'Edit Card' : 'Create Card');
+const { t } = useI18n();
+
+const pageTitle = computed(() => isEditMode.value ? t('editor.editCard') : t('editor.createCard'));
 const cardViewUrl = computed(() => form.slug ? `/c/${form.slug}` : null);
 
 const savedCardId = ref<string | null>(cardId.value ?? null);
@@ -71,7 +74,7 @@ async function handleSave() {
 async function handleImageUpload(type: 'avatar' | 'banner' | 'background', file: File) {
   const id = savedCardId.value ?? cardId.value;
   if (!id) {
-    error.value = 'Please save the card before uploading images.';
+    error.value = t('editor.saveBeforeUpload');
     return;
   }
   await uploadImage(id, type, file);
@@ -85,7 +88,7 @@ async function handleImageDelete(type: 'avatar' | 'banner' | 'background') {
 
 onBeforeRouteLeave((_to, _from, next) => {
   if (isDirty.value) {
-    const leave = window.confirm('You have unsaved changes. Are you sure you want to leave?');
+    const leave = window.confirm(t('editor.unsavedChanges'));
     next(leave);
   } else {
     next();
@@ -106,7 +109,7 @@ onMounted(() => {
   <div class="editor">
     <button class="editor__back-btn" @click="router.push({ name: 'dashboard' })">
       <ArrowLeft :size="16" />
-      Back
+      {{ $t('common.back') }}
     </button>
     <div class="editor__header">
       <h1 class="editor__title">{{ pageTitle }}</h1>
@@ -117,7 +120,7 @@ onMounted(() => {
     </div>
 
     <div v-if="loading" class="editor__loading">
-      Loading card...
+      {{ $t('editor.loadingCard') }}
     </div>
 
     <div v-else class="editor__layout">
@@ -129,7 +132,7 @@ onMounted(() => {
             class="editor__section-header"
             @click="toggleSection('basicInfo')"
           >
-            <span class="editor__section-title">Basic Info</span>
+            <span class="editor__section-title">{{ $t('editor.basicInfo.title') }}</span>
             <ChevronDown
               :size="18"
               class="editor__section-chevron"
@@ -138,43 +141,43 @@ onMounted(() => {
           </button>
           <div v-show="expandedSections.basicInfo" class="editor__section-body">
             <div class="editor__field">
-              <label class="editor__label" for="name">Name *</label>
+              <label class="editor__label" for="name">{{ $t('editor.basicInfo.nameRequired') }}</label>
               <input
                 id="name"
                 v-model="form.name"
                 type="text"
                 class="editor__input"
-                placeholder="Full name"
+                :placeholder="$t('editor.basicInfo.namePlaceholder')"
                 required
               />
             </div>
             <div class="editor__field">
-              <label class="editor__label" for="jobTitle">Job Title</label>
+              <label class="editor__label" for="jobTitle">{{ $t('editor.basicInfo.jobTitle') }}</label>
               <input
                 id="jobTitle"
                 v-model="form.jobTitle"
                 type="text"
                 class="editor__input"
-                placeholder="e.g. Software Engineer"
+                :placeholder="$t('editor.basicInfo.jobTitlePlaceholder')"
               />
             </div>
             <div class="editor__field">
-              <label class="editor__label" for="company">Company</label>
+              <label class="editor__label" for="company">{{ $t('editor.basicInfo.company') }}</label>
               <input
                 id="company"
                 v-model="form.company"
                 type="text"
                 class="editor__input"
-                placeholder="Company name"
+                :placeholder="$t('editor.basicInfo.companyPlaceholder')"
               />
             </div>
             <div class="editor__field">
-              <label class="editor__label" for="bio">Bio</label>
+              <label class="editor__label" for="bio">{{ $t('editor.basicInfo.bio') }}</label>
               <textarea
                 id="bio"
                 v-model="form.bio"
                 class="editor__textarea"
-                placeholder="A short bio or description"
+                :placeholder="$t('editor.basicInfo.bioPlaceholder')"
                 rows="3"
               />
             </div>
@@ -188,7 +191,7 @@ onMounted(() => {
             class="editor__section-header"
             @click="toggleSection('contact')"
           >
-            <span class="editor__section-title">Contact</span>
+            <span class="editor__section-title">{{ $t('editor.contact.title') }}</span>
             <ChevronDown
               :size="18"
               class="editor__section-chevron"
@@ -216,7 +219,7 @@ onMounted(() => {
             class="editor__section-header"
             @click="toggleSection('webSocial')"
           >
-            <span class="editor__section-title">Web & Social</span>
+            <span class="editor__section-title">{{ $t('editor.webSocial.title') }}</span>
             <ChevronDown
               :size="18"
               class="editor__section-chevron"
@@ -242,7 +245,7 @@ onMounted(() => {
             class="editor__section-header"
             @click="toggleSection('images')"
           >
-            <span class="editor__section-title">Images</span>
+            <span class="editor__section-title">{{ $t('editor.images.title') }}</span>
             <ChevronDown
               :size="18"
               class="editor__section-chevron"
@@ -251,25 +254,25 @@ onMounted(() => {
           </button>
           <div v-show="expandedSections.images" class="editor__section-body">
             <p v-if="!savedCardId && !cardId" class="editor__hint">
-              Save the card first to upload images.
+              {{ $t('editor.saveFirst') }}
             </p>
             <template v-else>
               <div class="editor__images-row">
                 <ImageUploader
-                  label="Avatar"
+                  :label="$t('editor.images.avatar')"
                   :image-url="avatarUrl"
                   @upload="handleImageUpload('avatar', $event)"
                   @remove="handleImageDelete('avatar')"
                 />
                 <ImageUploader
-                  label="Banner"
+                  :label="$t('editor.images.banner')"
                   :image-url="bannerUrl"
                   @upload="handleImageUpload('banner', $event)"
                   @remove="handleImageDelete('banner')"
                 />
               </div>
               <ImageUploader
-                label="Background"
+                :label="$t('editor.images.background')"
                 :image-url="backgroundUrl"
                 @upload="handleImageUpload('background', $event)"
                 @remove="handleImageDelete('background')"
@@ -285,7 +288,7 @@ onMounted(() => {
             class="editor__section-header"
             @click="toggleSection('appearance')"
           >
-            <span class="editor__section-title">Appearance & Settings</span>
+            <span class="editor__section-title">{{ $t('editor.appearance.title') }}</span>
             <ChevronDown
               :size="18"
               class="editor__section-chevron"
@@ -324,7 +327,7 @@ onMounted(() => {
       <div class="editor__preview">
         <div class="editor__preview-sticky">
           <div class="editor__preview-header">
-            <span class="editor__preview-label">Live Preview</span>
+            <span class="editor__preview-label">{{ $t('editor.livePreview') }}</span>
             <div class="editor__preview-actions">
               <a
                 v-if="cardViewUrl"
@@ -332,7 +335,7 @@ onMounted(() => {
                 target="_blank"
                 rel="noopener noreferrer"
                 class="editor__open-btn"
-                title="Open card"
+                :title="$t('editor.openCard')"
               >
                 <ExternalLink :size="14" />
               </a>
@@ -342,7 +345,7 @@ onMounted(() => {
                 @click="handleSave"
               >
                 <Loader2 v-if="saving" :size="14" class="editor__spinner" />
-                {{ saving ? 'Saving...' : 'Save Card' }}
+                {{ saving ? $t('common.saving') : $t('editor.saveCard') }}
               </button>
             </div>
           </div>

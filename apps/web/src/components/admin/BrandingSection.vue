@@ -44,10 +44,10 @@ function onFaviconChange(event: Event) {
 
 <template>
   <section class="settings-section">
-    <h2 class="settings-section__title">Branding</h2>
+    <h2 class="settings-section__title">{{ $t('admin.branding.title') }}</h2>
 
     <div class="settings-field">
-      <label class="settings-field__label" for="org-name">Organization Name</label>
+      <label class="settings-field__label" for="org-name">{{ $t('admin.branding.orgName') }}</label>
       <input
         id="org-name"
         type="text"
@@ -58,17 +58,17 @@ function onFaviconChange(event: Event) {
     </div>
 
     <div class="settings-field">
-      <label class="settings-field__label">Logo</label>
+      <label class="settings-field__label">{{ $t('admin.branding.logo') }}</label>
       <div class="settings-field__upload">
         <img
           v-if="logoPreview || orgLogo"
           :src="logoPreview || orgLogo!"
-          alt="Organization logo"
+          :alt="$t('admin.branding.orgLogoAlt')"
           class="settings-field__preview settings-field__preview--logo"
         />
-        <div v-else class="settings-field__placeholder">No logo uploaded</div>
+        <div v-else class="settings-field__placeholder">{{ $t('admin.branding.noLogo') }}</div>
         <label class="settings-field__upload-btn">
-          Choose File
+          {{ $t('common.chooseFile') }}
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp,image/svg+xml"
@@ -80,17 +80,17 @@ function onFaviconChange(event: Event) {
     </div>
 
     <div class="settings-field">
-      <label class="settings-field__label">Favicon</label>
+      <label class="settings-field__label">{{ $t('admin.branding.favicon') }}</label>
       <div class="settings-field__upload">
         <img
           v-if="faviconPreview || orgFavicon"
           :src="faviconPreview || orgFavicon!"
-          alt="Favicon"
+          :alt="$t('admin.branding.faviconAlt')"
           class="settings-field__preview settings-field__preview--favicon"
         />
-        <div v-else class="settings-field__placeholder">No favicon uploaded</div>
+        <div v-else class="settings-field__placeholder">{{ $t('admin.branding.noFavicon') }}</div>
         <label class="settings-field__upload-btn">
-          Choose File
+          {{ $t('common.chooseFile') }}
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp,image/svg+xml"

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import { useApi } from '@/composables/useApi';
+import i18n from '@/i18n';
 
 export const useSettingsStore = defineStore('settings', () => {
   const settings = ref<Record<string, string | null>>({});
@@ -17,7 +18,7 @@ export const useSettingsStore = defineStore('settings', () => {
     try {
       settings.value = await api.get<Record<string, string | null>>('/api/settings');
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to load settings';
+      error.value = e instanceof Error ? e.message : i18n.global.t('errors.failedLoadSettings');
     } finally {
       loading.value = false;
     }
@@ -33,9 +34,9 @@ export const useSettingsStore = defineStore('settings', () => {
       for (const { key, value } of changed) {
         settings.value[key] = value;
       }
-      successMessage.value = 'Settings saved successfully';
+      successMessage.value = i18n.global.t('success.settingsSaved');
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to save settings';
+      error.value = e instanceof Error ? e.message : i18n.global.t('errors.failedSaveSettings');
     } finally {
       saving.value = false;
     }
@@ -55,7 +56,7 @@ export const useSettingsStore = defineStore('settings', () => {
         body: formData,
       });
       if (!response.ok) {
-        const text = await response.text().catch(() => 'Upload failed');
+        const text = await response.text().catch(() => i18n.global.t('errors.uploadFailed'));
         throw new Error(text);
       }
       const result = (await response.json()) as { path: string };
@@ -63,7 +64,7 @@ export const useSettingsStore = defineStore('settings', () => {
       settings.value[settingKey] = result.path;
       return result.path;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Upload failed';
+      error.value = e instanceof Error ? e.message : i18n.global.t('errors.uploadFailed');
       return null;
     }
   }

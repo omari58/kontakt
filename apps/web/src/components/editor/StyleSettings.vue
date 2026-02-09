@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { AvatarShape, Theme, Visibility } from '@/types';
 
-const FONT_OPTIONS = [
-  { id: '', name: 'Default (Outfit)', family: "'Outfit', sans-serif" },
+const { t } = useI18n();
+
+const fontOptions = computed(() => [
+  { id: '', name: t('editor.appearance.defaultFont'), family: "'Outfit', sans-serif" },
   { id: 'dm-serif', name: 'DM Serif Display', family: "'DM Serif Display', Georgia, serif" },
   { id: 'playfair', name: 'Playfair Display', family: "'Playfair Display', Georgia, serif" },
   { id: 'inter', name: 'Inter', family: "'Inter', sans-serif" },
@@ -11,7 +15,13 @@ const FONT_OPTIONS = [
   { id: 'sora', name: 'Sora', family: "'Sora', sans-serif" },
   { id: 'fraunces', name: 'Fraunces', family: "'Fraunces', Georgia, serif" },
   { id: 'bricolage', name: 'Bricolage Grotesque', family: "'Bricolage Grotesque', sans-serif" },
-];
+]);
+
+const themeOptions = computed(() => [
+  { value: 'LIGHT' as const, label: t('theme.light') },
+  { value: 'DARK' as const, label: t('theme.dark') },
+  { value: 'AUTO' as const, label: t('theme.auto') },
+]);
 
 defineProps<{
   bgColor: string;
@@ -45,16 +55,12 @@ const emit = defineEmits<{
 <template>
   <div class="style-settings">
     <fieldset class="style-settings__group">
-      <legend class="style-settings__legend">Theme</legend>
+      <legend class="style-settings__legend">{{ $t('editor.appearance.theme') }}</legend>
 
       <!-- Theme mode selector with pill buttons -->
       <div class="style-settings__theme-pills">
         <button
-          v-for="opt in ([
-            { value: 'LIGHT', label: 'Light' },
-            { value: 'DARK', label: 'Dark' },
-            { value: 'AUTO', label: 'Auto' },
-          ] as const)"
+          v-for="opt in themeOptions"
           :key="opt.value"
           type="button"
           class="style-settings__theme-pill"
@@ -68,12 +74,12 @@ const emit = defineEmits<{
       <!-- Live color swatch preview -->
       <div v-if="theme === 'AUTO'" class="style-settings__swatch-pair">
         <div class="style-settings__swatch style-settings__swatch--half" :style="{ background: '#ffffff' }">
-          <span class="style-settings__swatch-label" :style="{ color: '#111111' }">Light</span>
+          <span class="style-settings__swatch-label" :style="{ color: '#111111' }">{{ $t('theme.light') }}</span>
           <span class="style-settings__swatch-text" :style="{ color: '#111111' }">Aa</span>
           <span class="style-settings__swatch-accent" :style="{ background: primaryColor }" />
         </div>
         <div class="style-settings__swatch style-settings__swatch--half" :style="{ background: '#1e1e1e' }">
-          <span class="style-settings__swatch-label" :style="{ color: '#ffffff' }">Dark</span>
+          <span class="style-settings__swatch-label" :style="{ color: '#ffffff' }">{{ $t('theme.dark') }}</span>
           <span class="style-settings__swatch-text" :style="{ color: '#ffffff' }">Aa</span>
           <span class="style-settings__swatch-accent" :style="{ background: primaryColor }" />
         </div>
@@ -86,7 +92,7 @@ const emit = defineEmits<{
       <!-- Colors: full controls for Light/Dark, accent-only for Auto -->
       <div v-if="theme !== 'AUTO'" class="style-settings__color-row">
         <label class="style-settings__color-label">
-          Background
+          {{ $t('editor.appearance.background') }}
           <div class="style-settings__color-picker">
             <input
               type="color"
@@ -104,7 +110,7 @@ const emit = defineEmits<{
         </label>
 
         <label class="style-settings__color-label">
-          Text
+          {{ $t('editor.appearance.text') }}
           <div class="style-settings__color-picker">
             <input
               type="color"
@@ -122,7 +128,7 @@ const emit = defineEmits<{
         </label>
 
         <label class="style-settings__color-label">
-          Accent
+          {{ $t('editor.appearance.accent') }}
           <div class="style-settings__color-picker">
             <input
               type="color"
@@ -142,7 +148,7 @@ const emit = defineEmits<{
 
       <div v-else class="style-settings__color-row">
         <label class="style-settings__color-label">
-          Accent Color
+          {{ $t('editor.appearance.accentColor') }}
           <div class="style-settings__color-picker">
             <input
               type="color"
@@ -165,22 +171,22 @@ const emit = defineEmits<{
         class="style-settings__reset-btn"
         @click="emit('resetStyles')"
       >
-        Reset to theme defaults
+        {{ $t('editor.appearance.resetDefaults') }}
       </button>
     </fieldset>
 
     <fieldset class="style-settings__group">
-      <legend class="style-settings__legend">Style</legend>
+      <legend class="style-settings__legend">{{ $t('editor.appearance.style') }}</legend>
 
       <div class="style-settings__field">
-        <label class="style-settings__label">Name Font</label>
+        <label class="style-settings__label">{{ $t('editor.appearance.nameFont') }}</label>
         <select
           :value="fontFamily"
           class="style-settings__select"
           @change="emit('update:fontFamily', ($event.target as HTMLSelectElement).value)"
         >
           <option
-            v-for="font in FONT_OPTIONS"
+            v-for="font in fontOptions"
             :key="font.id"
             :value="font.id"
             :style="{ fontFamily: font.family }"
@@ -191,45 +197,45 @@ const emit = defineEmits<{
       </div>
 
       <div class="style-settings__field">
-        <label class="style-settings__label">Avatar Shape</label>
+        <label class="style-settings__label">{{ $t('editor.appearance.avatarShape') }}</label>
         <select
           :value="avatarShape"
           class="style-settings__select"
           @change="emit('update:avatarShape', ($event.target as HTMLSelectElement).value as AvatarShape)"
         >
-          <option value="CIRCLE">Circle</option>
-          <option value="ROUNDED_SQUARE">Rounded Square</option>
+          <option value="CIRCLE">{{ $t('editor.appearance.circle') }}</option>
+          <option value="ROUNDED_SQUARE">{{ $t('editor.appearance.roundedSquare') }}</option>
         </select>
       </div>
     </fieldset>
 
     <fieldset class="style-settings__group">
-      <legend class="style-settings__legend">Card Settings</legend>
+      <legend class="style-settings__legend">{{ $t('editor.settings.title') }}</legend>
 
       <div v-if="isEditMode" class="style-settings__field">
-        <label class="style-settings__label">Slug</label>
+        <label class="style-settings__label">{{ $t('editor.settings.slug') }}</label>
         <div class="style-settings__slug-row">
           <span class="style-settings__slug-prefix">/c/</span>
           <input
             :value="slug"
             type="text"
             class="style-settings__input"
-            placeholder="my-card-slug"
+            :placeholder="$t('editor.settings.slugPlaceholder')"
             @input="emit('update:slug', ($event.target as HTMLInputElement).value)"
           />
         </div>
       </div>
 
       <div class="style-settings__field">
-        <label class="style-settings__label">Visibility</label>
+        <label class="style-settings__label">{{ $t('editor.settings.visibility') }}</label>
         <select
           :value="visibility"
           class="style-settings__select"
           @change="emit('update:visibility', ($event.target as HTMLSelectElement).value as Visibility)"
         >
-          <option value="PUBLIC">Public</option>
-          <option value="UNLISTED">Unlisted</option>
-          <option value="DISABLED">Disabled</option>
+          <option value="PUBLIC">{{ $t('editor.settings.public') }}</option>
+          <option value="UNLISTED">{{ $t('editor.settings.unlisted') }}</option>
+          <option value="DISABLED">{{ $t('editor.settings.disabled') }}</option>
         </select>
       </div>
 
@@ -239,7 +245,7 @@ const emit = defineEmits<{
           :checked="noIndex"
           @change="emit('update:noIndex', ($event.target as HTMLInputElement).checked)"
         />
-        No Index (prevent search engines from indexing)
+        {{ $t('editor.settings.noIndex') }}
       </label>
 
       <label class="style-settings__checkbox">
@@ -248,7 +254,7 @@ const emit = defineEmits<{
           :checked="obfuscate"
           @change="emit('update:obfuscate', ($event.target as HTMLInputElement).checked)"
         />
-        Obfuscate contact info (bot protection)
+        {{ $t('editor.settings.obfuscate') }}
       </label>
     </fieldset>
   </div>

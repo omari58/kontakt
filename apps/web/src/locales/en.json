@@ -1,0 +1,196 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "loading": "Loading...",
+    "back": "Back",
+    "change": "Change",
+    "remove": "Remove",
+    "previous": "Previous",
+    "next": "Next",
+    "saving": "Saving...",
+    "chooseFile": "Choose File"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "allCards": "All Cards",
+    "settings": "Settings"
+  },
+  "auth": {
+    "logOut": "Log out"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "auto": "Auto",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode",
+    "autoMode": "Auto mode"
+  },
+  "dashboard": {
+    "title": "My Cards",
+    "subtitle": "Manage and share your digital business cards",
+    "createNew": "Create New Card",
+    "createFirst": "Create Your First Card",
+    "noCards": "No cards yet",
+    "noCardsHint": "Create your first digital business card to get started.",
+    "deleteCard": "Delete Card",
+    "deleteConfirm": "Are you sure you want to delete this card? This action cannot be undone."
+  },
+  "cardList": {
+    "copyUrl": "Click to copy URL",
+    "downloadQr": "Download QR",
+    "open": "Open"
+  },
+  "editor": {
+    "editCard": "Edit Card",
+    "createCard": "Create Card",
+    "loadingCard": "Loading card...",
+    "saveCard": "Save Card",
+    "livePreview": "Live Preview",
+    "openCard": "Open card",
+    "unsavedChanges": "You have unsaved changes. Are you sure you want to leave?",
+    "saveBeforeUpload": "Please save the card before uploading images.",
+    "saveFirst": "Save the card first to upload images.",
+    "basicInfo": {
+      "title": "Basic Info",
+      "nameRequired": "Name *",
+      "namePlaceholder": "Full name",
+      "jobTitle": "Job Title",
+      "jobTitlePlaceholder": "e.g. Software Engineer",
+      "company": "Company",
+      "companyPlaceholder": "Company name",
+      "bio": "Bio",
+      "bioPlaceholder": "A short bio or description"
+    },
+    "contact": {
+      "title": "Contact",
+      "phoneNumbers": "Phone Numbers",
+      "phonePlaceholder": "Phone number",
+      "phoneLabelPlaceholder": "Label (e.g. Work)",
+      "addPhone": "Add Phone",
+      "emailAddresses": "Email Addresses",
+      "emailPlaceholder": "Email address",
+      "emailLabelPlaceholder": "Label (e.g. Personal)",
+      "addEmail": "Add Email",
+      "address": "Address",
+      "street": "Street",
+      "city": "City",
+      "zip": "ZIP / Postal Code",
+      "country": "Country"
+    },
+    "webSocial": {
+      "title": "Web & Social",
+      "websites": "Websites",
+      "label": "Label",
+      "addWebsite": "Add Website",
+      "socialLinks": "Social Links",
+      "addSocialLink": "Add Social Link"
+    },
+    "images": {
+      "title": "Images",
+      "dragDrop": "Drag and drop an image here, or click to browse",
+      "avatar": "Avatar",
+      "banner": "Banner",
+      "background": "Background"
+    },
+    "appearance": {
+      "title": "Appearance & Settings",
+      "theme": "Theme",
+      "background": "Background",
+      "text": "Text",
+      "accent": "Accent",
+      "accentColor": "Accent Color",
+      "resetDefaults": "Reset to theme defaults",
+      "style": "Style",
+      "nameFont": "Name Font",
+      "defaultFont": "Default (Outfit)",
+      "avatarShape": "Avatar Shape",
+      "circle": "Circle",
+      "roundedSquare": "Rounded Square"
+    },
+    "settings": {
+      "title": "Card Settings",
+      "slug": "Slug",
+      "slugPlaceholder": "my-card-slug",
+      "visibility": "Visibility",
+      "public": "Public",
+      "unlisted": "Unlisted",
+      "disabled": "Disabled",
+      "noIndex": "No Index (prevent search engines from indexing)",
+      "obfuscate": "Obfuscate contact info (bot protection)"
+    }
+  },
+  "preview": {
+    "phone": "Phone",
+    "email": "Email",
+    "website": "Website",
+    "address": "Address"
+  },
+  "admin": {
+    "settings": {
+      "title": "Admin Settings",
+      "saveChanges": "Save Changes",
+      "loadingSettings": "Loading settings..."
+    },
+    "branding": {
+      "title": "Branding",
+      "orgName": "Organization Name",
+      "logo": "Logo",
+      "orgLogoAlt": "Organization logo",
+      "noLogo": "No logo uploaded",
+      "favicon": "Favicon",
+      "faviconAlt": "Favicon",
+      "noFavicon": "No favicon uploaded"
+    },
+    "themeDefaults": {
+      "title": "Theme Defaults",
+      "primaryColor": "Primary Color",
+      "secondaryColor": "Secondary Color",
+      "backgroundColor": "Background Color",
+      "themeMode": "Theme Mode",
+      "defaultAvatarShape": "Default Avatar Shape"
+    },
+    "features": {
+      "title": "Feature Toggles",
+      "allowColors": "Allow users to customize card colors",
+      "allowBgImages": "Allow background images on cards",
+      "defaultVisibility": "Default Card Visibility"
+    },
+    "footer": {
+      "title": "Footer",
+      "footerText": "Footer Text",
+      "footerLink": "Footer Link"
+    },
+    "cards": {
+      "title": "All Cards",
+      "searchPlaceholder": "Search by name or company...",
+      "name": "Name",
+      "owner": "Owner",
+      "company": "Company",
+      "slug": "Slug",
+      "visibility": "Visibility",
+      "created": "Created",
+      "noCards": "No cards found."
+    }
+  },
+  "errors": {
+    "failedLoadCard": "Failed to load card",
+    "failedSaveCard": "Failed to save card",
+    "failedUpload": "Failed to upload {type}: {detail}",
+    "failedDelete": "Failed to delete {type}",
+    "failedLoadCards": "Failed to load cards",
+    "failedLoadSettings": "Failed to load settings",
+    "failedSaveSettings": "Failed to save settings",
+    "uploadFailed": "Upload failed",
+    "unauthorized": "Unauthorized",
+    "requestFailed": "Request failed"
+  },
+  "success": {
+    "settingsSaved": "Settings saved successfully"
+  },
+  "home": {
+    "tagline": "Digital business card platform"
+  }
+}

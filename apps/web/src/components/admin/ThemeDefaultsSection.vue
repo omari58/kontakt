@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   primaryColor: string;
@@ -29,16 +32,16 @@ watch(() => props.bgColor, (v) => { localBg.value = v; });
 watch(() => props.theme, (v) => { localTheme.value = v; });
 watch(() => props.avatarShape, (v) => { localShape.value = v; });
 
-const themes: { value: string; label: string }[] = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-  { value: 'auto', label: 'Auto' },
-];
+const themes = computed(() => [
+  { value: 'light', label: t('theme.light') },
+  { value: 'dark', label: t('theme.dark') },
+  { value: 'auto', label: t('theme.auto') },
+]);
 
-const avatarShapes: { value: string; label: string }[] = [
-  { value: 'circle', label: 'Circle' },
-  { value: 'rounded_square', label: 'Rounded Square' },
-];
+const avatarShapes = computed(() => [
+  { value: 'circle', label: t('editor.appearance.circle') },
+  { value: 'rounded_square', label: t('editor.appearance.roundedSquare') },
+]);
 
 function onColorInput(field: 'primaryColor' | 'secondaryColor' | 'bgColor', event: Event) {
   const value = (event.target as HTMLInputElement).value;
@@ -60,10 +63,10 @@ function onShapeChange(event: Event) {
 
 <template>
   <section class="settings-section">
-    <h2 class="settings-section__title">Theme Defaults</h2>
+    <h2 class="settings-section__title">{{ $t('admin.themeDefaults.title') }}</h2>
 
     <div class="settings-field">
-      <label class="settings-field__label" for="primary-color">Primary Color</label>
+      <label class="settings-field__label" for="primary-color">{{ $t('admin.themeDefaults.primaryColor') }}</label>
       <div class="settings-field__color-row">
         <input
           id="primary-color"
@@ -82,7 +85,7 @@ function onShapeChange(event: Event) {
     </div>
 
     <div class="settings-field">
-      <label class="settings-field__label" for="secondary-color">Secondary Color</label>
+      <label class="settings-field__label" for="secondary-color">{{ $t('admin.themeDefaults.secondaryColor') }}</label>
       <div class="settings-field__color-row">
         <input
           id="secondary-color"
@@ -101,7 +104,7 @@ function onShapeChange(event: Event) {
     </div>
 
     <div class="settings-field">
-      <label class="settings-field__label" for="bg-color">Background Color</label>
+      <label class="settings-field__label" for="bg-color">{{ $t('admin.themeDefaults.backgroundColor') }}</label>
       <div class="settings-field__color-row">
         <input
           id="bg-color"
@@ -120,7 +123,7 @@ function onShapeChange(event: Event) {
     </div>
 
     <div class="settings-field">
-      <label class="settings-field__label" for="theme-mode">Theme Mode</label>
+      <label class="settings-field__label" for="theme-mode">{{ $t('admin.themeDefaults.themeMode') }}</label>
       <select
         id="theme-mode"
         class="settings-field__select"
@@ -132,7 +135,7 @@ function onShapeChange(event: Event) {
     </div>
 
     <div class="settings-field">
-      <label class="settings-field__label" for="avatar-shape">Default Avatar Shape</label>
+      <label class="settings-field__label" for="avatar-shape">{{ $t('admin.themeDefaults.defaultAvatarShape') }}</label>
       <select
         id="avatar-shape"
         class="settings-field__select"

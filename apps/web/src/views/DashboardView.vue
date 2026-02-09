@@ -41,12 +41,12 @@ async function executeDelete() {
   <div class="dashboard">
     <div class="dashboard__header">
       <div>
-        <h1 class="dashboard__title">My Cards</h1>
-        <p class="dashboard__subtitle">Manage and share your digital business cards</p>
+        <h1 class="dashboard__title">{{ $t('dashboard.title') }}</h1>
+        <p class="dashboard__subtitle">{{ $t('dashboard.subtitle') }}</p>
       </div>
       <button class="dashboard__create-btn" @click="createCard">
         <Plus :size="16" />
-        Create New Card
+        {{ $t('dashboard.createNew') }}
       </button>
     </div>
 
@@ -64,11 +64,11 @@ async function executeDelete() {
     <!-- Empty state -->
     <div v-else-if="cards.length === 0" class="dashboard__empty">
       <CreditCard :size="56" class="dashboard__empty-icon" />
-      <h2 class="dashboard__empty-heading">No cards yet</h2>
-      <p class="dashboard__empty-text">Create your first digital business card to get started.</p>
+      <h2 class="dashboard__empty-heading">{{ $t('dashboard.noCards') }}</h2>
+      <p class="dashboard__empty-text">{{ $t('dashboard.noCardsHint') }}</p>
       <button class="dashboard__create-btn" @click="createCard">
         <Plus :size="16" />
-        Create Your First Card
+        {{ $t('dashboard.createFirst') }}
       </button>
     </div>
 
@@ -87,12 +87,12 @@ async function executeDelete() {
     <Transition name="modal">
       <div v-if="pendingDeleteId" class="dashboard__overlay" @click.self="cancelDelete">
         <div class="dashboard__dialog">
-          <h2 class="dashboard__dialog-title">Delete Card</h2>
-          <p class="dashboard__dialog-text">Are you sure you want to delete this card? This action cannot be undone.</p>
+          <h2 class="dashboard__dialog-title">{{ $t('dashboard.deleteCard') }}</h2>
+          <p class="dashboard__dialog-text">{{ $t('dashboard.deleteConfirm') }}</p>
           <div class="dashboard__dialog-actions">
-            <button class="dashboard__dialog-btn dashboard__dialog-btn--ghost" @click="cancelDelete">Cancel</button>
+            <button class="dashboard__dialog-btn dashboard__dialog-btn--ghost" @click="cancelDelete">{{ $t('common.cancel') }}</button>
             <button class="dashboard__dialog-btn dashboard__dialog-btn--danger" @click="executeDelete">
-              Delete
+              {{ $t('common.delete') }}
             </button>
           </div>
         </div>

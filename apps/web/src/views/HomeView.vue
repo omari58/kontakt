@@ -4,6 +4,6 @@
 <template>
   <div>
     <h1>Kontakt</h1>
-    <p>Digital business card platform</p>
+    <p>{{ $t('home.tagline') }}</p>
   </div>
 </template>

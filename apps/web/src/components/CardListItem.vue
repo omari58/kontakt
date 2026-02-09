@@ -83,7 +83,7 @@ async function downloadQr() {
 
     <!-- Footer with URL + actions -->
     <div class="card-item__footer">
-      <button class="card-item__url" title="Click to copy URL" @click="copyLink">
+      <button class="card-item__url" :title="$t('cardList.copyUrl')" @click="copyLink">
         <span class="card-item__url-text">/c/{{ card.slug }}</span>
         <Check v-if="copied" :size="12" class="card-item__url-icon card-item__url-icon--copied" />
         <Copy v-else :size="12" class="card-item__url-icon" />
@@ -91,7 +91,7 @@ async function downloadQr() {
       <div class="card-item__actions">
         <button
           class="card-item__btn"
-          title="Download QR"
+          :title="$t('cardList.downloadQr')"
           @click="downloadQr"
         >
           <QrCode :size="14" />
@@ -101,13 +101,13 @@ async function downloadQr() {
           target="_blank"
           rel="noopener"
           class="card-item__btn"
-          title="Open"
+          :title="$t('cardList.open')"
         >
           <ExternalLink :size="14" />
         </a>
         <button
           class="card-item__btn card-item__btn--delete"
-          title="Delete"
+          :title="$t('common.delete')"
           @click="emit('delete', card.id)"
         >
           <Trash2 :size="14" />

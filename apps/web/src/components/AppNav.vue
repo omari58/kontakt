@@ -13,16 +13,16 @@ defineEmits<{
   <nav class="app-nav">
     <router-link to="/" class="app-nav__link" @click="$emit('navigate')">
       <LayoutDashboard :size="16" class="app-nav__icon" />
-      Dashboard
+      {{ $t('nav.dashboard') }}
     </router-link>
     <template v-if="isAdmin">
       <router-link to="/admin/cards" class="app-nav__link" @click="$emit('navigate')">
         <CreditCard :size="16" class="app-nav__icon" />
-        All Cards
+        {{ $t('nav.allCards') }}
       </router-link>
       <router-link to="/admin/settings" class="app-nav__link" @click="$emit('navigate')">
         <Settings :size="16" class="app-nav__icon" />
-        Settings
+        {{ $t('nav.settings') }}
       </router-link>
     </template>
   </nav>

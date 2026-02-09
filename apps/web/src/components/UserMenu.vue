@@ -14,7 +14,7 @@ const { user, logout } = useAuth();
       <p class="user-menu__name">{{ user?.name }}</p>
       <p class="user-menu__email">{{ user?.email }}</p>
     </div>
-    <button class="user-menu__logout" title="Log out" @click="logout">
+    <button class="user-menu__logout" :title="$t('auth.logOut')" @click="logout">
       <LogOut :size="14" />
     </button>
   </div>

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Card } from '@/types';
 import { useApi } from '@/composables/useApi';
+import i18n from '@/i18n';
 
 export const useCardsStore = defineStore('cards', () => {
   const cards = ref<Card[]>([]);
@@ -16,7 +17,7 @@ export const useCardsStore = defineStore('cards', () => {
     try {
       cards.value = await api.get<Card[]>('/api/me/cards');
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Failed to load cards';
+      error.value = e instanceof Error ? e.message : i18n.global.t('errors.failedLoadCards');
     } finally {
       loading.value = false;
     }

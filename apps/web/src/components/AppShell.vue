@@ -5,6 +5,7 @@ import AppNav from './AppNav.vue';
 import UserMenu from './UserMenu.vue';
 import AppToast from './AppToast.vue';
 import ThemeToggle from './ThemeToggle.vue';
+import LocaleSwitcher from './LocaleSwitcher.vue';
 
 const { isAuthenticated } = useAuth();
 const mobileMenuOpen = ref(false);
@@ -37,6 +38,7 @@ function closeMobileMenu() {
       <AppNav />
       <div class="shell__sidebar-bottom">
         <ThemeToggle />
+        <LocaleSwitcher />
         <UserMenu />
       </div>
     </aside>
@@ -48,6 +50,7 @@ function closeMobileMenu() {
           <AppNav @navigate="closeMobileMenu" />
           <div class="shell__mobile-bottom">
             <ThemeToggle />
+            <LocaleSwitcher />
           </div>
         </div>
       </div>

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, watch, onMounted, onUnmounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { CardFormData } from '@/composables/useCardForm';
+
+const { t } = useI18n();
 
 const FONT_MAP: Record<string, { family: string; url: string }> = {
   'dm-serif':  { family: "'DM Serif Display', Georgia, serif", url: 'DM+Serif+Display' },
@@ -149,7 +152,7 @@ const platformLabels: Record<string, string> = {
       <div class="card__divider" />
       <div class="card__section">
         <div v-for="(phone, i) in form.phones" :key="'p'+i" class="card__contact">
-          <span class="card__contact-label">{{ phone.label || 'Phone' }}</span>
+          <span class="card__contact-label">{{ phone.label || t('preview.phone') }}</span>
           <span class="card__contact-value">{{ phone.number }}</span>
         </div>
       </div>
@@ -160,7 +163,7 @@ const platformLabels: Record<string, string> = {
       <div v-if="!form.phones.length" class="card__divider" />
       <div class="card__section">
         <div v-for="(email, i) in form.emails" :key="'e'+i" class="card__contact">
-          <span class="card__contact-label">{{ email.label || 'Email' }}</span>
+          <span class="card__contact-label">{{ email.label || t('preview.email') }}</span>
           <span class="card__contact-value">{{ email.email }}</span>
         </div>
       </div>
@@ -171,7 +174,7 @@ const platformLabels: Record<string, string> = {
       <div class="card__divider" />
       <div class="card__section">
         <div v-for="(site, i) in form.websites" :key="'w'+i" class="card__contact">
-          <span class="card__contact-label">{{ site.label || 'Website' }}</span>
+          <span class="card__contact-label">{{ site.label || t('preview.website') }}</span>
           <span class="card__contact-value card__contact-value--link">
             {{ site.url }}
             <svg class="card__website-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -185,7 +188,7 @@ const platformLabels: Record<string, string> = {
       <div class="card__divider" />
       <div class="card__section">
         <div class="card__contact">
-          <span class="card__contact-label">Address</span>
+          <span class="card__contact-label">{{ t('preview.address') }}</span>
           <span class="card__address">
             <template v-if="form.address.street">{{ form.address.street }}<br /></template>
             <template v-if="form.address.city">{{ form.address.city }}</template><template v-if="form.address.zip"> {{ form.address.zip }}</template>

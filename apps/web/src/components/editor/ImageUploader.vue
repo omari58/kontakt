@@ -61,7 +61,7 @@ function onFileChange(event: Event) {
     >
       <Upload :size="32" class="image-uploader__upload-icon" />
       <p class="image-uploader__text">
-        Drag and drop an image here, or click to browse
+        {{ $t('editor.images.dragDrop') }}
       </p>
       <input
         ref="fileInput"
@@ -83,14 +83,14 @@ function onFileChange(event: Event) {
           class="image-uploader__change-btn"
           @click="openFileDialog"
         >
-          Change
+          {{ $t('common.change') }}
         </button>
         <button
           type="button"
           class="image-uploader__remove-btn"
           @click="emit('remove')"
         >
-          Remove
+          {{ $t('common.remove') }}
         </button>
       </div>
       <input

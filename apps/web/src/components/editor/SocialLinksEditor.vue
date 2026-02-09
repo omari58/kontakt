@@ -49,7 +49,7 @@ const platformOptions = [
 <template>
   <div class="social-editor">
     <fieldset class="social-editor__group">
-      <legend class="social-editor__legend">Websites</legend>
+      <legend class="social-editor__legend">{{ $t('editor.webSocial.websites') }}</legend>
       <div
         v-for="(site, index) in websites"
         :key="index"
@@ -58,7 +58,7 @@ const platformOptions = [
         <input
           v-model="site.label"
           type="text"
-          placeholder="Label"
+          :placeholder="$t('editor.webSocial.label')"
           class="social-editor__label-input"
         />
         <input
@@ -80,12 +80,12 @@ const platformOptions = [
         class="social-editor__add-btn"
         @click="emit('addWebsite')"
       >
-        <Plus :size="14" /> Add Website
+        <Plus :size="14" /> {{ $t('editor.webSocial.addWebsite') }}
       </button>
     </fieldset>
 
     <fieldset class="social-editor__group">
-      <legend class="social-editor__legend">Social Links</legend>
+      <legend class="social-editor__legend">{{ $t('editor.webSocial.socialLinks') }}</legend>
       <div
         v-for="(link, index) in socialLinks"
         :key="index"
@@ -122,7 +122,7 @@ const platformOptions = [
         class="social-editor__add-btn"
         @click="emit('addSocialLink')"
       >
-        <Plus :size="14" /> Add Social Link
+        <Plus :size="14" /> {{ $t('editor.webSocial.addSocialLink') }}
       </button>
     </fieldset>
   </div>

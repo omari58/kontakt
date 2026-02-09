@@ -24,7 +24,7 @@ function updateAddress(field: keyof Address, value: string) {
 <template>
   <div class="contact-fields">
     <fieldset class="contact-fields__group">
-      <legend class="contact-fields__legend">Phone Numbers</legend>
+      <legend class="contact-fields__legend">{{ $t('editor.contact.phoneNumbers') }}</legend>
       <div
         v-for="(phone, index) in phones"
         :key="index"
@@ -33,13 +33,13 @@ function updateAddress(field: keyof Address, value: string) {
         <input
           v-model="phone.number"
           type="tel"
-          placeholder="Phone number"
+          :placeholder="$t('editor.contact.phonePlaceholder')"
           class="contact-fields__input contact-fields__input--phone"
         />
         <input
           v-model="phone.label"
           type="text"
-          placeholder="Label (e.g. Work)"
+          :placeholder="$t('editor.contact.phoneLabelPlaceholder')"
           class="contact-fields__input contact-fields__input--label"
         />
         <button
@@ -55,12 +55,12 @@ function updateAddress(field: keyof Address, value: string) {
         class="contact-fields__add-btn"
         @click="emit('addPhone')"
       >
-        <Plus :size="14" /> Add Phone
+        <Plus :size="14" /> {{ $t('editor.contact.addPhone') }}
       </button>
     </fieldset>
 
     <fieldset class="contact-fields__group">
-      <legend class="contact-fields__legend">Email Addresses</legend>
+      <legend class="contact-fields__legend">{{ $t('editor.contact.emailAddresses') }}</legend>
       <div
         v-for="(email, index) in emails"
         :key="index"
@@ -69,13 +69,13 @@ function updateAddress(field: keyof Address, value: string) {
         <input
           v-model="email.email"
           type="email"
-          placeholder="Email address"
+          :placeholder="$t('editor.contact.emailPlaceholder')"
           class="contact-fields__input contact-fields__input--email"
         />
         <input
           v-model="email.label"
           type="text"
-          placeholder="Label (e.g. Personal)"
+          :placeholder="$t('editor.contact.emailLabelPlaceholder')"
           class="contact-fields__input contact-fields__input--label"
         />
         <button
@@ -91,38 +91,38 @@ function updateAddress(field: keyof Address, value: string) {
         class="contact-fields__add-btn"
         @click="emit('addEmail')"
       >
-        <Plus :size="14" /> Add Email
+        <Plus :size="14" /> {{ $t('editor.contact.addEmail') }}
       </button>
     </fieldset>
 
     <fieldset class="contact-fields__group">
-      <legend class="contact-fields__legend">Address</legend>
+      <legend class="contact-fields__legend">{{ $t('editor.contact.address') }}</legend>
       <div class="contact-fields__address-grid">
         <input
           :value="address.street"
           type="text"
-          placeholder="Street"
+          :placeholder="$t('editor.contact.street')"
           class="contact-fields__input contact-fields__input--full"
           @input="updateAddress('street', ($event.target as HTMLInputElement).value)"
         />
         <input
           :value="address.city"
           type="text"
-          placeholder="City"
+          :placeholder="$t('editor.contact.city')"
           class="contact-fields__input"
           @input="updateAddress('city', ($event.target as HTMLInputElement).value)"
         />
         <input
           :value="address.zip"
           type="text"
-          placeholder="ZIP / Postal Code"
+          :placeholder="$t('editor.contact.zip')"
           class="contact-fields__input"
           @input="updateAddress('zip', ($event.target as HTMLInputElement).value)"
         />
         <input
           :value="address.country"
           type="text"
-          placeholder="Country"
+          :placeholder="$t('editor.contact.country')"
           class="contact-fields__input contact-fields__input--full"
           @input="updateAddress('country', ($event.target as HTMLInputElement).value)"
         />

@@ -66,7 +66,7 @@ onMounted(() => {
 
 <template>
   <div class="admin-cards">
-    <h1 class="admin-cards__title">All Cards</h1>
+    <h1 class="admin-cards__title">{{ $t('admin.cards.title') }}</h1>
 
     <div class="admin-cards__toolbar">
       <div class="admin-cards__search-wrap">
@@ -74,24 +74,24 @@ onMounted(() => {
         <input
           v-model="search"
           type="text"
-          placeholder="Search by name or company..."
+          :placeholder="$t('admin.cards.searchPlaceholder')"
           class="admin-cards__search"
           @input="onSearchInput"
         />
       </div>
     </div>
 
-    <div v-if="loading" class="admin-cards__loading">Loading...</div>
+    <div v-if="loading" class="admin-cards__loading">{{ $t('common.loading') }}</div>
 
     <table v-else class="admin-cards__table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th>Owner</th>
-          <th>Company</th>
-          <th>Slug</th>
-          <th>Visibility</th>
-          <th>Created</th>
+          <th>{{ $t('admin.cards.name') }}</th>
+          <th>{{ $t('admin.cards.owner') }}</th>
+          <th>{{ $t('admin.cards.company') }}</th>
+          <th>{{ $t('admin.cards.slug') }}</th>
+          <th>{{ $t('admin.cards.visibility') }}</th>
+          <th>{{ $t('admin.cards.created') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -113,7 +113,7 @@ onMounted(() => {
           <td>{{ new Date(card.createdAt).toLocaleDateString() }}</td>
         </tr>
         <tr v-if="cards.length === 0">
-          <td colspan="6" class="admin-cards__empty">No cards found.</td>
+          <td colspan="6" class="admin-cards__empty">{{ $t('admin.cards.noCards') }}</td>
         </tr>
       </tbody>
     </table>
@@ -124,7 +124,7 @@ onMounted(() => {
         :disabled="page <= 1"
         @click="goToPage(page - 1)"
       >
-        Previous
+        {{ $t('common.previous') }}
       </button>
       <button
         v-for="p in totalPages"
@@ -139,7 +139,7 @@ onMounted(() => {
         :disabled="page >= totalPages"
         @click="goToPage(page + 1)"
       >
-        Next
+        {{ $t('common.next') }}
       </button>
     </div>
   </div>

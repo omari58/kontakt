@@ -105,13 +105,13 @@ async function onUploadFavicon(file: File) {
 <template>
   <div class="admin-settings">
     <div class="admin-settings__header">
-      <h1 class="admin-settings__title">Admin Settings</h1>
+      <h1 class="admin-settings__title">{{ $t('admin.settings.title') }}</h1>
       <button
         class="admin-settings__save-btn"
         :disabled="!hasChanges || store.saving"
         @click="save"
       >
-        {{ store.saving ? 'Saving...' : 'Save Changes' }}
+        {{ store.saving ? $t('common.saving') : $t('admin.settings.saveChanges') }}
       </button>
     </div>
 
@@ -130,7 +130,7 @@ async function onUploadFavicon(file: File) {
     </div>
 
     <div v-if="store.loading" class="admin-settings__loading">
-      Loading settings...
+      {{ $t('admin.settings.loadingSettings') }}
     </div>
 
     <template v-else>

@@ -1,29 +1,32 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useTheme } from '@/composables/useTheme';
 import type { ThemePreference } from '@/composables/useTheme';
+import { useI18n } from 'vue-i18n';
 import { Sun, Moon, Monitor } from 'lucide-vue-next';
 
 const { preference, setTheme } = useTheme();
+const { t } = useI18n();
 
-const themes: { value: ThemePreference; label: string; icon: typeof Sun }[] = [
-  { value: 'light', label: 'Light', icon: Sun },
-  { value: 'dark', label: 'Dark', icon: Moon },
-  { value: 'system', label: 'Auto', icon: Monitor },
-];
+const themes = computed(() => [
+  { value: 'light' as ThemePreference, label: t('theme.light'), title: t('theme.lightMode'), icon: Sun },
+  { value: 'dark' as ThemePreference, label: t('theme.dark'), title: t('theme.darkMode'), icon: Moon },
+  { value: 'system' as ThemePreference, label: t('theme.auto'), title: t('theme.autoMode'), icon: Monitor },
+]);
 </script>
 
 <template>
   <div class="theme-toggle">
     <button
-      v-for="t in themes"
-      :key="t.value"
+      v-for="th in themes"
+      :key="th.value"
       class="theme-toggle__btn"
-      :class="{ 'theme-toggle__btn--active': preference === t.value }"
-      :title="`${t.label} mode`"
-      @click="setTheme(t.value)"
+      :class="{ 'theme-toggle__btn--active': preference === th.value }"
+      :title="th.title"
+      @click="setTheme(th.value)"
     >
-      <component :is="t.icon" :size="14" />
-      <span class="theme-toggle__label">{{ t.label }}</span>
+      <component :is="th.icon" :size="14" />
+      <span class="theme-toggle__label">{{ th.label }}</span>
     </button>
   </div>
 </template>

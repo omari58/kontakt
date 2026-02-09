@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const props = defineProps<{
   allowUserColorOverride: boolean;
@@ -29,11 +32,11 @@ watch(() => props.defaultVisibility, (v) => { localVisibility.value = v; });
 watch(() => props.footerText, (v) => { localFooterText.value = v; });
 watch(() => props.footerLink, (v) => { localFooterLink.value = v; });
 
-const visibilityOptions = [
-  { value: 'public', label: 'Public' },
-  { value: 'unlisted', label: 'Unlisted' },
-  { value: 'disabled', label: 'Disabled' },
-];
+const visibilityOptions = computed(() => [
+  { value: 'public', label: t('editor.settings.public') },
+  { value: 'unlisted', label: t('editor.settings.unlisted') },
+  { value: 'disabled', label: t('editor.settings.disabled') },
+]);
 
 function onToggle(field: 'allowUserColorOverride' | 'allowBgImages', event: Event) {
   const checked = (event.target as HTMLInputElement).checked;
@@ -61,7 +64,7 @@ function onFooterLinkInput(event: Event) {
 
 <template>
   <section class="settings-section">
-    <h2 class="settings-section__title">Feature Toggles</h2>
+    <h2 class="settings-section__title">{{ $t('admin.features.title') }}</h2>
 
     <div class="settings-field">
       <label class="settings-field__toggle">
@@ -70,7 +73,7 @@ function onFooterLinkInput(event: Event) {
           :checked="localColorOverride"
           @change="onToggle('allowUserColorOverride', $event)"
         />
-        <span class="settings-field__toggle-label">Allow users to customize card colors</span>
+        <span class="settings-field__toggle-label">{{ $t('admin.features.allowColors') }}</span>
       </label>
     </div>
 
@@ -81,12 +84,12 @@ function onFooterLinkInput(event: Event) {
           :checked="localBgImages"
           @change="onToggle('allowBgImages', $event)"
         />
-        <span class="settings-field__toggle-label">Allow background images on cards</span>
+        <span class="settings-field__toggle-label">{{ $t('admin.features.allowBgImages') }}</span>
       </label>
     </div>
 
     <div class="settings-field">
-      <label class="settings-field__label" for="default-visibility">Default Card Visibility</label>
+      <label class="settings-field__label" for="default-visibility">{{ $t('admin.features.defaultVisibility') }}</label>
       <select
         id="default-visibility"
         class="settings-field__select"
@@ -99,10 +102,10 @@ function onFooterLinkInput(event: Event) {
   </section>
 
   <section class="settings-section">
-    <h2 class="settings-section__title">Footer</h2>
+    <h2 class="settings-section__title">{{ $t('admin.footer.title') }}</h2>
 
     <div class="settings-field">
-      <label class="settings-field__label" for="footer-text">Footer Text</label>
+      <label class="settings-field__label" for="footer-text">{{ $t('admin.footer.footerText') }}</label>
       <input
         id="footer-text"
         type="text"
@@ -113,7 +116,7 @@ function onFooterLinkInput(event: Event) {
     </div>
 
     <div class="settings-field">
-      <label class="settings-field__label" for="footer-link">Footer Link</label>
+      <label class="settings-field__label" for="footer-link">{{ $t('admin.footer.footerLink') }}</label>
       <input
         id="footer-link"
         type="url"

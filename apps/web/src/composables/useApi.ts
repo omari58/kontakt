@@ -1,3 +1,5 @@
+import i18n from '@/i18n';
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -22,11 +24,11 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
 
   if (response.status === 401) {
     window.location.href = '/api/auth/login';
-    throw new ApiError(401, 'Unauthorized');
+    throw new ApiError(401, i18n.global.t('errors.unauthorized'));
   }
 
   if (!response.ok) {
-    const text = await response.text().catch(() => 'Request failed');
+    const text = await response.text().catch(() => i18n.global.t('errors.requestFailed'));
     let message = text;
     try {
       const json = JSON.parse(text);
