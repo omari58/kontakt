@@ -6,13 +6,38 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-kontakt}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-kontakt}
       POSTGRES_DB: ${POSTGRES_DB:-kontakt}
+    ports:
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kontakt}"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kontakt} -d ${POSTGRES_DB:-kontakt}"]
+      interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
+    profiles:
+      - infra
+      - prod
+    networks:
+      - internal
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.2
+    container_name: kontakt-keycloak
+    restart: unless-stopped
+    command: start-dev
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_HTTP_PORT: 8080
+    ports:
+      - "${KEYCLOAK_PORT:-4080}:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    profiles:
+      - infra
+      - prod
     networks:
       - internal
 
@@ -25,15 +50,19 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-kontakt}:${POSTGRES_PASSWORD:-kontakt}@postgres:5432/${POSTGRES_DB:-kontakt}?schema=public
       NODE_ENV: production
       PORT: 3000
-    env_file:
-      - path: .env
-        required: false
+      OIDC_ISSUER: http://keycloak:8080/realms/kontakt
+      OIDC_CALLBACK_URL: http://localhost/api/auth/callback
     volumes:
       - uploads:/app/uploads
+    profiles:
+      - prod
     networks:
       - internal
 
@@ -44,6 +73,8 @@ services:
     restart: unless-stopped
     volumes:
       - web_dist:/srv/share
+    profiles:
+      - prod
     networks:
       - internal
 
@@ -63,11 +94,14 @@ services:
       - caddy_data:/data
       - caddy_config:/config
       - web_dist:/srv/web:ro
+    profiles:
+      - prod
     networks:
       - internal
 
 volumes:
   pgdata:
+  keycloak_data:
   uploads:
   web_dist:
   caddy_data:

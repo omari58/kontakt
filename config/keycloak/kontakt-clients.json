@@ -16,12 +16,12 @@
       },
       "redirectUris": [
         "http://localhost:4000/api/auth/callback",
-        "https://kontakt.localhost.dev/api/auth/callback"
+        "http://localhost/api/auth/callback"
       ],
       "webOrigins": [
         "http://localhost:4000",
         "http://localhost:5173",
-        "https://kontakt.localhost.dev"
+        "http://localhost"
       ],
       "protocolMappers": [
         {

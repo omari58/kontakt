@@ -116,6 +116,10 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'templates'));
   app.setViewEngine('hbs');
 
+  // Enable graceful shutdown so NestJS properly closes the HTTP server
+  // and runs OnModuleDestroy hooks (e.g. Prisma disconnect) on SIGTERM/SIGINT.
+  app.enableShutdownHooks();
+
   // Seed default settings on first run
   const prisma = app.get(PrismaService);
   await seedDefaultSettings(prisma, logger);
