@@ -46,6 +46,7 @@ export class RenderService {
 
     const footerText = allSettings.get('footer_text') || null;
     const footerLink = allSettings.get('footer_link') || null;
+    const favicon = allSettings.get('org_favicon') || null;
 
     const avatarShapeClass = resolved.avatarShape === 'ROUNDED_SQUARE'
       ? 'rounded-square'
@@ -115,6 +116,7 @@ export class RenderService {
       jsonLd,
       footerText,
       footerLink,
+      favicon,
     };
   }
 
