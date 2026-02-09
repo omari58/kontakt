@@ -28,8 +28,8 @@ RUN addgroup -S kontakt && adduser -S kontakt -G kontakt
 # Copy built static files to a known path for Caddy volume mount
 COPY --from=build /app/apps/web/dist /srv/web
 
-RUN chown -R kontakt:kontakt /srv/web
+RUN mkdir -p /srv/share && chown -R kontakt:kontakt /srv/web /srv/share
 USER kontakt
 
-# This container just holds the static files — Caddy serves them via shared volume
-CMD ["sleep", "infinity"]
+# Copy built files into shared volume on startup, then idle
+CMD ["sh", "-c", "cp -a /srv/web/. /srv/share/ && echo 'Web files synced to shared volume' && sleep infinity"]

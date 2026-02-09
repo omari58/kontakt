@@ -46,6 +46,9 @@ COPY --from=build /app/apps/api/templates ./apps/api/templates
 # Prisma schema + migrations for runtime migrate deploy
 COPY --from=build /app/apps/api/prisma ./apps/api/prisma
 
+# Entrypoint script for migrations + startup
+COPY apps/api/entrypoint.sh ./apps/api/entrypoint.sh
+
 # Package files needed by Node resolution
 COPY apps/api/package.json ./apps/api/package.json
 COPY package.json ./

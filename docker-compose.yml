@@ -8,26 +8,43 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-kontakt}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-kontakt}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
 
   api:
     build:
       context: .
       dockerfile: apps/api/Dockerfile
     restart: unless-stopped
+    entrypoint: ["sh", "./apps/api/entrypoint.sh"]
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-kontakt}:${POSTGRES_PASSWORD:-kontakt}@postgres:5432/${POSTGRES_DB:-kontakt}?schema=public
       NODE_ENV: production
     env_file:
       - path: .env
         required: false
+    volumes:
+      - uploads:/app/apps/api/uploads
+    networks:
+      - internal
 
   web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
     restart: unless-stopped
+    volumes:
+      - web_dist:/srv/share
+    networks:
+      - internal
 
   caddy:
     image: caddy:2-alpine
@@ -42,8 +59,17 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
+      - web_dist:/srv/web:ro
+    networks:
+      - internal
 
 volumes:
   pgdata:
+  uploads:
+  web_dist:
   caddy_data:
   caddy_config:
+
+networks:
+  internal:
+    driver: bridge
