@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { Card } from '@/types';
-import { ExternalLink, Copy, Check, Trash2 } from 'lucide-vue-next';
+import { ExternalLink, Copy, Check, Trash2, QrCode } from 'lucide-vue-next';
 
 const props = defineProps<{
   card: Card;
@@ -44,6 +44,17 @@ async function copyLink() {
   copied.value = true;
   setTimeout(() => { copied.value = false; }, 2000);
 }
+
+async function downloadQr() {
+  const res = await fetch(`/api/cards/${props.card.slug}/qr?format=png&size=500`);
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${props.card.slug}-qr.png`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 </script>
 
 <template>
@@ -78,6 +89,13 @@ async function copyLink() {
         <Copy v-else :size="12" class="card-item__url-icon" />
       </button>
       <div class="card-item__actions">
+        <button
+          class="card-item__btn"
+          title="Download QR"
+          @click="downloadQr"
+        >
+          <QrCode :size="14" />
+        </button>
         <a
           :href="`/c/${card.slug}`"
           target="_blank"
