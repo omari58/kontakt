@@ -159,28 +159,28 @@ requirements:
   - id: REQ-017
     name: "Dashboard with card list"
     description: "Authenticated users see a dashboard listing their cards with quick stats and actions (edit, preview, share, delete)."
-    status: pending
+    status: done
     plan: "plans/06-frontend-spa.md"
     depends_on: [REQ-007]
 
   - id: REQ-018
     name: "Card editor"
     description: "Users create and edit cards through a form-based editor with live preview, covering all card fields including contact info, social links, images, and styling."
-    status: pending
+    status: done
     plan: "plans/06-frontend-spa.md"
     depends_on: [REQ-007, REQ-009]
 
   - id: REQ-019
     name: "Admin settings page"
     description: "Admins can view and modify instance settings through a dedicated settings page in the SPA."
-    status: pending
+    status: done
     plan: "plans/06-frontend-spa.md"
     depends_on: [REQ-014]
 
   - id: REQ-020
     name: "Admin card overview"
     description: "Admins can view all cards across all users from an admin panel."
-    status: pending
+    status: done
     plan: "plans/06-frontend-spa.md"
     depends_on: [REQ-005, REQ-007]
 

@@ -23,14 +23,16 @@ function closeMobileMenu() {
         <span class="shell__hamburger-line" />
       </button>
       <span class="shell__brand">Kontakt</span>
+      <UserMenu />
     </header>
-
-    <UserMenu />
 
     <!-- Sidebar (desktop) -->
     <aside class="shell__sidebar">
       <div class="shell__sidebar-brand">Kontakt</div>
       <AppNav />
+      <div class="shell__sidebar-bottom">
+        <UserMenu />
+      </div>
     </aside>
 
     <!-- Mobile menu overlay -->
@@ -53,54 +55,24 @@ function closeMobileMenu() {
 </template>
 
 <style scoped>
+/* ============ Base layout ============ */
 .shell {
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
-  position: relative;
 }
 
-/* Sidebar - desktop only */
-.shell__sidebar {
-  width: 220px;
-  background: #fafafa;
-  border-right: 1px solid #e0e0e0;
-  padding: 1rem 0.5rem;
-  flex-shrink: 0;
-  display: none;
-}
-
-.shell__sidebar-brand {
-  font-size: 1.125rem;
-  font-weight: 700;
-  padding: 0 1rem 1rem;
-  border-bottom: 1px solid #e0e0e0;
-  margin-bottom: 0.75rem;
-}
-
-@media (min-width: 768px) {
-  .shell__sidebar {
-    display: block;
-  }
-  .shell__header {
-    display: none;
-  }
-  .shell__main {
-    /* Position user menu in top-right on desktop */
-  }
-}
-
-/* Mobile header */
+/* ============ Mobile header ============ */
 .shell__header {
-  position: sticky;
-  top: 0;
   display: flex;
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   background: #fff;
   border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
   z-index: 30;
-  width: 100%;
 }
 
 .shell__hamburger {
@@ -126,7 +98,26 @@ function closeMobileMenu() {
   flex: 1;
 }
 
-/* Mobile overlay */
+/* ============ Sidebar (hidden on mobile) ============ */
+.shell__sidebar {
+  display: none;
+}
+
+.shell__sidebar-brand {
+  font-size: 1.125rem;
+  font-weight: 700;
+  padding: 0 1rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 0.75rem;
+}
+
+.shell__sidebar-bottom {
+  margin-top: auto;
+  padding: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* ============ Mobile overlay ============ */
 .shell__mobile-overlay {
   position: fixed;
   inset: 0;
@@ -141,44 +132,43 @@ function closeMobileMenu() {
   padding: 1rem 0.5rem;
 }
 
-/* Main content */
+/* ============ Main content ============ */
 .shell__main {
   flex: 1;
   min-width: 0;
 }
 
-@media (max-width: 767px) {
-  .shell {
-    flex-direction: column;
-  }
-  .shell :deep(.user-menu) {
-    position: absolute;
-    top: 0.75rem;
-    right: 1rem;
-    z-index: 31;
-  }
-}
-
-@media (min-width: 768px) {
-  .shell__main {
-    position: relative;
-  }
-
-  /* Desktop user menu positioning handled by a wrapper */
-  .shell :deep(.user-menu) {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 30;
-  }
-}
-
-/* Loading state */
+/* ============ Loading state ============ */
 .shell__loading {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   color: #666;
+}
+
+/* ============ Desktop layout (>= 768px) ============ */
+@media (min-width: 768px) {
+  .shell {
+    flex-direction: row;
+  }
+
+  .shell__header {
+    display: none;
+  }
+
+  .shell__sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 220px;
+    background: #fafafa;
+    border-right: 1px solid #e0e0e0;
+    padding: 1rem 0.5rem;
+    flex-shrink: 0;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+  }
 }
 </style>

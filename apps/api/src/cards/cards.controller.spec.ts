@@ -131,7 +131,7 @@ describe('CardsController', () => {
     it('should return a CardResponseDto by ID', async () => {
       const result = await controller.findOne('card-uuid-1', mockUser);
 
-      expect(service.findOne).toHaveBeenCalledWith('card-uuid-1', 'user-uuid-1');
+      expect(service.findOne).toHaveBeenCalledWith('card-uuid-1', 'user-uuid-1', false);
       expect(result).toBeInstanceOf(CardResponseDto);
       expect(result.id).toBe(mockCard.id);
     });
@@ -177,7 +177,7 @@ describe('CardsController', () => {
 
       const result = await controller.update('card-uuid-1', mockUser, dto);
 
-      expect(service.update).toHaveBeenCalledWith('card-uuid-1', 'user-uuid-1', dto);
+      expect(service.update).toHaveBeenCalledWith('card-uuid-1', 'user-uuid-1', dto, false);
       expect(result).toBeInstanceOf(CardResponseDto);
       expect(result.name).toBe('Updated Name');
     });
@@ -195,7 +195,7 @@ describe('CardsController', () => {
     it('should delete a card', async () => {
       await controller.remove('card-uuid-1', mockUser);
 
-      expect(service.delete).toHaveBeenCalledWith('card-uuid-1', 'user-uuid-1');
+      expect(service.delete).toHaveBeenCalledWith('card-uuid-1', 'user-uuid-1', false);
     });
   });
 });

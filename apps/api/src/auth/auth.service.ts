@@ -66,11 +66,12 @@ export class AuthService implements OnModuleInit {
   async handleCallback(
     currentUrl: URL,
     codeVerifier: string,
+    expectedState: string,
   ): Promise<AuthResult> {
     const tokens = await oidc.authorizationCodeGrant(
       this.oidcConfig,
       currentUrl,
-      { pkceCodeVerifier: codeVerifier },
+      { pkceCodeVerifier: codeVerifier, expectedState },
     );
 
     const claims = tokens.claims() as Record<string, unknown>;

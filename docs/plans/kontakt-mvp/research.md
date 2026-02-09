@@ -103,3 +103,20 @@
 - [2026-02-08]: `resolveCardTheme` is a pure function (no class, no side effects) — makes testing trivial and keeps the render service clean
 - [2026-02-08]: After theme resolver integration, `buildCssVars` parameters are guaranteed non-null — update type signatures to match (`string` not `string | null`) to avoid dead code paths
 - [2026-02-08]: ITU-R BT.601 luma formula `(0.299*R + 0.587*G + 0.114*B)/255` with threshold 0.5 for text color contrast — standard approach, works well for UI
+
+## Phase 6 Implementation Learnings
+
+- [2026-02-08]: Auth store `fetchUser()` must use raw `fetch` instead of `useApi()` — the API client's 401 auto-redirect would cause an infinite loop during the router guard's auth check
+- [2026-02-08]: Pinia stores use Composition API `defineStore` with setup function consistently — `storeToRefs` for reactive refs, direct references for actions
+- [2026-02-08]: `useApi()` composable handles 204 responses as `undefined as T` — pragmatic for DELETE/PUT where return type is `void`
+- [2026-02-08]: File uploads (images, logo, favicon) use raw `fetch` with `FormData` instead of `useApi()` — the API client sets `Content-Type: application/json` which conflicts with multipart
+- [2026-02-08]: Vue Router `router-link-active` prefix-matches all child routes — use `router-link-exact-active` for root route `/` to avoid always-active state
+- [2026-02-08]: `CardResponseDto.fromCard()` strips `user` field — admin endpoints need `AdminCardResponseDto` with `fromCardWithUser()` to preserve user info
+- [2026-02-08]: Prisma relation search filter: `{ user: { email: { contains: search, mode: 'insensitive' } } }` — valid syntax for searching across relations
+- [2026-02-08]: CSS `url()` values must quote interpolated URLs to prevent CSS injection — `url("${url}")` not `url(${url})`
+- [2026-02-08]: `router.push` (not `router.replace`) after card creation — ensures component re-mounts with new route params so composable re-initializes
+- [2026-02-08]: `vi.useFakeTimers()` in `beforeEach` requires `vi.useRealTimers()` in `afterEach` — fake timers leak across test files otherwise
+- [2026-02-08]: Settings dirty tracking via JSON snapshot diff — `changedSettings` computed compares current form state against initial snapshot, sends only delta to API
+- [2026-02-08]: Deviation: Backend settings key is `allow_user_background_image` not `allow_bg_images` — frontend matched actual backend key
+- [2026-02-08]: Deviation: Card editor merges "Appearance" and "Settings" into single collapsible section — all fields present, just structural difference from plan
+- [2026-02-08]: Prisma 6 with `mode: 'insensitive' as const` needed for TypeScript literal type narrowing in search filters

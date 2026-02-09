@@ -56,7 +56,7 @@ export function useCardForm(cardId?: string) {
   const isDirty = ref(false);
   const savedSnapshot = ref('');
 
-  const isEditMode = computed(() => !!cardId);
+  const isEditMode = computed(() => !!cardId && cardId !== 'new');
 
   const avatarUrl = ref<string | null>(null);
   const bannerUrl = ref<string | null>(null);
@@ -165,25 +165,24 @@ export function useCardForm(cardId?: string) {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const response = await fetch(`/api/cards/${cardIdForUpload}/${type}`, {
+      const response = await fetch(`/api/cards/${cardIdForUpload}/upload/${type}`, {
         method: 'POST',
         credentials: 'include',
         body: formData,
       });
       if (!response.ok) {
-        throw new Error(`Failed to upload ${type}`);
+        const text = await response.text().catch(() => '');
+        throw new Error(`Failed to upload ${type}: ${response.status} ${text}`);
       }
-      const card = await response.json() as Card;
+      const result = await response.json() as { path: string };
       if (type === 'avatar') {
-        avatarUrl.value = card.avatarPath;
-        return card.avatarPath;
+        avatarUrl.value = result.path;
       } else if (type === 'banner') {
-        bannerUrl.value = card.bannerPath;
-        return card.bannerPath;
+        bannerUrl.value = result.path;
       } else {
-        backgroundUrl.value = card.bgImagePath;
-        return card.bgImagePath;
+        backgroundUrl.value = result.path;
       }
+      return result.path;
     } catch (e: unknown) {
       error.value = e instanceof Error ? e.message : `Failed to upload ${type}`;
       return null;

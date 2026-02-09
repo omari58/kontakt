@@ -173,8 +173,9 @@ describe('AuthService', () => {
       mockedOidc.authorizationCodeGrant.mockResolvedValue(mockTokens as any);
 
       const result = await service.handleCallback(
-        new URL('http://localhost:3000/api/auth/callback?code=auth-code'),
+        new URL('http://localhost:3000/api/auth/callback?code=auth-code&state=test-state'),
         'test-code-verifier',
+        'test-state',
       );
 
       expect(mockedOidc.authorizationCodeGrant).toHaveBeenCalled();
@@ -197,8 +198,9 @@ describe('AuthService', () => {
 
       await expect(
         service.handleCallback(
-          new URL('http://localhost:3000/api/auth/callback?code=bad-code'),
+          new URL('http://localhost:3000/api/auth/callback?code=bad-code&state=test-state'),
           'test-code-verifier',
+          'test-state',
         ),
       ).rejects.toThrow();
     });

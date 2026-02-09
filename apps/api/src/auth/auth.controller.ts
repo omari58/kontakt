@@ -62,7 +62,7 @@ export class AuthController {
       `${req.protocol}://${req.get('host')}${req.originalUrl}`,
     );
 
-    const { token } = await this.authService.handleCallback(currentUrl, codeVerifier);
+    const { token } = await this.authService.handleCallback(currentUrl, codeVerifier, storedState);
 
     // Set session JWT in HTTP-only cookie with configured lifetime
     res.cookie(SESSION_COOKIE, token, sessionCookieOptions(this.sessionMaxAge));

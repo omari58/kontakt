@@ -78,12 +78,12 @@ export class CardsService {
     });
   }
 
-  async findOne(id: string, userId: string): Promise<Card> {
+  async findOne(id: string, userId: string, isAdmin = false): Promise<Card> {
     const card = await this.prisma.card.findUnique({ where: { id } });
     if (!card) {
       throw new NotFoundException('Card not found');
     }
-    if (card.userId !== userId) {
+    if (!isAdmin && card.userId !== userId) {
       throw new ForbiddenException('You do not have access to this card');
     }
     return card;
@@ -97,8 +97,8 @@ export class CardsService {
     return card;
   }
 
-  async update(id: string, userId: string, dto: UpdateCardDto): Promise<Card> {
-    const card = await this.findOne(id, userId);
+  async update(id: string, userId: string, dto: UpdateCardDto, isAdmin = false): Promise<Card> {
+    const card = await this.findOne(id, userId, isAdmin);
 
     if (dto.slug) {
       await this.ensureSlugAvailable(dto.slug, card.id);
@@ -120,8 +120,8 @@ export class CardsService {
     });
   }
 
-  async delete(id: string, userId: string): Promise<void> {
-    await this.findOne(id, userId);
+  async delete(id: string, userId: string, isAdmin = false): Promise<void> {
+    await this.findOne(id, userId, isAdmin);
     await this.prisma.card.delete({ where: { id } });
   }
 

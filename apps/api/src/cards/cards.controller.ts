@@ -57,7 +57,8 @@ export class CardsController {
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
   ): Promise<CardResponseDto> {
-    const card = await this.cardsService.findOne(id, user.sub);
+    const isAdmin = user.role === 'ADMIN';
+    const card = await this.cardsService.findOne(id, user.sub, isAdmin);
     return CardResponseDto.fromCard(card);
   }
 
@@ -68,7 +69,8 @@ export class CardsController {
     @CurrentUser() user: JwtPayload,
     @Body() dto: UpdateCardDto,
   ): Promise<CardResponseDto> {
-    const card = await this.cardsService.update(id, user.sub, dto);
+    const isAdmin = user.role === 'ADMIN';
+    const card = await this.cardsService.update(id, user.sub, dto, isAdmin);
     return CardResponseDto.fromCard(card);
   }
 
@@ -79,6 +81,7 @@ export class CardsController {
     @Param('id') id: string,
     @CurrentUser() user: JwtPayload,
   ): Promise<void> {
-    await this.cardsService.delete(id, user.sub);
+    const isAdmin = user.role === 'ADMIN';
+    await this.cardsService.delete(id, user.sub, isAdmin);
   }
 }
