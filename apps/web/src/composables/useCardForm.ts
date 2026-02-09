@@ -40,13 +40,19 @@ function createEmptyForm(): CardFormData {
     textColor: '#111111',
     fontFamily: '',
     avatarShape: 'CIRCLE',
-    theme: 'LIGHT',
+    theme: 'AUTO',
     visibility: 'PUBLIC',
     noIndex: false,
     obfuscate: false,
     slug: '',
   };
 }
+
+const THEME_DEFAULTS = {
+  LIGHT: { bgColor: '#ffffff', textColor: '#111111' },
+  DARK:  { bgColor: '#1e1e1e', textColor: '#ffffff' },
+  AUTO:  { bgColor: '#ffffff', textColor: '#111111' },
+} as const;
 
 export function useCardForm(cardId?: string) {
   const api = useApi();
@@ -74,6 +80,20 @@ export function useCardForm(cardId?: string) {
       isDirty.value = JSON.stringify(form) !== savedSnapshot.value;
     }
   }, { deep: true });
+
+  // Auto-adjust bgColor/textColor when theme changes, but only if they
+  // still match the previous theme's defaults (preserve manual overrides)
+  watch(
+    () => form.theme,
+    (newTheme, oldTheme) => {
+      if (!oldTheme || !newTheme) return;
+      const oldD = THEME_DEFAULTS[oldTheme as keyof typeof THEME_DEFAULTS];
+      const newD = THEME_DEFAULTS[newTheme as keyof typeof THEME_DEFAULTS];
+      if (!oldD || !newD) return;
+      if (form.bgColor.toLowerCase() === oldD.bgColor) form.bgColor = newD.bgColor;
+      if (form.textColor.toLowerCase() === oldD.textColor) form.textColor = newD.textColor;
+    },
+  );
 
   async function loadCard() {
     if (!cardId) return;
@@ -207,6 +227,15 @@ export function useCardForm(cardId?: string) {
     }
   }
 
+  function resetStyles() {
+    const defaults = THEME_DEFAULTS[form.theme as keyof typeof THEME_DEFAULTS] ?? THEME_DEFAULTS.LIGHT;
+    form.bgColor = defaults.bgColor;
+    form.primaryColor = '#0066cc';
+    form.textColor = defaults.textColor;
+    form.fontFamily = '';
+    form.avatarShape = 'CIRCLE';
+  }
+
   // Phone helpers
   function addPhone() { form.phones.push({ number: '', label: '' }); }
   function removePhone(index: number) { form.phones.splice(index, 1); }
@@ -245,5 +274,6 @@ export function useCardForm(cardId?: string) {
     removeWebsite,
     addSocialLink,
     removeSocialLink,
+    resetStyles,
   };
 }

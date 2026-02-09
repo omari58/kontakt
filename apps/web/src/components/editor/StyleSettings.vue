@@ -38,35 +38,55 @@ const emit = defineEmits<{
   'update:noIndex': [value: boolean];
   'update:obfuscate': [value: boolean];
   'update:slug': [value: string];
+  'resetStyles': [];
 }>();
 </script>
 
 <template>
   <div class="style-settings">
     <fieldset class="style-settings__group">
-      <legend class="style-settings__legend">Appearance</legend>
+      <legend class="style-settings__legend">Theme</legend>
 
-      <div class="style-settings__color-row">
-        <label class="style-settings__color-label">
-          Primary Color
-          <div class="style-settings__color-picker">
-            <input
-              type="color"
-              :value="primaryColor"
-              class="style-settings__color-input"
-              @input="emit('update:primaryColor', ($event.target as HTMLInputElement).value)"
-            />
-            <input
-              type="text"
-              :value="primaryColor"
-              class="style-settings__color-text"
-              @input="emit('update:primaryColor', ($event.target as HTMLInputElement).value)"
-            />
-          </div>
-        </label>
+      <!-- Theme mode selector with pill buttons -->
+      <div class="style-settings__theme-pills">
+        <button
+          v-for="opt in ([
+            { value: 'LIGHT', label: 'Light' },
+            { value: 'DARK', label: 'Dark' },
+            { value: 'AUTO', label: 'Auto' },
+          ] as const)"
+          :key="opt.value"
+          type="button"
+          class="style-settings__theme-pill"
+          :class="{ 'style-settings__theme-pill--active': theme === opt.value }"
+          @click="emit('update:theme', opt.value)"
+        >
+          {{ opt.label }}
+        </button>
+      </div>
 
+      <!-- Live color swatch preview -->
+      <div v-if="theme === 'AUTO'" class="style-settings__swatch-pair">
+        <div class="style-settings__swatch style-settings__swatch--half" :style="{ background: '#ffffff' }">
+          <span class="style-settings__swatch-label" :style="{ color: '#111111' }">Light</span>
+          <span class="style-settings__swatch-text" :style="{ color: '#111111' }">Aa</span>
+          <span class="style-settings__swatch-accent" :style="{ background: primaryColor }" />
+        </div>
+        <div class="style-settings__swatch style-settings__swatch--half" :style="{ background: '#1e1e1e' }">
+          <span class="style-settings__swatch-label" :style="{ color: '#ffffff' }">Dark</span>
+          <span class="style-settings__swatch-text" :style="{ color: '#ffffff' }">Aa</span>
+          <span class="style-settings__swatch-accent" :style="{ background: primaryColor }" />
+        </div>
+      </div>
+      <div v-else class="style-settings__swatch" :style="{ background: bgColor }">
+        <span class="style-settings__swatch-text" :style="{ color: textColor }">Aa</span>
+        <span class="style-settings__swatch-accent" :style="{ background: primaryColor }" />
+      </div>
+
+      <!-- Colors: full controls for Light/Dark, accent-only for Auto -->
+      <div v-if="theme !== 'AUTO'" class="style-settings__color-row">
         <label class="style-settings__color-label">
-          Background Color
+          Background
           <div class="style-settings__color-picker">
             <input
               type="color"
@@ -84,7 +104,7 @@ const emit = defineEmits<{
         </label>
 
         <label class="style-settings__color-label">
-          Text Color
+          Text
           <div class="style-settings__color-picker">
             <input
               type="color"
@@ -97,10 +117,60 @@ const emit = defineEmits<{
               :value="textColor"
               class="style-settings__color-text"
               @input="emit('update:textColor', ($event.target as HTMLInputElement).value)"
+            />
+          </div>
+        </label>
+
+        <label class="style-settings__color-label">
+          Accent
+          <div class="style-settings__color-picker">
+            <input
+              type="color"
+              :value="primaryColor"
+              class="style-settings__color-input"
+              @input="emit('update:primaryColor', ($event.target as HTMLInputElement).value)"
+            />
+            <input
+              type="text"
+              :value="primaryColor"
+              class="style-settings__color-text"
+              @input="emit('update:primaryColor', ($event.target as HTMLInputElement).value)"
             />
           </div>
         </label>
       </div>
+
+      <div v-else class="style-settings__color-row">
+        <label class="style-settings__color-label">
+          Accent Color
+          <div class="style-settings__color-picker">
+            <input
+              type="color"
+              :value="primaryColor"
+              class="style-settings__color-input"
+              @input="emit('update:primaryColor', ($event.target as HTMLInputElement).value)"
+            />
+            <input
+              type="text"
+              :value="primaryColor"
+              class="style-settings__color-text"
+              @input="emit('update:primaryColor', ($event.target as HTMLInputElement).value)"
+            />
+          </div>
+        </label>
+      </div>
+
+      <button
+        type="button"
+        class="style-settings__reset-btn"
+        @click="emit('resetStyles')"
+      >
+        Reset to theme defaults
+      </button>
+    </fieldset>
+
+    <fieldset class="style-settings__group">
+      <legend class="style-settings__legend">Style</legend>
 
       <div class="style-settings__field">
         <label class="style-settings__label">Name Font</label>
@@ -117,19 +187,6 @@ const emit = defineEmits<{
           >
             {{ font.name }}
           </option>
-        </select>
-      </div>
-
-      <div class="style-settings__field">
-        <label class="style-settings__label">Theme Mode</label>
-        <select
-          :value="theme"
-          class="style-settings__select"
-          @change="emit('update:theme', ($event.target as HTMLSelectElement).value as Theme)"
-        >
-          <option value="LIGHT">Light</option>
-          <option value="DARK">Dark</option>
-          <option value="AUTO">Auto</option>
         </select>
       </div>
 
@@ -212,11 +269,101 @@ const emit = defineEmits<{
   margin-bottom: var(--space-3);
 }
 
+/* ===== Theme pills ===== */
+.style-settings__theme-pills {
+  display: flex;
+  gap: 0;
+  background: var(--color-gray-100);
+  border-radius: var(--radius-lg);
+  padding: 3px;
+  margin-bottom: 0.75rem;
+}
+
+.style-settings__theme-pill {
+  flex: 1;
+  padding: 0.375rem 0.75rem;
+  border: none;
+  border-radius: calc(var(--radius-lg) - 2px);
+  background: transparent;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.style-settings__theme-pill:hover {
+  color: var(--color-text);
+}
+
+.style-settings__theme-pill--active {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.style-settings__hint {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin: -0.25rem 0 0.75rem;
+  line-height: 1.4;
+}
+
+/* ===== Color swatch ===== */
+.style-settings__swatch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  margin-bottom: 0.75rem;
+  transition: background 0.2s ease;
+}
+
+.style-settings__swatch-pair {
+  display: flex;
+  gap: 0;
+  margin-bottom: 0.75rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.style-settings__swatch--half {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+
+.style-settings__swatch-label {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  opacity: 0.5;
+}
+
+.style-settings__swatch-text {
+  font-size: 1.25rem;
+  font-weight: var(--font-semibold);
+  letter-spacing: -0.01em;
+  transition: color 0.2s ease;
+}
+
+.style-settings__swatch-accent {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid rgba(128, 128, 128, 0.15);
+  transition: background 0.2s ease;
+}
+
+/* ===== Colors ===== */
 .style-settings__color-row {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .style-settings__color-label {
@@ -259,6 +406,24 @@ const emit = defineEmits<{
   box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
+/* ===== Reset ===== */
+.style-settings__reset-btn {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.style-settings__reset-btn:hover {
+  background: var(--color-gray-100);
+  color: var(--color-text);
+}
+
+/* ===== Form fields ===== */
 .style-settings__field {
   margin-bottom: 0.75rem;
 }

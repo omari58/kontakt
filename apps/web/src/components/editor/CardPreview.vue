@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch, onMounted } from 'vue';
+import { computed, watch, onMounted, onUnmounted, ref } from 'vue';
 import type { CardFormData } from '@/composables/useCardForm';
 
 const FONT_MAP: Record<string, { family: string; url: string }> = {
@@ -70,7 +70,29 @@ const avatarShapeClass = computed(() =>
   props.form.avatarShape === 'ROUNDED_SQUARE' ? 'rounded-square' : 'circle',
 );
 
-const isDark = computed(() => props.form.theme === 'DARK');
+const prefersDark = ref(
+  typeof window !== 'undefined'
+    ? window.matchMedia('(prefers-color-scheme: dark)').matches
+    : false,
+);
+
+let mediaQuery: MediaQueryList | null = null;
+const onMediaChange = (e: MediaQueryListEvent) => { prefersDark.value = e.matches; };
+
+onMounted(() => {
+  mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  mediaQuery.addEventListener('change', onMediaChange);
+});
+
+onUnmounted(() => {
+  mediaQuery?.removeEventListener('change', onMediaChange);
+});
+
+const isDark = computed(() => {
+  if (props.form.theme === 'DARK') return true;
+  if (props.form.theme === 'AUTO') return prefersDark.value;
+  return false;
+});
 
 const hasAddress = computed(() =>
   props.form.address.street || props.form.address.city || props.form.address.country || props.form.address.zip,
@@ -192,15 +214,15 @@ const platformLabels: Record<string, string> = {
   --p-primary: #0066cc;
   --p-text: #111111;
   --p-font-display: 'DM Serif Display', Georgia, serif;
-  --p-text-secondary: color-mix(in srgb, var(--p-text) 65%, white);
-  --p-text-tertiary: color-mix(in srgb, var(--p-text) 45%, white);
-  --p-divider: color-mix(in srgb, var(--p-text) 10%, white);
-  --p-primary-soft: color-mix(in srgb, var(--p-primary) 10%, white);
+  --p-text-secondary: color-mix(in srgb, var(--p-text) 65%, var(--p-bg));
+  --p-text-tertiary: color-mix(in srgb, var(--p-text) 45%, var(--p-bg));
+  --p-divider: color-mix(in srgb, var(--p-text) 10%, var(--p-bg));
+  --p-primary-soft: color-mix(in srgb, var(--p-primary) 10%, var(--p-bg));
 
   max-width: 400px;
   width: 100%;
   margin: 0 auto;
-  background: white;
+  background: var(--p-bg);
   border-radius: 20px;
   overflow: hidden;
   color: var(--p-text);
@@ -214,7 +236,6 @@ const platformLabels: Record<string, string> = {
 }
 
 .card--dark {
-  background: #1e1e1e;
   box-shadow:
     0 0 0 1px rgba(255,255,255,0.06),
     0 8px 24px rgba(0,0,0,0.3),
@@ -259,15 +280,10 @@ const platformLabels: Record<string, string> = {
 .card__avatar {
   width: 80px;
   height: 80px;
-  border: 3px solid white;
+  border: 3px solid var(--p-bg);
   object-fit: cover;
   display: inline-block;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.card--dark .card__avatar,
-.card--dark .card__avatar-ph {
-  border-color: #1e1e1e;
 }
 
 .card__avatar.circle { border-radius: 50%; }
@@ -276,7 +292,7 @@ const platformLabels: Record<string, string> = {
 .card__avatar-ph {
   width: 80px;
   height: 80px;
-  border: 3px solid white;
+  border: 3px solid var(--p-bg);
   display: inline-flex;
   align-items: center;
   justify-content: center;

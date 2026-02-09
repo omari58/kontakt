@@ -58,7 +58,7 @@ export class RenderService {
     const fontDisplay = fontEntry ? fontEntry.family : "'DM Serif Display', Georgia, 'Times New Roman', serif";
     const fontUrl = fontEntry ? `https://fonts.googleapis.com/css2?family=${fontEntry.url}&display=swap` : null;
 
-    const cssVars = this.buildCssVars(resolved.bgColor, resolved.primaryColor, resolved.textColor, fontDisplay);
+    const cssVars = this.buildCssVars(resolved.bgColor, resolved.primaryColor, resolved.textColor, fontDisplay, resolved.theme);
 
     const jsonLd = this.buildJsonLd(card, cardUrl, ogImage);
 
@@ -106,13 +106,22 @@ export class RenderService {
     primaryColor: string,
     textColor: string,
     fontDisplay: string,
+    theme: string,
   ): string {
-    return [
+    const vars = [
       `--bg-color: ${bgColor}`,
       `--primary-color: ${primaryColor}`,
       `--text-color: ${textColor}`,
       `--font-display: ${fontDisplay}`,
-    ].join('; ');
+    ];
+
+    // For AUTO mode, provide dark-variant values that CSS media queries can switch to
+    if (theme.toUpperCase() === 'AUTO') {
+      vars.push('--bg-color-dark: #1e1e1e');
+      vars.push('--text-color-dark: #ffffff');
+    }
+
+    return vars.join('; ');
   }
 
   private buildJsonLd(

@@ -23,6 +23,16 @@ export function resolveCardTheme(
   const allowColorOverride = settings.get('allow_user_color_override') === 'true';
   const allowBgImage = settings.get('allow_user_background_image') === 'true';
 
+  // Resolve theme first so we can pick the right bgColor default
+  const theme = resolveValue(
+    card.theme,
+    settings.get('default_theme') ?? 'auto',
+    allowColorOverride,
+  );
+
+  const isDarkTheme = theme.toUpperCase() === 'DARK';
+  const defaultBgColor = isDarkTheme ? '#1e1e1e' : (settings.get('default_bg_color') ?? '#FFFFFF');
+
   const primaryColor = resolveValue(
     card.primaryColor,
     settings.get('default_primary_color') ?? '#0F172A',
@@ -31,13 +41,7 @@ export function resolveCardTheme(
 
   const bgColor = resolveValue(
     card.bgColor,
-    settings.get('default_bg_color') ?? '#FFFFFF',
-    allowColorOverride,
-  );
-
-  const theme = resolveValue(
-    card.theme,
-    settings.get('default_theme') ?? 'light',
+    defaultBgColor,
     allowColorOverride,
   );
 

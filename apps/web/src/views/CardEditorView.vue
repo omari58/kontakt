@@ -36,6 +36,7 @@ const {
   removeWebsite,
   addSocialLink,
   removeSocialLink,
+  resetStyles,
 } = useCardForm(cardId.value);
 
 const expandedSections = ref<Record<string, boolean>>({
@@ -104,14 +105,6 @@ onMounted(() => {
         Back
       </button>
       <h1 class="editor__title">{{ pageTitle }}</h1>
-      <button
-        class="editor__save-btn"
-        :disabled="saving || !form.name"
-        @click="handleSave"
-      >
-        <Loader2 v-if="saving" :size="14" class="editor__spinner" />
-        {{ saving ? 'Saving...' : 'Save Card' }}
-      </button>
     </div>
 
     <div v-if="error" class="editor__error">
@@ -315,6 +308,7 @@ onMounted(() => {
               @update:no-index="form.noIndex = $event"
               @update:obfuscate="form.obfuscate = $event"
               @update:slug="form.slug = $event"
+              @reset-styles="resetStyles"
             />
           </div>
         </div>
@@ -322,7 +316,17 @@ onMounted(() => {
 
       <div class="editor__preview">
         <div class="editor__preview-sticky">
-          <span class="editor__preview-label">Live Preview</span>
+          <div class="editor__preview-header">
+            <span class="editor__preview-label">Live Preview</span>
+            <button
+              class="editor__save-btn"
+              :disabled="saving || !form.name"
+              @click="handleSave"
+            >
+              <Loader2 v-if="saving" :size="14" class="editor__spinner" />
+              {{ saving ? 'Saving...' : 'Save Card' }}
+            </button>
+          </div>
           <div class="editor__preview-frame">
             <CardPreview
               :form="form"
@@ -548,14 +552,19 @@ onMounted(() => {
   top: var(--space-6);
 }
 
+.editor__preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
 .editor__preview-label {
-  display: block;
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-text-muted);
   font-weight: var(--font-semibold);
-  margin-bottom: var(--space-3);
 }
 
 .editor__preview-frame {
