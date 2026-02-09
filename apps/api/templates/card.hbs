@@ -267,6 +267,13 @@
       flex-shrink: 0;
     }
 
+    .card__contact-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
     .card__contact-value {
       font-size: 14px;
       font-weight: 500;
@@ -274,6 +281,32 @@
       text-align: right;
       word-break: break-all;
     }
+
+    .card__copy {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .card__copy:hover {
+      background: var(--primary-soft);
+      color: var(--primary-color, #0066cc);
+    }
+
+    .card__copy--done {
+      color: #22c55e !important;
+    }
+
+    .card__copy--done .card__copy-icon { display: none; }
+    .card__copy--done .card__copy-check { display: inline; }
+    .card__copy-check { display: none; }
 
     .card__contact-value--link {
       display: inline-flex;
@@ -521,10 +554,23 @@
     <div class="card__divider"></div>
     <div class="card__section">
       {{#each card.phones}}
+      {{#if ../obfuscate}}
+      <a href="#" class="card__contact card__contact--ob" data-ob-href="{{this.encodedHref}}" data-ob-text="{{this.encodedValue}}">
+        <span class="card__contact-label">{{#if this.label}}{{this.label}}{{else}}Phone{{/if}}</span>
+        <span class="card__contact-right">
+          <span class="card__contact-value">{{this.masked}}</span>
+          <span class="card__copy" data-copy-ob="{{this.encodedValue}}" role="button"><svg class="card__copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="card__copy-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </span>
+      </a>
+      {{else}}
       <a href="tel:{{this.number}}" class="card__contact">
         <span class="card__contact-label">{{#if this.label}}{{this.label}}{{else}}Phone{{/if}}</span>
-        <span class="card__contact-value">{{this.number}}</span>
+        <span class="card__contact-right">
+          <span class="card__contact-value">{{this.number}}</span>
+          <span class="card__copy" data-copy="{{this.number}}" role="button"><svg class="card__copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="card__copy-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </span>
       </a>
+      {{/if}}
       {{/each}}
     </div>
     {{/if}}
@@ -534,10 +580,23 @@
     {{#unless card.phones}}<div class="card__divider"></div>{{/unless}}
     <div class="card__section">
       {{#each card.emails}}
+      {{#if ../obfuscate}}
+      <a href="#" class="card__contact card__contact--ob" data-ob-href="{{this.encodedHref}}" data-ob-text="{{this.encodedValue}}">
+        <span class="card__contact-label">{{#if this.label}}{{this.label}}{{else}}Email{{/if}}</span>
+        <span class="card__contact-right">
+          <span class="card__contact-value">{{this.masked}}</span>
+          <span class="card__copy" data-copy-ob="{{this.encodedValue}}" role="button"><svg class="card__copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="card__copy-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </span>
+      </a>
+      {{else}}
       <a href="mailto:{{this.email}}" class="card__contact">
         <span class="card__contact-label">{{#if this.label}}{{this.label}}{{else}}Email{{/if}}</span>
-        <span class="card__contact-value">{{this.email}}</span>
+        <span class="card__contact-right">
+          <span class="card__contact-value">{{this.email}}</span>
+          <span class="card__copy" data-copy="{{this.email}}" role="button"><svg class="card__copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><svg class="card__copy-check" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </span>
       </a>
+      {{/if}}
       {{/each}}
     </div>
     {{/if}}
@@ -618,6 +677,38 @@
         fetch('/api/cards/{{card.slug}}/view', { method: 'POST' });
       } catch (e) { /* silent */ }
     })();
+
+    // Deobfuscate contact info
+    document.querySelectorAll('.card__contact--ob').forEach(function(el) {
+      var href = el.getAttribute('data-ob-href');
+      var text = el.getAttribute('data-ob-text');
+      if (href) el.setAttribute('href', atob(href));
+      if (text) el.querySelector('.card__contact-value').textContent = atob(text);
+      el.classList.remove('card__contact--ob');
+      el.removeAttribute('data-ob-href');
+      el.removeAttribute('data-ob-text');
+      var copyBtn = el.querySelector('[data-copy-ob]');
+      if (copyBtn) {
+        copyBtn.setAttribute('data-copy', atob(copyBtn.getAttribute('data-copy-ob')));
+        copyBtn.removeAttribute('data-copy-ob');
+      }
+    });
+
+    // Copy to clipboard
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.card__copy');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var text = btn.getAttribute('data-copy');
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(function() {
+        btn.classList.add('card__copy--done');
+        setTimeout(function() {
+          btn.classList.remove('card__copy--done');
+        }, 1500);
+      });
+    });
 
     // Share functionality
     document.getElementById('share-btn').addEventListener('click', function() {

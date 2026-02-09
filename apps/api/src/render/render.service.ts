@@ -64,17 +64,41 @@ export class RenderService {
 
     const cssVars = this.buildCssVars(resolved.bgColor, resolved.primaryColor, resolved.textColor, fontDisplay, resolved.theme);
 
-    const jsonLd = this.buildJsonLd(card, cardUrl, ogImage);
+    const obfuscate = card.obfuscate;
+
+    const jsonLd = this.buildJsonLd(card, cardUrl, ogImage, obfuscate);
 
     const nameInitial = card.name.charAt(0).toUpperCase();
+
+    // When obfuscating, enrich phone/email arrays with encoded + masked fields
+    const phones = obfuscate
+      ? (card.phones as { number: string; label: string }[] | null)?.map(p => ({
+          ...p,
+          encodedHref: Buffer.from(`tel:${p.number}`).toString('base64'),
+          encodedValue: Buffer.from(p.number).toString('base64'),
+          masked: this.maskPhone(p.number),
+        })) ?? null
+      : card.phones;
+
+    const emails = obfuscate
+      ? (card.emails as { email: string; label: string }[] | null)?.map(e => ({
+          ...e,
+          encodedHref: Buffer.from(`mailto:${e.email}`).toString('base64'),
+          encodedValue: Buffer.from(e.email).toString('base64'),
+          masked: this.maskEmail(e.email),
+        })) ?? null
+      : card.emails;
 
     return {
       card: {
         ...card,
+        phones,
+        emails,
         bgImagePath: resolved.bgImagePath,
         avatarShapeClass,
         nameInitial,
       },
+      obfuscate,
       og: {
         title: ogTitle,
         description: ogDescription,
@@ -134,6 +158,7 @@ export class RenderService {
     card: Card,
     cardUrl: string,
     image: string | null,
+    obfuscate: boolean,
   ): string {
     const jsonLd: Record<string, unknown> = {
       '@context': 'https://schema.org',
@@ -154,15 +179,28 @@ export class RenderService {
     if (image) {
       jsonLd.image = image;
     }
-    const emails = card.emails as { email: string; label: string }[] | null;
-    if (emails && Array.isArray(emails) && emails.length > 0) {
-      jsonLd.email = emails[0].email;
-    }
-    const phones = card.phones as { number: string; label: string }[] | null;
-    if (phones && Array.isArray(phones) && phones.length > 0) {
-      jsonLd.telephone = phones[0].number;
+    if (!obfuscate) {
+      const emails = card.emails as { email: string; label: string }[] | null;
+      if (emails && Array.isArray(emails) && emails.length > 0) {
+        jsonLd.email = emails[0].email;
+      }
+      const phones = card.phones as { number: string; label: string }[] | null;
+      if (phones && Array.isArray(phones) && phones.length > 0) {
+        jsonLd.telephone = phones[0].number;
+      }
     }
 
     return JSON.stringify(jsonLd);
+  }
+
+  private maskPhone(number: string): string {
+    if (number.length <= 4) return '\u2022\u2022\u2022\u2022\u2022\u2022';
+    return number.slice(0, 4) + '\u2022'.repeat(Math.min(number.length - 4, 6));
+  }
+
+  private maskEmail(email: string): string {
+    const parts = email.split('@');
+    if (parts.length !== 2) return '\u2022\u2022\u2022@\u2022\u2022\u2022';
+    return parts[0][0] + '\u2022\u2022\u2022@' + parts[1];
   }
 }
