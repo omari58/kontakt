@@ -31,5 +31,8 @@ COPY --from=build /app/apps/web/dist /srv/web
 RUN mkdir -p /srv/share && chown -R kontakt:kontakt /srv/web /srv/share
 USER kontakt
 
+HEALTHCHECK --interval=2s --timeout=2s --retries=5 \
+  CMD test -f /srv/share/index.html || exit 1
+
 # Copy built files into shared volume on startup, then idle
 CMD ["sh", "-c", "cp -a /srv/web/. /srv/share/ && echo 'Web files synced to shared volume' && sleep infinity"]
