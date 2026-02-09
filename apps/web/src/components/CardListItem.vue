@@ -207,7 +207,7 @@ async function downloadQr() {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
-  border-top: 1px solid var(--color-gray-100);
+  border-top: 1px solid var(--color-border);
 }
 
 .card-item__url {
@@ -276,7 +276,7 @@ async function downloadQr() {
 }
 
 .card-item__btn:hover {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   color: var(--color-text);
 }
 

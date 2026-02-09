@@ -273,7 +273,7 @@ const emit = defineEmits<{
 .style-settings__theme-pills {
   display: flex;
   gap: 0;
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   border-radius: var(--radius-lg);
   padding: 3px;
   margin-bottom: 0.75rem;
@@ -419,7 +419,7 @@ const emit = defineEmits<{
 }
 
 .style-settings__reset-btn:hover {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   color: var(--color-text);
 }
 
@@ -472,7 +472,7 @@ const emit = defineEmits<{
 
 .style-settings__slug-prefix {
   padding: 0.5rem 0.5rem 0.5rem 0.75rem;
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   border: 1px solid var(--color-border);
   border-right: none;
   border-radius: var(--radius-md) 0 0 var(--radius-md);

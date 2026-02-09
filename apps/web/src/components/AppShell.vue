@@ -4,6 +4,7 @@ import { useAuth } from '@/composables/useAuth';
 import AppNav from './AppNav.vue';
 import UserMenu from './UserMenu.vue';
 import AppToast from './AppToast.vue';
+import ThemeToggle from './ThemeToggle.vue';
 
 const { isAuthenticated } = useAuth();
 const mobileMenuOpen = ref(false);
@@ -35,6 +36,7 @@ function closeMobileMenu() {
       <div class="shell__sidebar-brand">Kontakt</div>
       <AppNav />
       <div class="shell__sidebar-bottom">
+        <ThemeToggle />
         <UserMenu />
       </div>
     </aside>
@@ -44,6 +46,9 @@ function closeMobileMenu() {
       <div v-if="mobileMenuOpen" class="shell__mobile-overlay" @click="closeMobileMenu">
         <div class="shell__mobile-menu" @click.stop>
           <AppNav @navigate="closeMobileMenu" />
+          <div class="shell__mobile-bottom">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </Transition>
@@ -93,7 +98,7 @@ function closeMobileMenu() {
 .shell__hamburger-line {
   width: 18px;
   height: 1.5px;
-  background: var(--color-gray-600);
+  background: var(--color-text-secondary);
   border-radius: 1px;
   transition: transform var(--duration-slow) var(--ease-default),
               opacity var(--duration-slow) var(--ease-default);
@@ -130,7 +135,7 @@ function closeMobileMenu() {
   font-weight: var(--font-bold);
   letter-spacing: -0.02em;
   padding: 0 var(--space-4) var(--space-4);
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-border);
   margin-bottom: var(--space-3);
   color: var(--color-text);
 }
@@ -138,7 +143,16 @@ function closeMobileMenu() {
 .shell__sidebar-bottom {
   margin-top: auto;
   padding: var(--space-3);
-  border-top: 1px solid var(--color-gray-100);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.shell__mobile-bottom {
+  margin-top: auto;
+  padding: var(--space-3);
+  border-top: 1px solid var(--color-border);
 }
 
 /* ===== Mobile overlay ===== */

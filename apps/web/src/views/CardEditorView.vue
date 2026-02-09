@@ -384,7 +384,7 @@ onMounted(() => {
 }
 
 .editor__back-btn:hover {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   color: var(--color-text);
 }
 
@@ -457,7 +457,7 @@ onMounted(() => {
 }
 
 .editor__section {
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .editor__section:last-child {
@@ -599,12 +599,12 @@ onMounted(() => {
 }
 
 .editor__open-btn:hover {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   color: var(--color-text);
 }
 
 .editor__preview-frame {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   border-radius: var(--radius-xl);
   padding: var(--space-4);
 }

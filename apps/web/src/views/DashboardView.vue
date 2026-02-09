@@ -174,7 +174,7 @@ async function executeDelete() {
   width: 48px;
   height: 48px;
   border-radius: var(--radius-full);
-  background: var(--color-gray-200);
+  background: var(--color-bg-muted);
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
@@ -188,7 +188,7 @@ async function executeDelete() {
 .dashboard__skeleton-line {
   height: 12px;
   width: 60%;
-  background: var(--color-gray-200);
+  background: var(--color-bg-muted);
   border-radius: var(--radius-sm);
   animation: shimmer 1.5s ease-in-out infinite;
 }
@@ -209,7 +209,7 @@ async function executeDelete() {
 }
 
 .dashboard__empty-icon {
-  color: var(--color-gray-300);
+  color: var(--color-text-muted);
   margin-bottom: var(--space-4);
 }
 
@@ -280,7 +280,7 @@ async function executeDelete() {
 }
 
 .dashboard__dialog-btn--ghost:hover {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   color: var(--color-text);
 }
 

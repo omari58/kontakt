@@ -117,7 +117,7 @@ function onFaviconChange(event: Event) {
   font-weight: var(--font-semibold);
   margin-bottom: var(--space-5);
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .settings-field {
@@ -191,7 +191,7 @@ function onFaviconChange(event: Event) {
 }
 
 .settings-field__upload-btn:hover {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
 }
 
 .settings-field__file-input {

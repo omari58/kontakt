@@ -149,7 +149,7 @@ const platformOptions = [
   margin-bottom: var(--space-2);
   align-items: center;
   padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .social-editor__label-input {

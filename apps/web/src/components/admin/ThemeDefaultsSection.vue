@@ -159,7 +159,7 @@ function onShapeChange(event: Event) {
   font-weight: var(--font-semibold);
   margin-bottom: var(--space-5);
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .settings-field {

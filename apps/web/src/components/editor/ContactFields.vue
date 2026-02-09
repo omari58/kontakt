@@ -152,7 +152,7 @@ function updateAddress(field: keyof Address, value: string) {
   margin-bottom: var(--space-2);
   align-items: center;
   padding-bottom: var(--space-2);
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .contact-fields__input {

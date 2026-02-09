@@ -211,12 +211,12 @@ onMounted(() => {
   letter-spacing: 0.05em;
   color: var(--color-text-muted);
   font-weight: var(--font-semibold);
-  border-bottom: 1px solid var(--color-gray-200);
+  border-bottom: 1px solid var(--color-border);
 }
 
 .admin-cards__table td {
   padding: var(--space-3);
-  border-bottom: 1px solid var(--color-gray-100);
+  border-bottom: 1px solid var(--color-border);
   font-size: var(--text-base);
 }
 
@@ -253,7 +253,7 @@ onMounted(() => {
 }
 
 .admin-cards__badge--disabled {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   color: var(--color-text-muted);
 }
 
@@ -289,9 +289,9 @@ onMounted(() => {
 }
 
 .admin-cards__page-btn--active {
-  background: var(--color-gray-900);
-  color: #fff;
-  border-color: var(--color-gray-900);
+  background: var(--color-text);
+  color: var(--color-bg);
+  border-color: var(--color-text);
 }
 
 @media (max-width: 768px) {

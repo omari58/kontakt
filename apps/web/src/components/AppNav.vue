@@ -41,7 +41,7 @@ defineEmits<{
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   text-decoration: none;
-  color: var(--color-gray-500);
+  color: var(--color-text-secondary);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   border-radius: var(--radius-md);
@@ -53,7 +53,7 @@ defineEmits<{
 }
 
 .app-nav__link.router-link-exact-active {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
   color: var(--color-text);
   font-weight: var(--font-semibold);
 }

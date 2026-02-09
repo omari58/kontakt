@@ -133,7 +133,7 @@ function onFileChange(event: Event) {
 }
 
 .image-uploader__upload-icon {
-  color: var(--color-gray-300);
+  color: var(--color-text-muted);
   margin-bottom: var(--space-2);
 }
 
@@ -177,7 +177,7 @@ function onFileChange(event: Event) {
 }
 
 .image-uploader__change-btn:hover {
-  background: var(--color-gray-100);
+  background: var(--color-bg-muted);
 }
 
 .image-uploader__remove-btn {
