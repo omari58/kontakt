@@ -51,8 +51,8 @@ COPY apps/api/entrypoint.sh ./apps/api/entrypoint.sh
 COPY apps/api/package.json ./apps/api/package.json
 COPY package.json ./
 
-# Set ownership and switch to non-root user
-RUN chown -R kontakt:kontakt /app
+# Create uploads directory for volume mount (owned by non-root user)
+RUN mkdir -p /app/uploads && chown -R kontakt:kontakt /app
 USER kontakt
 
 EXPOSE 3000
