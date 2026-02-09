@@ -8,6 +8,7 @@ import SocialLinksEditor from '@/components/editor/SocialLinksEditor.vue';
 import ImageUploader from '@/components/editor/ImageUploader.vue';
 import StyleSettings from '@/components/editor/StyleSettings.vue';
 import CardPreview from '@/components/editor/CardPreview.vue';
+import { useSettingsStore } from '@/stores/settings';
 
 const route = useRoute();
 const router = useRouter();
@@ -91,20 +92,23 @@ onBeforeRouteLeave((_to, _from, next) => {
   }
 });
 
+const settingsStore = useSettingsStore();
+
 onMounted(() => {
   if (isEditMode.value) {
     loadCard();
   }
+  settingsStore.fetchSettings();
 });
 </script>
 
 <template>
   <div class="editor">
+    <button class="editor__back-btn" @click="router.push({ name: 'dashboard' })">
+      <ArrowLeft :size="16" />
+      Back
+    </button>
     <div class="editor__header">
-      <button class="editor__back-btn" @click="router.push({ name: 'dashboard' })">
-        <ArrowLeft :size="16" />
-        Back
-      </button>
       <h1 class="editor__title">{{ pageTitle }}</h1>
     </div>
 
@@ -346,6 +350,8 @@ onMounted(() => {
               :avatar-url="avatarUrl"
               :banner-url="bannerUrl"
               :background-url="backgroundUrl"
+              :footer-text="settingsStore.settings.footer_text"
+              :footer-link="settingsStore.settings.footer_link"
             />
           </div>
         </div>

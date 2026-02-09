@@ -20,6 +20,8 @@ const props = defineProps<{
   avatarUrl: string | null;
   bannerUrl: string | null;
   backgroundUrl: string | null;
+  footerText?: string | null;
+  footerLink?: string | null;
 }>();
 
 const bgColor = computed(() => props.form.bgColor || '#ffffff');
@@ -206,6 +208,15 @@ const platformLabels: Record<string, string> = {
         </span>
       </div>
     </template>
+
+    <!-- Footer -->
+    <div v-if="footerText" class="card__footer">
+      <a v-if="footerLink" :href="footerLink" target="_blank" rel="noopener noreferrer">{{ footerText }}</a>
+      <span v-else>{{ footerText }}</span>
+    </div>
+    <div v-else-if="footerLink" class="card__footer">
+      <a :href="footerLink" target="_blank" rel="noopener noreferrer">{{ footerLink }}</a>
+    </div>
   </div>
   </div>
 </template>
@@ -458,5 +469,23 @@ const platformLabels: Record<string, string> = {
   border-color: var(--p-primary);
   color: var(--p-primary);
   background: var(--p-primary-soft);
+}
+
+/* ===== Footer ===== */
+.card__footer {
+  padding: 12px 24px 16px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--p-text-tertiary);
+}
+
+.card__footer a {
+  color: var(--p-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.card__footer a:hover {
+  text-decoration: underline;
 }
 </style>
