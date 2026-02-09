@@ -14,7 +14,7 @@ onMounted(() => {
 });
 
 function createCard() {
-  router.push({ name: 'card-edit', params: { id: 'new' } });
+  router.push({ name: 'card-new' });
 }
 
 function editCard(id: string) {

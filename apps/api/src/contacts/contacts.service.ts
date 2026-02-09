@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CardsService } from '../cards/cards.service';
 import { VCardBuilder } from './vcard.builder';
 import * as fs from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
 
 @Injectable()
 export class ContactsService {
+  private readonly logger = new Logger(ContactsService.name);
+
   constructor(
     private readonly cardsService: CardsService,
     private readonly configService: ConfigService,
@@ -18,13 +20,20 @@ export class ContactsService {
     let avatarBase64: string | undefined;
     if (card.avatarPath) {
       const uploadDir = this.configService.get<string>('UPLOAD_DIR', 'uploads');
-      const avatarFullPath = join(process.cwd(), uploadDir, card.avatarPath);
-      try {
-        await fs.promises.access(avatarFullPath);
-        const buffer = await fs.promises.readFile(avatarFullPath);
-        avatarBase64 = buffer.toString('base64');
-      } catch {
-        // File does not exist on disk, skip avatar
+      const baseDir = resolve(process.cwd(), uploadDir);
+      const safePath = card.avatarPath.replace(/^\/+/, '');
+      const avatarFullPath = join(baseDir, safePath);
+
+      if (!avatarFullPath.startsWith(resolve(baseDir))) {
+        this.logger.debug(`Skipping avatar with invalid path for card ${card.id}`);
+      } else {
+        try {
+          await fs.promises.access(avatarFullPath);
+          const buffer = await fs.promises.readFile(avatarFullPath);
+          avatarBase64 = buffer.toString('base64');
+        } catch {
+          // File does not exist on disk, skip avatar
+        }
       }
     }
 
@@ -42,8 +51,7 @@ export class ContactsService {
     };
 
     const vcf = VCardBuilder.build(vcfInput, avatarBase64);
-    const filename = `${card.name}.vcf`;
 
-    return { vcf, filename };
+    return { vcf, filename: card.name };
   }
 }

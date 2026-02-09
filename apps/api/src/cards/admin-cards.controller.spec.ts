@@ -97,7 +97,7 @@ describe('AdminCardsController', () => {
     });
 
     it('should pass pagination params', async () => {
-      await controller.findAll(2, 10);
+      await controller.findAll('2', '10');
 
       expect(service.findAll).toHaveBeenCalledWith({
         page: 2,
@@ -107,7 +107,7 @@ describe('AdminCardsController', () => {
     });
 
     it('should pass search param', async () => {
-      await controller.findAll(1, 20, 'acme');
+      await controller.findAll('1', '20', 'acme');
 
       expect(service.findAll).toHaveBeenCalledWith({
         page: 1,

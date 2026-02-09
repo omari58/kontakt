@@ -27,19 +27,26 @@ describe('cookie-utils', () => {
 
   describe('sessionCookieOptions', () => {
     it('should return cookie options with given maxAge', () => {
-      const opts = sessionCookieOptions(3600000);
+      const opts = sessionCookieOptions(3600000, true);
 
       expect(opts.httpOnly).toBe(true);
+      expect(opts.secure).toBe(true);
       expect(opts.sameSite).toBe('lax');
       expect(opts.maxAge).toBe(3600000);
+    });
+
+    it('should set secure false in non-production', () => {
+      const opts = sessionCookieOptions(3600000, false);
+      expect(opts.secure).toBe(false);
     });
   });
 
   describe('clearSessionCookieOptions', () => {
     it('should return options without maxAge for clearing', () => {
-      const opts = clearSessionCookieOptions();
+      const opts = clearSessionCookieOptions(true);
 
       expect(opts.httpOnly).toBe(true);
+      expect(opts.secure).toBe(true);
       expect(opts.sameSite).toBe('lax');
       expect(opts).not.toHaveProperty('maxAge');
     });

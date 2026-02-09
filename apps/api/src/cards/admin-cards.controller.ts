@@ -18,13 +18,15 @@ export class AdminCardsController {
 
   @Get()
   async findAll(
-    @Query('page') page = 1,
-    @Query('limit') limit = 20,
+    @Query('page') rawPage = '1',
+    @Query('limit') rawLimit = '20',
     @Query('search') search?: string,
   ): Promise<{ data: AdminCardResponseDto[]; total: number; page: number; limit: number }> {
+    const page = Math.max(1, parseInt(rawPage, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(rawLimit, 10) || 20));
     const result = await this.cardsService.findAll({
-      page: Number(page),
-      limit: Number(limit),
+      page,
+      limit,
       search,
     });
 

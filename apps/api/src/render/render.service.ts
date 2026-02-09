@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { CardsService } from '../cards/cards.service';
 import { SettingsService } from '../settings/settings.service';
 import { resolveCardTheme } from '../cards/theme.resolver';
-import { Visibility, AvatarShape, Theme } from '@prisma/client';
+import { Card, Visibility, AvatarShape, Theme } from '@prisma/client';
 
 @Injectable()
 export class RenderService {
@@ -97,11 +97,11 @@ export class RenderService {
   }
 
   private buildJsonLd(
-    card: Record<string, any>,
+    card: Card,
     cardUrl: string,
     image: string | null,
   ): string {
-    const jsonLd: Record<string, any> = {
+    const jsonLd: Record<string, unknown> = {
       '@context': 'https://schema.org',
       '@type': 'Person',
       name: card.name,
@@ -120,11 +120,13 @@ export class RenderService {
     if (image) {
       jsonLd.image = image;
     }
-    if (card.emails && Array.isArray(card.emails) && card.emails.length > 0) {
-      jsonLd.email = card.emails[0].email;
+    const emails = card.emails as { email: string; label: string }[] | null;
+    if (emails && Array.isArray(emails) && emails.length > 0) {
+      jsonLd.email = emails[0].email;
     }
-    if (card.phones && Array.isArray(card.phones) && card.phones.length > 0) {
-      jsonLd.telephone = card.phones[0].number;
+    const phones = card.phones as { number: string; label: string }[] | null;
+    if (phones && Array.isArray(phones) && phones.length > 0) {
+      jsonLd.telephone = phones[0].number;
     }
 
     return JSON.stringify(jsonLd);

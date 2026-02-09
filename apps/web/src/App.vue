@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { RouterView } from 'vue-router';
 import AppShell from '@/components/AppShell.vue';
 
 onMounted(async () => {
@@ -23,6 +22,6 @@ onMounted(async () => {
 
 <template>
   <AppShell>
-    <RouterView />
+    <RouterView :key="$route.path" />
   </AppShell>
 </template>

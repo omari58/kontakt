@@ -18,6 +18,7 @@ import { JwtPayload } from './dto/auth.dto';
 @Controller()
 export class AuthController {
   private readonly sessionMaxAge: number;
+  private readonly isProduction: boolean;
 
   constructor(
     private readonly authService: AuthService,
@@ -25,6 +26,7 @@ export class AuthController {
   ) {
     const jwtExpiry = this.configService.get<string>('JWT_EXPIRY', '24h');
     this.sessionMaxAge = parseExpiryToMs(jwtExpiry);
+    this.isProduction = this.configService.get<string>('NODE_ENV', 'development') === 'production';
   }
 
   @Get('auth/login')
@@ -33,7 +35,7 @@ export class AuthController {
 
     const oidcCookieOptions = {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: this.isProduction,
       sameSite: 'lax' as const,
       maxAge: 10 * 60 * 1000, // 10 minutes
     };
@@ -65,19 +67,20 @@ export class AuthController {
     const { token } = await this.authService.handleCallback(currentUrl, codeVerifier, storedState);
 
     // Set session JWT in HTTP-only cookie with configured lifetime
-    res.cookie(SESSION_COOKIE, token, sessionCookieOptions(this.sessionMaxAge));
+    res.cookie(SESSION_COOKIE, token, sessionCookieOptions(this.sessionMaxAge, this.isProduction));
 
     // Clean up OIDC flow cookies with matching options
-    res.clearCookie('oidc_code_verifier', clearSessionCookieOptions());
-    res.clearCookie('oidc_state', clearSessionCookieOptions());
+    res.clearCookie('oidc_code_verifier', clearSessionCookieOptions(this.isProduction));
+    res.clearCookie('oidc_state', clearSessionCookieOptions(this.isProduction));
 
     // Redirect to frontend dashboard
     res.redirect('/');
   }
 
   @Post('auth/logout')
+  @UseGuards(JwtAuthGuard)
   logout(@Res() res: Response): void {
-    res.clearCookie(SESSION_COOKIE, clearSessionCookieOptions());
+    res.clearCookie(SESSION_COOKIE, clearSessionCookieOptions(this.isProduction));
     res.json({ message: 'Logged out' });
   }
 

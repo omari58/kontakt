@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Delete,
   Param,
   UseGuards,
   UseInterceptors,
@@ -51,5 +52,19 @@ export class UploadsController {
     pipe.transform(file);
 
     return this.uploadsService.upload(cardId, user.sub, type as ImageType, file);
+  }
+
+  @Delete(':id/:type')
+  async deleteImage(
+    @Param('id') cardId: string,
+    @Param('type') type: string,
+    @CurrentUser() user: JwtPayload,
+  ): Promise<void> {
+    if (!VALID_IMAGE_TYPES.includes(type as ImageType)) {
+      throw new BadRequestException(
+        `Invalid image type: ${type}. Allowed: ${VALID_IMAGE_TYPES.join(', ')}`,
+      );
+    }
+    await this.uploadsService.deleteImage(cardId, user.sub, type as ImageType);
   }
 }

@@ -15,6 +15,7 @@ export const SESSION_COOKIE = 'kontakt_session';
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   private readonly sessionMaxAge: number;
+  private readonly isProduction: boolean;
 
   constructor(
     private readonly jwtService: JwtService,
@@ -22,6 +23,7 @@ export class JwtAuthGuard implements CanActivate {
   ) {
     const jwtExpiry = this.configService.get<string>('JWT_EXPIRY', '24h');
     this.sessionMaxAge = parseExpiryToMs(jwtExpiry);
+    this.isProduction = this.configService.get<string>('NODE_ENV', 'development') === 'production';
   }
 
   canActivate(context: ExecutionContext): boolean {
@@ -63,7 +65,7 @@ export class JwtAuthGuard implements CanActivate {
         role: payload.role,
       });
 
-      response.cookie(SESSION_COOKIE, newToken, sessionCookieOptions(this.sessionMaxAge));
+      response.cookie(SESSION_COOKIE, newToken, sessionCookieOptions(this.sessionMaxAge, this.isProduction));
     }
   }
 }

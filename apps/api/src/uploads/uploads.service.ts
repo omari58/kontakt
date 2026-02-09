@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CardsService } from '../cards/cards.service';
 import * as sharp from 'sharp';
@@ -23,6 +23,8 @@ const DB_FIELD_MAP: Record<ImageType, keyof Pick<Card, 'avatarPath' | 'bannerPat
 
 @Injectable()
 export class UploadsService {
+  private readonly logger = new Logger(UploadsService.name);
+
   constructor(
     private readonly cardsService: CardsService,
     private readonly prisma: PrismaService,
@@ -78,12 +80,20 @@ export class UploadsService {
     return { path: publicPath };
   }
 
+  async deleteImage(cardId: string, userId: string, type: ImageType): Promise<void> {
+    await this.cardsService.findOne(cardId, userId);
+    const dbField = DB_FIELD_MAP[type];
+    const filePath = path.join(this.uploadDir, 'cards', cardId, `${type}.webp`);
+    await this.deleteFileIfExists(filePath);
+    await this.prisma.card.update({ where: { id: cardId }, data: { [dbField]: null } });
+  }
+
   private async deleteFileIfExists(filePath: string): Promise<void> {
     try {
       await fs.access(filePath);
       await fs.unlink(filePath);
-    } catch {
-      // File doesn't exist, nothing to delete
+    } catch (error) {
+      this.logger.debug(`File not found for deletion: ${filePath}`);
     }
   }
 }

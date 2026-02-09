@@ -26,7 +26,6 @@ const ALLOWED_IMAGE_MIMES = [
   'image/jpeg',
   'image/png',
   'image/webp',
-  'image/svg+xml',
 ];
 
 const KNOWN_KEYS = new Set<string>(
@@ -153,8 +152,12 @@ export class SettingsController {
   private validateImageFile(file: Express.Multer.File): void {
     if (!file || !ALLOWED_IMAGE_MIMES.includes(file.mimetype)) {
       throw new BadRequestException(
-        'Invalid file type. Allowed: JPEG, PNG, WebP, SVG',
+        'Invalid file type. Allowed: JPEG, PNG, WebP',
       );
+    }
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      throw new BadRequestException(`File too large. Max: ${maxSize} bytes`);
     }
   }
 }

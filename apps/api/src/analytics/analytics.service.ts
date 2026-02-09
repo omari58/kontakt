@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EventType } from '@prisma/client';
 import { createHash } from 'crypto';
 
 @Injectable()
 export class AnalyticsService {
+  private readonly logger = new Logger(AnalyticsService.name);
+
   constructor(private readonly prisma: PrismaService) {}
 
   async recordView(slug: string, ip: string): Promise<void> {
@@ -41,8 +43,8 @@ export class AnalyticsService {
           ipHash,
         },
       });
-    } catch {
-      // Silently fail — fire-and-forget
+    } catch (error) {
+      this.logger.warn('Analytics event recording failed', error instanceof Error ? error.message : error);
     }
   }
 

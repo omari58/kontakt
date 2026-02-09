@@ -17,28 +17,37 @@ export class CardsService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(userId: string, dto: CreateCardDto): Promise<Card> {
-    const slug = await this.findUniqueSlug(generateSlug(dto.name));
     const { phones, emails, websites, socialLinks, address, ...rest } = dto;
+    const maxRetries = 3;
 
-    const data: Prisma.CardUncheckedCreateInput = {
-      ...rest,
-      userId,
-      slug,
-      phones: phones as unknown as Prisma.InputJsonValue,
-      emails: emails as unknown as Prisma.InputJsonValue,
-      websites: websites as unknown as Prisma.InputJsonValue,
-      socialLinks: socialLinks as unknown as Prisma.InputJsonValue,
-      address: address as unknown as Prisma.InputJsonValue,
-    };
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      const slug = await this.findUniqueSlug(generateSlug(dto.name));
 
-    try {
-      return await this.prisma.card.create({ data });
-    } catch (error: any) {
-      if (error.code === 'P2002' && error.meta?.target?.includes('slug')) {
-        throw new ConflictException('Slug is already taken. Please try again.');
+      const data: Prisma.CardUncheckedCreateInput = {
+        ...rest,
+        userId,
+        slug,
+        phones: phones as unknown as Prisma.InputJsonValue,
+        emails: emails as unknown as Prisma.InputJsonValue,
+        websites: websites as unknown as Prisma.InputJsonValue,
+        socialLinks: socialLinks as unknown as Prisma.InputJsonValue,
+        address: address as unknown as Prisma.InputJsonValue,
+      };
+
+      try {
+        return await this.prisma.card.create({ data });
+      } catch (error: any) {
+        if (error.code === 'P2002' && error.meta?.target?.includes('slug') && attempt < maxRetries) {
+          continue;
+        }
+        if (error.code === 'P2002' && error.meta?.target?.includes('slug')) {
+          throw new ConflictException('Slug is already taken. Please try again.');
+        }
+        throw error;
       }
-      throw error;
     }
+
+    throw new ConflictException('Slug is already taken. Please try again.');
   }
 
   async findAll(options: {

@@ -27,19 +27,19 @@ export function parseExpiryToMs(expiry: string): number {
   }
 }
 
-export function sessionCookieOptions(maxAge: number): CookieOptions {
+export function sessionCookieOptions(maxAge: number, isProduction: boolean): CookieOptions {
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isProduction,
     sameSite: 'lax',
     maxAge,
   };
 }
 
-export function clearSessionCookieOptions(): CookieOptions {
+export function clearSessionCookieOptions(isProduction: boolean): CookieOptions {
   return {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: isProduction,
     sameSite: 'lax',
   };
 }

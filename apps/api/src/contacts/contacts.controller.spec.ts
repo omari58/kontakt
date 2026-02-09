@@ -9,7 +9,7 @@ describe('ContactsController', () => {
 
   const mockVcfResult = {
     vcf: 'BEGIN:VCARD\r\nVERSION:4.0\r\nFN:John Doe\r\nN:Doe;John;;;\r\nEND:VCARD\r\n',
-    filename: 'John Doe.vcf',
+    filename: 'John Doe',
   };
 
   beforeEach(async () => {
@@ -51,7 +51,7 @@ describe('ContactsController', () => {
       expect(contactsService.generateVCard).toHaveBeenCalledWith('john-doe');
       expect(mockRes.set).toHaveBeenCalledWith({
         'Content-Type': 'text/vcard',
-        'Content-Disposition': 'attachment; filename="John Doe.vcf"',
+        'Content-Disposition': `attachment; filename="John Doe.vcf"; filename*=UTF-8''John%20Doe.vcf`,
       });
       expect(mockRes.send).toHaveBeenCalledWith(mockVcfResult.vcf);
     });
@@ -59,7 +59,7 @@ describe('ContactsController', () => {
     it('should sanitize quotes in filename for Content-Disposition', async () => {
       const resultWithQuotes = {
         vcf: 'BEGIN:VCARD\r\nEND:VCARD\r\n',
-        filename: 'John "The Dev" Doe.vcf',
+        filename: 'John "The Dev" Doe',
       };
       (contactsService.generateVCard as jest.Mock).mockResolvedValue(resultWithQuotes);
 

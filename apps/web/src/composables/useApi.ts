@@ -9,13 +9,15 @@ export class ApiError extends Error {
 }
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
+  const headers: Record<string, string> = { ...options?.headers as Record<string, string> };
+  if (!options?.body || !(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
+
   const response = await fetch(url, {
     ...options,
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
+    headers,
   });
 
   if (response.status === 401) {
@@ -25,7 +27,12 @@ async function request<T>(url: string, options?: RequestInit): Promise<T> {
 
   if (!response.ok) {
     const text = await response.text().catch(() => 'Request failed');
-    throw new ApiError(response.status, text);
+    let message = text;
+    try {
+      const json = JSON.parse(text);
+      if (json.message) message = Array.isArray(json.message) ? json.message.join(', ') : json.message;
+    } catch { /* use raw text */ }
+    throw new ApiError(response.status, message);
   }
 
   if (response.status === 204) {

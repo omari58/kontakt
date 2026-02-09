@@ -92,7 +92,7 @@ describe('ContactsService', () => {
       expect(result.vcf).toContain('ORG:Acme Corp');
       expect(result.vcf).toContain('TEL;TYPE=work:+1-555-0100');
       expect(result.vcf).toContain('END:VCARD');
-      expect(result.filename).toBe('John Doe.vcf');
+      expect(result.filename).toBe('John Doe');
     });
 
     it('should throw NotFoundException for non-existent slug', async () => {
@@ -150,7 +150,7 @@ describe('ContactsService', () => {
       expect(result.vcf).not.toContain('TITLE');
       expect(result.vcf).not.toContain('ORG');
       expect(result.vcf).not.toContain('TEL');
-      expect(result.filename).toBe('John Doe.vcf');
+      expect(result.filename).toBe('John Doe');
     });
   });
 });
