@@ -188,6 +188,6 @@ requirements:
   - id: REQ-021
     name: "Production Docker deployment"
     description: "The application deploys via Docker Compose with Caddy as reverse proxy providing automatic HTTPS, routing /c/:slug and /api/* to NestJS and /* to Vue static files."
-    status: pending
+    status: done
     plan: "plans/07-deployment.md"
     depends_on: [REQ-001, REQ-003]
