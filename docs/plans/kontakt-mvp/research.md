@@ -120,3 +120,18 @@
 - [2026-02-08]: Deviation: Backend settings key is `allow_user_background_image` not `allow_bg_images` — frontend matched actual backend key
 - [2026-02-08]: Deviation: Card editor merges "Appearance" and "Settings" into single collapsible section — all fields present, just structural difference from plan
 - [2026-02-08]: Prisma 6 with `mode: 'insensitive' as const` needed for TypeScript literal type narrowing in search filters
+
+## Phase 7 Implementation Learnings
+
+- [2026-02-09]: `corepack prepare pnpm@latest` in Dockerfiles makes builds non-reproducible — always pin to specific version (e.g., `pnpm@10.11.0`)
+- [2026-02-09]: `.dockerignore` files in subdirectories have no effect — Docker reads only from the build context root. Place `.dockerignore` at the repo root when `context: .`
+- [2026-02-09]: `dotenv-cli` in `db:generate` script references `../../.env` which doesn't exist in Docker builds — `touch .env` stub in build stage works since `prisma generate` only needs the schema
+- [2026-02-09]: Upload volume must mount at `/app/uploads` (not `/app/apps/api/uploads`) — app resolves `UPLOAD_DIR` default `./uploads` relative to cwd `/app`
+- [2026-02-09]: Web container serving static files via shared Docker volume requires a healthcheck (`test -f /srv/share/index.html`) so Caddy waits for file copy to complete
+- [2026-02-09]: Caddy `try_files {path} /index.html` handles Vue Router history mode — returns index.html for unknown paths
+- [2026-02-09]: `entrypoint.sh` must use `#!/bin/sh` (not bash) on Alpine, `set -e` for fail-fast, and `exec node` to replace shell process for proper signal forwarding
+- [2026-02-09]: Startup env validation should happen before `NestFactory.create()` for fast fail-fast — avoids loading modules when config is missing
+- [2026-02-09]: OIDC discovery check at startup should be warning-only (not fatal) — provider may start later in Docker Compose
+- [2026-02-09]: CORS origin configurable via `CORS_ORIGIN` env var (comma-separated for multiple origins) — don't hardcode `localhost` for production
+- [2026-02-09]: Deviation: Task description used `OIDC_ISSUER_URL` and `OIDC_REDIRECT_URI` but actual codebase env vars are `OIDC_ISSUER` and `OIDC_CALLBACK_URL`
+- [2026-02-09]: Dockerfile CMD and entrypoint.sh should use consistent file references — prefer explicit `main.js` extension over extensionless `main`

@@ -32,10 +32,8 @@ ENV NODE_ENV=production
 # Create non-root user
 RUN addgroup -S kontakt && adduser -S kontakt -G kontakt
 
-# Production node_modules (hoisted to root)
-COPY --from=deps /app/node_modules ./node_modules
-# Prisma generated client (shamefully-hoist puts it at root)
-COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
+# node_modules from build stage (includes generated Prisma client in .pnpm store)
+COPY --from=build /app/node_modules ./node_modules
 
 # Built application
 COPY --from=build /app/apps/api/dist ./apps/api/dist

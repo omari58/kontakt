@@ -115,12 +115,10 @@ describe('AuthService', () => {
       );
     });
 
-    it('should throw with clear message if OIDC discovery fails', async () => {
+    it('should warn but not throw if OIDC discovery fails', async () => {
       mockedOidc.discovery.mockRejectedValue(new Error('ECONNREFUSED'));
 
-      await expect(service.onModuleInit()).rejects.toThrow(
-        /Failed to discover OIDC issuer/,
-      );
+      await expect(service.onModuleInit()).resolves.not.toThrow();
     });
 
     it('should throw if OIDC_ISSUER is not configured', async () => {

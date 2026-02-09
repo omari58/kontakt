@@ -17,7 +17,7 @@ COPY --from=deps /app/apps/web/node_modules ./apps/web/node_modules
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
 COPY apps/web ./apps/web
 
-RUN pnpm --filter web build
+RUN pnpm --filter web exec vite build
 
 # --- Static files stage ---
 FROM alpine:3.21 AS runtime

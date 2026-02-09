@@ -18,6 +18,10 @@ export class AuthService implements OnModuleInit {
   ) {}
 
   async onModuleInit(): Promise<void> {
+    await this.discoverOidc();
+  }
+
+  private async discoverOidc(): Promise<void> {
     const issuer = this.configService.getOrThrow<string>('OIDC_ISSUER');
     const clientId = this.configService.getOrThrow<string>('OIDC_CLIENT_ID');
     const clientSecret = this.configService.getOrThrow<string>('OIDC_CLIENT_SECRET');
@@ -30,16 +34,26 @@ export class AuthService implements OnModuleInit {
         clientId,
         clientSecret,
       );
+      this.logger.log('OIDC discovery complete');
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      this.logger.error(`Failed to discover OIDC issuer at ${issuer}: ${message}`);
-      throw new Error(`Failed to discover OIDC issuer at ${issuer}: ${message}`);
+      this.logger.warn(
+        `OIDC discovery failed at ${issuer}: ${message}. Auth endpoints will retry on first request.`,
+      );
     }
+  }
 
-    this.logger.log('OIDC discovery complete');
+  private async ensureOidcConfig(): Promise<void> {
+    if (!this.oidcConfig) {
+      await this.discoverOidc();
+    }
+    if (!this.oidcConfig) {
+      throw new Error('OIDC provider is not available. Cannot process auth request.');
+    }
   }
 
   async getAuthorizationUrl(): Promise<AuthorizationUrlResult> {
+    await this.ensureOidcConfig();
     const redirectUri = this.configService.getOrThrow<string>('OIDC_CALLBACK_URL');
 
     const codeVerifier = oidc.randomPKCECodeVerifier();
@@ -68,6 +82,7 @@ export class AuthService implements OnModuleInit {
     codeVerifier: string,
     expectedState: string,
   ): Promise<AuthResult> {
+    await this.ensureOidcConfig();
     const tokens = await oidc.authorizationCodeGrant(
       this.oidcConfig,
       currentUrl,

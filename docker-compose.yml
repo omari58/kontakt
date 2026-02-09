@@ -28,6 +28,7 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-kontakt}:${POSTGRES_PASSWORD:-kontakt}@postgres:5432/${POSTGRES_DB:-kontakt}?schema=public
       NODE_ENV: production
+      PORT: 3000
     env_file:
       - path: .env
         required: false
