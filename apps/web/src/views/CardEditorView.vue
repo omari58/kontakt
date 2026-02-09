@@ -2,7 +2,7 @@
 import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import { useCardForm } from '@/composables/useCardForm';
-import { ArrowLeft, ChevronDown, Loader2 } from 'lucide-vue-next';
+import { ArrowLeft, ChevronDown, Loader2, ExternalLink } from 'lucide-vue-next';
 import ContactFields from '@/components/editor/ContactFields.vue';
 import SocialLinksEditor from '@/components/editor/SocialLinksEditor.vue';
 import ImageUploader from '@/components/editor/ImageUploader.vue';
@@ -44,8 +44,8 @@ const expandedSections = ref<Record<string, boolean>>({
   contact: true,
   webSocial: true,
   images: true,
-  appearance: false,
-  settings: false,
+  appearance: true,
+  settings: true,
 });
 
 function toggleSection(section: string) {
@@ -53,6 +53,7 @@ function toggleSection(section: string) {
 }
 
 const pageTitle = computed(() => isEditMode.value ? 'Edit Card' : 'Create Card');
+const cardViewUrl = computed(() => form.slug ? `/c/${form.slug}` : null);
 
 const savedCardId = ref<string | null>(cardId.value ?? null);
 
@@ -318,14 +319,26 @@ onMounted(() => {
         <div class="editor__preview-sticky">
           <div class="editor__preview-header">
             <span class="editor__preview-label">Live Preview</span>
-            <button
-              class="editor__save-btn"
-              :disabled="saving || !form.name"
-              @click="handleSave"
-            >
-              <Loader2 v-if="saving" :size="14" class="editor__spinner" />
-              {{ saving ? 'Saving...' : 'Save Card' }}
-            </button>
+            <div class="editor__preview-actions">
+              <a
+                v-if="cardViewUrl"
+                :href="cardViewUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="editor__open-btn"
+                title="Open card"
+              >
+                <ExternalLink :size="14" />
+              </a>
+              <button
+                class="editor__save-btn"
+                :disabled="saving || !form.name"
+                @click="handleSave"
+              >
+                <Loader2 v-if="saving" :size="14" class="editor__spinner" />
+                {{ saving ? 'Saving...' : 'Save Card' }}
+              </button>
+            </div>
           </div>
           <div class="editor__preview-frame">
             <CardPreview
@@ -565,6 +578,29 @@ onMounted(() => {
   letter-spacing: 0.05em;
   color: var(--color-text-muted);
   font-weight: var(--font-semibold);
+}
+
+.editor__preview-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.editor__open-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  transition: background var(--duration-fast) var(--ease-default),
+              color var(--duration-fast) var(--ease-default);
+}
+
+.editor__open-btn:hover {
+  background: var(--color-gray-100);
+  color: var(--color-text);
 }
 
 .editor__preview-frame {
