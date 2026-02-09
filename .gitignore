@@ -17,4 +17,4 @@ coverage/
 .cache/
 tmp/
 .kontakt-session
-/uploads/
+apps/api/uploads/
