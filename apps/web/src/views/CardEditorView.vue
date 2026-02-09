@@ -564,6 +564,24 @@ onMounted(() => {
   margin: 0;
 }
 
+.editor__images-row {
+  display: flex;
+  gap: var(--space-4);
+  margin-bottom: 1rem;
+}
+
+.editor__images-row > * {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0;
+}
+
+@media (max-width: 480px) {
+  .editor__images-row {
+    flex-direction: column;
+  }
+}
+
 .editor__preview {
   min-width: 0;
   align-self: start;
