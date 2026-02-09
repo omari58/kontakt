@@ -44,7 +44,7 @@ export class ContactsService {
       phones: card.phones as { number: string; label: string }[] | null,
       emails: card.emails as { email: string; label: string }[] | null,
       address: card.address as { street?: string; city?: string; country?: string; zip?: string } | null,
-      websites: card.websites as string[] | null,
+      websites: card.websites as { url: string; label?: string }[] | null,
       socialLinks: card.socialLinks as { platform: string; url: string }[] | null,
       bio: card.bio,
       avatarPath: card.avatarPath,

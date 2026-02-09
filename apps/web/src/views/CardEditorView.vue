@@ -2,6 +2,7 @@
 import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import { useCardForm } from '@/composables/useCardForm';
+import { ArrowLeft, ChevronDown, Loader2 } from 'lucide-vue-next';
 import ContactFields from '@/components/editor/ContactFields.vue';
 import SocialLinksEditor from '@/components/editor/SocialLinksEditor.vue';
 import ImageUploader from '@/components/editor/ImageUploader.vue';
@@ -52,7 +53,6 @@ function toggleSection(section: string) {
 
 const pageTitle = computed(() => isEditMode.value ? 'Edit Card' : 'Create Card');
 
-// Saved card ID is tracked for image uploads on newly created cards
 const savedCardId = ref<string | null>(cardId.value ?? null);
 
 async function handleSave() {
@@ -100,7 +100,8 @@ onMounted(() => {
   <div class="editor">
     <div class="editor__header">
       <button class="editor__back-btn" @click="router.push({ name: 'dashboard' })">
-        &larr; Back
+        <ArrowLeft :size="16" />
+        Back
       </button>
       <h1 class="editor__title">{{ pageTitle }}</h1>
       <button
@@ -108,6 +109,7 @@ onMounted(() => {
         :disabled="saving || !form.name"
         @click="handleSave"
       >
+        <Loader2 v-if="saving" :size="14" class="editor__spinner" />
         {{ saving ? 'Saving...' : 'Save Card' }}
       </button>
     </div>
@@ -130,7 +132,11 @@ onMounted(() => {
             @click="toggleSection('basicInfo')"
           >
             <span class="editor__section-title">Basic Info</span>
-            <span class="editor__section-toggle">{{ expandedSections.basicInfo ? '−' : '+' }}</span>
+            <ChevronDown
+              :size="18"
+              class="editor__section-chevron"
+              :class="{ 'editor__section-chevron--open': expandedSections.basicInfo }"
+            />
           </button>
           <div v-show="expandedSections.basicInfo" class="editor__section-body">
             <div class="editor__field">
@@ -185,7 +191,11 @@ onMounted(() => {
             @click="toggleSection('contact')"
           >
             <span class="editor__section-title">Contact</span>
-            <span class="editor__section-toggle">{{ expandedSections.contact ? '−' : '+' }}</span>
+            <ChevronDown
+              :size="18"
+              class="editor__section-chevron"
+              :class="{ 'editor__section-chevron--open': expandedSections.contact }"
+            />
           </button>
           <div v-show="expandedSections.contact" class="editor__section-body">
             <ContactFields
@@ -209,7 +219,11 @@ onMounted(() => {
             @click="toggleSection('webSocial')"
           >
             <span class="editor__section-title">Web & Social</span>
-            <span class="editor__section-toggle">{{ expandedSections.webSocial ? '−' : '+' }}</span>
+            <ChevronDown
+              :size="18"
+              class="editor__section-chevron"
+              :class="{ 'editor__section-chevron--open': expandedSections.webSocial }"
+            />
           </button>
           <div v-show="expandedSections.webSocial" class="editor__section-body">
             <SocialLinksEditor
@@ -231,7 +245,11 @@ onMounted(() => {
             @click="toggleSection('images')"
           >
             <span class="editor__section-title">Images</span>
-            <span class="editor__section-toggle">{{ expandedSections.images ? '−' : '+' }}</span>
+            <ChevronDown
+              :size="18"
+              class="editor__section-chevron"
+              :class="{ 'editor__section-chevron--open': expandedSections.images }"
+            />
           </button>
           <div v-show="expandedSections.images" class="editor__section-body">
             <p v-if="!savedCardId && !cardId" class="editor__hint">
@@ -268,13 +286,18 @@ onMounted(() => {
             @click="toggleSection('appearance')"
           >
             <span class="editor__section-title">Appearance & Settings</span>
-            <span class="editor__section-toggle">{{ expandedSections.appearance ? '−' : '+' }}</span>
+            <ChevronDown
+              :size="18"
+              class="editor__section-chevron"
+              :class="{ 'editor__section-chevron--open': expandedSections.appearance }"
+            />
           </button>
           <div v-show="expandedSections.appearance" class="editor__section-body">
             <StyleSettings
               :bg-color="form.bgColor"
               :primary-color="form.primaryColor"
               :text-color="form.textColor"
+              :font-family="form.fontFamily"
               :avatar-shape="form.avatarShape"
               :theme="form.theme"
               :visibility="form.visibility"
@@ -285,6 +308,7 @@ onMounted(() => {
               @update:bg-color="form.bgColor = $event"
               @update:primary-color="form.primaryColor = $event"
               @update:text-color="form.textColor = $event"
+              @update:font-family="form.fontFamily = $event"
               @update:avatar-shape="form.avatarShape = $event"
               @update:theme="form.theme = $event"
               @update:visibility="form.visibility = $event"
@@ -298,13 +322,15 @@ onMounted(() => {
 
       <div class="editor__preview">
         <div class="editor__preview-sticky">
-          <h3 class="editor__preview-title">Live Preview</h3>
-          <CardPreview
-            :form="form"
-            :avatar-url="avatarUrl"
-            :banner-url="bannerUrl"
-            :background-url="backgroundUrl"
-          />
+          <span class="editor__preview-label">Live Preview</span>
+          <div class="editor__preview-frame">
+            <CardPreview
+              :form="form"
+              :avatar-url="avatarUrl"
+              :banner-url="bannerUrl"
+              :background-url="backgroundUrl"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -315,49 +341,61 @@ onMounted(() => {
 .editor {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: var(--space-6);
 }
 
 .editor__header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
 .editor__back-btn {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  transition: background var(--duration-fast) var(--ease-default),
+              color var(--duration-fast) var(--ease-default);
 }
 
 .editor__back-btn:hover {
-  background: #f5f5f5;
+  background: var(--color-gray-100);
+  color: var(--color-text);
 }
 
 .editor__title {
   flex: 1;
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
   margin: 0;
+  color: var(--color-text);
 }
 
 .editor__save-btn {
-  padding: 0.5rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
   border: none;
-  border-radius: 6px;
-  background: #0066cc;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary-600);
   color: #fff;
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-default);
 }
 
 .editor__save-btn:hover:not(:disabled) {
-  background: #0052a3;
+  background: var(--color-primary-700);
 }
 
 .editor__save-btn:disabled {
@@ -365,40 +403,48 @@ onMounted(() => {
   cursor: not-allowed;
 }
 
+.editor__spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .editor__error {
-  background: #fce4ec;
-  color: #d32f2f;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
+  background: var(--color-error-50);
+  color: var(--color-error-700);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-error-500);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-sm);
 }
 
 .editor__loading {
   text-align: center;
-  padding: 3rem;
-  color: #666;
+  padding: var(--space-12);
+  color: var(--color-text-secondary);
 }
 
 .editor__layout {
   display: grid;
   grid-template-columns: 1fr 400px;
-  gap: 2rem;
+  gap: var(--space-8);
   align-items: start;
 }
 
 .editor__form {
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .editor__section {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  margin-bottom: 0.75rem;
-  background: #fff;
-  overflow: hidden;
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.editor__section:last-child {
+  border-bottom: none;
 }
 
 .editor__section-header {
@@ -406,98 +452,116 @@ onMounted(() => {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: var(--space-4) 0;
   border: none;
-  background: #fafafa;
+  background: transparent;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: var(--text-md);
   text-align: left;
 }
 
 .editor__section-header:hover {
-  background: #f0f0f0;
+  color: var(--color-primary-600);
 }
 
 .editor__section-title {
-  font-weight: 600;
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
 }
 
-.editor__section-toggle {
-  font-size: 1.25rem;
-  color: #666;
-  width: 24px;
-  text-align: center;
+.editor__section-header:hover .editor__section-title {
+  color: var(--color-primary-600);
+}
+
+.editor__section-chevron {
+  color: var(--color-text-muted);
+  transition: transform var(--duration-normal) var(--ease-default);
+  transform: rotate(-90deg);
+}
+
+.editor__section-chevron--open {
+  transform: rotate(0deg);
 }
 
 .editor__section-body {
-  padding: 1rem;
+  padding: 0 0 var(--space-4);
 }
 
 .editor__field {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-3);
 }
 
 .editor__label {
   display: block;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 0.25rem;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-1);
 }
 
 .editor__input {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  box-sizing: border-box;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
 }
 
 .editor__input:focus {
   outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.15);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .editor__textarea {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
   resize: vertical;
   font-family: inherit;
-  box-sizing: border-box;
+  color: var(--color-text);
+  background: var(--color-surface);
 }
 
 .editor__textarea:focus {
   outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.15);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .editor__hint {
-  color: #666;
-  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
   font-style: italic;
   margin: 0;
 }
 
 .editor__preview {
   min-width: 0;
-}
-
-.editor__preview-sticky {
+  align-self: start;
   position: sticky;
-  top: 1.5rem;
+  top: var(--space-6);
 }
 
-.editor__preview-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0 0 0.75rem;
-  color: #333;
+.editor__preview-label {
+  display: block;
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-3);
+}
+
+.editor__preview-frame {
+  background: var(--color-gray-100);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
 }
 
 @media (max-width: 900px) {
@@ -507,6 +571,7 @@ onMounted(() => {
 
   .editor__preview {
     order: -1;
+    position: static;
   }
 }
 </style>

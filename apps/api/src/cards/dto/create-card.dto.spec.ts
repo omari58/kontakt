@@ -22,7 +22,7 @@ describe('CreateCardDto', () => {
         company: 'Acme',
         phones: [{ number: '+1234567890', label: 'Work' }],
         emails: [{ email: 'jane@example.com', label: 'Personal' }],
-        websites: ['https://example.com'],
+        websites: [{ url: 'https://example.com' }],
         socialLinks: [{ platform: 'github', url: 'https://github.com/jane' }],
         address: { street: '123 Main St', city: 'NYC', country: 'US', zip: '10001' },
         bio: 'A short bio',
@@ -214,7 +214,7 @@ describe('CreateCardDto', () => {
     it('should pass with valid URLs', async () => {
       const dto = toDto({
         name: 'Test',
-        websites: ['https://example.com', 'http://test.org'],
+        websites: [{ url: 'https://example.com' }, { url: 'http://test.org' }],
       });
       const errors = await validate(dto);
       expect(errors).toHaveLength(0);
@@ -223,7 +223,7 @@ describe('CreateCardDto', () => {
     it('should fail with invalid URL', async () => {
       const dto = toDto({
         name: 'Test',
-        websites: ['not-a-url'],
+        websites: [{ url: 'not-a-url' }],
       });
       const errors = await validate(dto);
       const err = errors.find((e) => e.property === 'websites');

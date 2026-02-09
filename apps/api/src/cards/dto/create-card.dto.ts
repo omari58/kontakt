@@ -64,6 +64,15 @@ export class EmailDto {
   label?: string;
 }
 
+export class WebsiteDto {
+  @IsUrl()
+  url!: string;
+
+  @IsOptional()
+  @IsString()
+  label?: string;
+}
+
 export class SocialLinkDto {
   @IsIn(SOCIAL_PLATFORMS)
   platform!: string;
@@ -89,6 +98,17 @@ export class AddressDto {
   @IsString()
   zip?: string;
 }
+
+const CARD_FONTS = [
+  'dm-serif',
+  'playfair',
+  'inter',
+  'poppins',
+  'cormorant',
+  'sora',
+  'fraunces',
+  'bricolage',
+] as const;
 
 const HEX_COLOR_REGEX = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 
@@ -119,8 +139,9 @@ export class CreateCardDto {
 
   @IsOptional()
   @IsArray()
-  @IsUrl({}, { each: true })
-  websites?: string[];
+  @ValidateNested({ each: true })
+  @Type(() => WebsiteDto)
+  websites?: WebsiteDto[];
 
   @IsOptional()
   @IsArray()
@@ -148,6 +169,10 @@ export class CreateCardDto {
   @IsOptional()
   @Matches(HEX_COLOR_REGEX, { message: 'textColor must be a valid hex color (e.g. #fff or #ff0000)' })
   textColor?: string;
+
+  @IsOptional()
+  @IsIn(CARD_FONTS)
+  fontFamily?: string;
 
   @IsOptional()
   @IsEnum(AvatarShape)

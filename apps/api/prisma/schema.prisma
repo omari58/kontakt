@@ -38,6 +38,7 @@ model Card {
   bgColor      String?
   primaryColor String?
   textColor    String?
+  fontFamily   String?
   avatarShape  AvatarShape?
   theme        Theme?
   visibility   Visibility   @default(PUBLIC)

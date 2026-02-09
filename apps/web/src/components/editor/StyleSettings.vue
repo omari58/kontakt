@@ -1,10 +1,23 @@
 <script setup lang="ts">
 import type { AvatarShape, Theme, Visibility } from '@/types';
 
+const FONT_OPTIONS = [
+  { id: '', name: 'Default (Outfit)', family: "'Outfit', sans-serif" },
+  { id: 'dm-serif', name: 'DM Serif Display', family: "'DM Serif Display', Georgia, serif" },
+  { id: 'playfair', name: 'Playfair Display', family: "'Playfair Display', Georgia, serif" },
+  { id: 'inter', name: 'Inter', family: "'Inter', sans-serif" },
+  { id: 'poppins', name: 'Poppins', family: "'Poppins', sans-serif" },
+  { id: 'cormorant', name: 'Cormorant Garamond', family: "'Cormorant Garamond', Georgia, serif" },
+  { id: 'sora', name: 'Sora', family: "'Sora', sans-serif" },
+  { id: 'fraunces', name: 'Fraunces', family: "'Fraunces', Georgia, serif" },
+  { id: 'bricolage', name: 'Bricolage Grotesque', family: "'Bricolage Grotesque', sans-serif" },
+];
+
 defineProps<{
   bgColor: string;
   primaryColor: string;
   textColor: string;
+  fontFamily: string;
   avatarShape: AvatarShape;
   theme: Theme;
   visibility: Visibility;
@@ -18,6 +31,7 @@ const emit = defineEmits<{
   'update:bgColor': [value: string];
   'update:primaryColor': [value: string];
   'update:textColor': [value: string];
+  'update:fontFamily': [value: string];
   'update:avatarShape': [value: AvatarShape];
   'update:theme': [value: Theme];
   'update:visibility': [value: Visibility];
@@ -86,6 +100,24 @@ const emit = defineEmits<{
             />
           </div>
         </label>
+      </div>
+
+      <div class="style-settings__field">
+        <label class="style-settings__label">Name Font</label>
+        <select
+          :value="fontFamily"
+          class="style-settings__select"
+          @change="emit('update:fontFamily', ($event.target as HTMLSelectElement).value)"
+        >
+          <option
+            v-for="font in FONT_OPTIONS"
+            :key="font.id"
+            :value="font.id"
+            :style="{ fontFamily: font.family }"
+          >
+            {{ font.name }}
+          </option>
+        </select>
       </div>
 
       <div class="style-settings__field">
@@ -167,17 +199,17 @@ const emit = defineEmits<{
 
 <style scoped>
 .style-settings__group {
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  border: none;
+  padding: 0;
+  margin-bottom: var(--space-4);
 }
 
 .style-settings__legend {
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0 0.5rem;
-  color: #333;
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  padding: 0;
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
 }
 
 .style-settings__color-row {
@@ -191,8 +223,8 @@ const emit = defineEmits<{
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
-  font-size: 0.8125rem;
-  color: #555;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
 }
 
 .style-settings__color-picker {
@@ -202,28 +234,29 @@ const emit = defineEmits<{
 }
 
 .style-settings__color-input {
-  width: 36px;
-  height: 36px;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   padding: 2px;
   cursor: pointer;
   background: none;
+  box-shadow: var(--shadow-xs);
 }
 
 .style-settings__color-text {
   width: 80px;
   padding: 0.375rem 0.5rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  font-size: 0.8125rem;
-  font-family: monospace;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: var(--font-mono);
 }
 
 .style-settings__color-text:focus {
   outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.15);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .style-settings__field {
@@ -232,38 +265,38 @@ const emit = defineEmits<{
 
 .style-settings__label {
   display: block;
-  font-size: 0.8125rem;
-  color: #555;
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
   margin-bottom: 0.25rem;
 }
 
 .style-settings__select {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  font-size: 0.875rem;
-  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  background: var(--color-surface);
 }
 
 .style-settings__select:focus {
   outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.15);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .style-settings__input {
   flex: 1;
   padding: 0.5rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  font-size: 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
 }
 
 .style-settings__input:focus {
   outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.15);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .style-settings__slug-row {
@@ -274,24 +307,24 @@ const emit = defineEmits<{
 
 .style-settings__slug-prefix {
   padding: 0.5rem 0.5rem 0.5rem 0.75rem;
-  background: #f5f5f5;
-  border: 1px solid #d0d0d0;
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-border);
   border-right: none;
-  border-radius: 4px 0 0 4px;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
   font-size: 0.875rem;
-  color: #666;
+  color: var(--color-text-muted);
 }
 
 .style-settings__slug-row .style-settings__input {
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
 .style-settings__checkbox {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
-  color: #333;
+  font-size: var(--text-base);
+  color: var(--color-text);
   margin-bottom: 0.5rem;
   cursor: pointer;
 }

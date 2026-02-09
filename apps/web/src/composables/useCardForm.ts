@@ -1,6 +1,6 @@
 import { reactive, ref, computed, watch } from 'vue';
 import { useApi } from './useApi';
-import type { Card, Phone, Email, Address, SocialLink, AvatarShape, Theme, Visibility } from '@/types';
+import type { Card, Phone, Email, Website, Address, SocialLink, AvatarShape, Theme, Visibility } from '@/types';
 
 export interface CardFormData {
   name: string;
@@ -10,11 +10,12 @@ export interface CardFormData {
   phones: Phone[];
   emails: Email[];
   address: Address;
-  websites: string[];
+  websites: Website[];
   socialLinks: SocialLink[];
   bgColor: string;
   primaryColor: string;
   textColor: string;
+  fontFamily: string;
   avatarShape: AvatarShape;
   theme: Theme;
   visibility: Visibility;
@@ -37,6 +38,7 @@ function createEmptyForm(): CardFormData {
     bgColor: '#ffffff',
     primaryColor: '#0066cc',
     textColor: '#111111',
+    fontFamily: '',
     avatarShape: 'CIRCLE',
     theme: 'LIGHT',
     visibility: 'PUBLIC',
@@ -91,6 +93,7 @@ export function useCardForm(cardId?: string) {
       form.bgColor = card.bgColor ?? '#ffffff';
       form.primaryColor = card.primaryColor ?? '#0066cc';
       form.textColor = card.textColor ?? '#111111';
+      form.fontFamily = card.fontFamily ?? '';
       form.avatarShape = card.avatarShape ?? 'CIRCLE';
       form.theme = card.theme ?? 'LIGHT';
       form.visibility = card.visibility;
@@ -126,6 +129,7 @@ export function useCardForm(cardId?: string) {
     if (form.bgColor) payload.bgColor = form.bgColor;
     if (form.primaryColor) payload.primaryColor = form.primaryColor;
     if (form.textColor) payload.textColor = form.textColor;
+    if (form.fontFamily) payload.fontFamily = form.fontFamily;
     payload.avatarShape = form.avatarShape;
     payload.theme = form.theme;
     payload.visibility = form.visibility;
@@ -212,7 +216,7 @@ export function useCardForm(cardId?: string) {
   function removeEmail(index: number) { form.emails.splice(index, 1); }
 
   // Website helpers
-  function addWebsite() { form.websites.push(''); }
+  function addWebsite() { form.websites.push({ url: '', label: '' }); }
   function removeWebsite(index: number) { form.websites.splice(index, 1); }
 
   // Social link helpers

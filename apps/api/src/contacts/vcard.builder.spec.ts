@@ -44,7 +44,7 @@ describe('VCardBuilder', () => {
           country: 'US',
           zip: '62701',
         },
-        websites: ['https://johndoe.com', 'https://blog.johndoe.com'],
+        websites: [{ url: 'https://johndoe.com' }, { url: 'https://blog.johndoe.com' }],
         socialLinks: [
           { platform: 'twitter', url: 'https://twitter.com/johndoe' },
           { platform: 'linkedin', url: 'https://linkedin.com/in/johndoe' },

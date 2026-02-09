@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCards } from '@/composables/useCards';
+import { Plus, CreditCard } from 'lucide-vue-next';
 import CardListItem from '@/components/CardListItem.vue';
 
 const router = useRouter();
@@ -39,9 +40,13 @@ async function executeDelete() {
 <template>
   <div class="dashboard">
     <div class="dashboard__header">
-      <h1 class="dashboard__title">My Cards</h1>
+      <div>
+        <h1 class="dashboard__title">My Cards</h1>
+        <p class="dashboard__subtitle">Manage and share your digital business cards</p>
+      </div>
       <button class="dashboard__create-btn" @click="createCard">
-        + Create New Card
+        <Plus :size="16" />
+        Create New Card
       </button>
     </div>
 
@@ -58,8 +63,11 @@ async function executeDelete() {
 
     <!-- Empty state -->
     <div v-else-if="cards.length === 0" class="dashboard__empty">
-      <p class="dashboard__empty-text">You don't have any cards yet.</p>
+      <CreditCard :size="56" class="dashboard__empty-icon" />
+      <h2 class="dashboard__empty-heading">No cards yet</h2>
+      <p class="dashboard__empty-text">Create your first digital business card to get started.</p>
       <button class="dashboard__create-btn" @click="createCard">
+        <Plus :size="16" />
         Create Your First Card
       </button>
     </div>
@@ -76,18 +84,20 @@ async function executeDelete() {
     </div>
 
     <!-- Delete confirmation dialog -->
-    <div v-if="pendingDeleteId" class="dashboard__overlay" @click.self="cancelDelete">
-      <div class="dashboard__dialog">
-        <h2 class="dashboard__dialog-title">Delete Card</h2>
-        <p>Are you sure you want to delete this card? This action cannot be undone.</p>
-        <div class="dashboard__dialog-actions">
-          <button class="dashboard__dialog-btn" @click="cancelDelete">Cancel</button>
-          <button class="dashboard__dialog-btn dashboard__dialog-btn--danger" @click="executeDelete">
-            Delete
-          </button>
+    <Transition name="modal">
+      <div v-if="pendingDeleteId" class="dashboard__overlay" @click.self="cancelDelete">
+        <div class="dashboard__dialog">
+          <h2 class="dashboard__dialog-title">Delete Card</h2>
+          <p class="dashboard__dialog-text">Are you sure you want to delete this card? This action cannot be undone.</p>
+          <div class="dashboard__dialog-actions">
+            <button class="dashboard__dialog-btn dashboard__dialog-btn--ghost" @click="cancelDelete">Cancel</button>
+            <button class="dashboard__dialog-btn dashboard__dialog-btn--danger" @click="executeDelete">
+              Delete
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -95,92 +105,99 @@ async function executeDelete() {
 .dashboard {
   max-width: 960px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: var(--space-8) var(--space-4);
 }
 
 .dashboard__header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: var(--space-6);
 }
 
 .dashboard__title {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  line-height: var(--leading-tight);
+}
+
+.dashboard__subtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin-top: var(--space-1);
 }
 
 .dashboard__create-btn {
-  padding: 0.5rem 1rem;
-  background: #1a1a1a;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-primary-600);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
   cursor: pointer;
+  transition: background var(--duration-fast) var(--ease-default),
+              box-shadow var(--duration-fast) var(--ease-default);
+  white-space: nowrap;
 }
 
 .dashboard__create-btn:hover {
-  background: #333;
+  background: var(--color-primary-700);
+  box-shadow: var(--shadow-sm);
+}
+
+.dashboard__create-btn:active {
+  transform: scale(0.97);
 }
 
 .dashboard__grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-}
-
-@media (min-width: 640px) {
-  .dashboard__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 960px) {
-  .dashboard__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  grid-template-columns: repeat(auto-fill, minmax(260px, 280px));
+  gap: var(--space-4);
 }
 
 /* Skeleton loading */
 .dashboard__skeleton {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
 }
 
 .dashboard__skeleton-avatar {
   width: 48px;
   height: 48px;
-  border-radius: 50%;
-  background: #e0e0e0;
-  animation: pulse 1.5s ease-in-out infinite;
+  border-radius: var(--radius-full);
+  background: var(--color-gray-200);
+  animation: shimmer 1.5s ease-in-out infinite;
 }
 
 .dashboard__skeleton-lines {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .dashboard__skeleton-line {
   height: 12px;
   width: 60%;
-  background: #e0e0e0;
-  border-radius: 4px;
-  animation: pulse 1.5s ease-in-out infinite;
+  background: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  animation: shimmer 1.5s ease-in-out infinite;
 }
 
 .dashboard__skeleton-line--wide {
   width: 80%;
 }
 
-@keyframes pulse {
+@keyframes shimmer {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
@@ -188,66 +205,120 @@ async function executeDelete() {
 /* Empty state */
 .dashboard__empty {
   text-align: center;
-  padding: 4rem 1rem;
+  padding: var(--space-16) var(--space-4);
+}
+
+.dashboard__empty-icon {
+  color: var(--color-gray-300);
+  margin-bottom: var(--space-4);
+}
+
+.dashboard__empty-heading {
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  color: var(--color-text);
+  margin-bottom: var(--space-2);
 }
 
 .dashboard__empty-text {
-  color: #666;
-  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-6);
+  font-size: var(--text-base);
 }
 
 /* Delete dialog */
 .dashboard__overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: var(--z-modal);
 }
 
 .dashboard__dialog {
-  background: #fff;
-  border-radius: 8px;
-  padding: 1.5rem;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
   max-width: 400px;
   width: 90%;
+  box-shadow: var(--shadow-xl);
 }
 
 .dashboard__dialog-title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-2);
+  color: var(--color-text);
+}
+
+.dashboard__dialog-text {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  line-height: var(--leading-normal);
 }
 
 .dashboard__dialog-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
 }
 
-.dashboard__dialog-btn {
-  padding: 0.5rem 1rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px;
-  background: #fff;
+.dashboard__dialog-btn--ghost {
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: transparent;
   cursor: pointer;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-text-secondary);
+  transition: background var(--duration-fast) var(--ease-default);
 }
 
-.dashboard__dialog-btn:hover {
-  background: #f5f5f5;
+.dashboard__dialog-btn--ghost:hover {
+  background: var(--color-gray-100);
+  color: var(--color-text);
 }
 
 .dashboard__dialog-btn--danger {
-  background: #d32f2f;
+  padding: var(--space-2) var(--space-5);
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--color-error-500);
   color: #fff;
-  border-color: #d32f2f;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  transition: background var(--duration-fast) var(--ease-default);
 }
 
 .dashboard__dialog-btn--danger:hover {
-  background: #b71c1c;
+  background: var(--color-error-700);
+}
+
+/* Modal transition */
+.modal-enter-active {
+  transition: opacity var(--duration-normal) var(--ease-out);
+}
+.modal-enter-active .dashboard__dialog {
+  transition: transform var(--duration-normal) var(--ease-out),
+              opacity var(--duration-normal) var(--ease-out);
+}
+.modal-leave-active {
+  transition: opacity var(--duration-fast) var(--ease-default);
+}
+.modal-enter-from {
+  opacity: 0;
+}
+.modal-enter-from .dashboard__dialog {
+  opacity: 0;
+  transform: scale(0.95);
+}
+.modal-leave-to {
+  opacity: 0;
 }
 </style>

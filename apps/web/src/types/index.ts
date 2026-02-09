@@ -30,6 +30,11 @@ export interface Address {
   zip?: string;
 }
 
+export interface Website {
+  url: string;
+  label?: string;
+}
+
 export interface SocialLink {
   platform: string;
   url: string;
@@ -45,7 +50,7 @@ export interface Card {
   phones: Phone[] | null;
   emails: Email[] | null;
   address: Address | null;
-  websites: string[] | null;
+  websites: Website[] | null;
   socialLinks: SocialLink[] | null;
   bio: string | null;
   avatarPath: string | null;
@@ -54,6 +59,7 @@ export interface Card {
   bgColor: string | null;
   primaryColor: string | null;
   textColor: string | null;
+  fontFamily: string | null;
   avatarShape: AvatarShape | null;
   theme: Theme | null;
   visibility: Visibility;

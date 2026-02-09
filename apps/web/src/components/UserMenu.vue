@@ -1,112 +1,87 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useAuth } from '@/composables/useAuth';
+import { LogOut } from 'lucide-vue-next';
 
 const { user, logout } = useAuth();
-const open = ref(false);
-
-function toggle() {
-  open.value = !open.value;
-}
-
-function handleLogout() {
-  open.value = false;
-  logout();
-}
 </script>
 
 <template>
   <div class="user-menu">
-    <button class="user-menu__trigger" @click="toggle">
+    <div class="user-menu__avatar">
       {{ user?.name?.charAt(0)?.toUpperCase() || '?' }}
-    </button>
-    <div v-if="open" class="user-menu__dropdown">
-      <div class="user-menu__info">
-        <p class="user-menu__name">{{ user?.name }}</p>
-        <p class="user-menu__email">{{ user?.email }}</p>
-      </div>
-      <hr class="user-menu__divider" />
-      <button class="user-menu__logout" @click="handleLogout">
-        Log out
-      </button>
     </div>
-    <div v-if="open" class="user-menu__backdrop" @click="open = false" />
+    <div class="user-menu__info">
+      <p class="user-menu__name">{{ user?.name }}</p>
+      <p class="user-menu__email">{{ user?.email }}</p>
+    </div>
+    <button class="user-menu__logout" title="Log out" @click="logout">
+      <LogOut :size="14" />
+    </button>
   </div>
 </template>
 
 <style scoped>
 .user-menu {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-1);
 }
 
-.user-menu__trigger {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: none;
-  background: #e0e0e0;
-  font-weight: 600;
-  font-size: 0.875rem;
-  cursor: pointer;
+.user-menu__avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary-400), var(--color-primary-600));
+  color: #fff;
+  font-weight: var(--font-semibold);
+  font-size: var(--text-xs);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.user-menu__trigger:hover {
-  background: #d0d0d0;
-}
-
-.user-menu__dropdown {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  min-width: 200px;
-  z-index: 50;
+  flex-shrink: 0;
 }
 
 .user-menu__info {
-  padding: 0.75rem 1rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .user-menu__name {
-  font-weight: 600;
-  font-size: 0.875rem;
+  font-weight: var(--font-medium);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-menu__email {
-  font-size: 0.75rem;
-  color: #666;
-}
-
-.user-menu__divider {
-  border: none;
-  border-top: 1px solid #e0e0e0;
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-menu__logout {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
   border: none;
+  border-radius: var(--radius-md);
   background: none;
-  font-size: 0.875rem;
   cursor: pointer;
-  color: #d32f2f;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: color var(--duration-fast) var(--ease-default),
+              background var(--duration-fast) var(--ease-default);
 }
 
 .user-menu__logout:hover {
-  background: #fce4ec;
-}
-
-.user-menu__backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
+  background: var(--color-error-50);
+  color: var(--color-error-500);
 }
 </style>

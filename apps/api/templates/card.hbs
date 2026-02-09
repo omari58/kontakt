@@ -29,10 +29,25 @@
   <!-- Structured Data -->
   <script type="application/ld+json">{{{jsonLd}}}</script>
 
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  {{#if fontUrl}}
+  <link href="{{fontUrl}}" rel="stylesheet">
+  {{/if}}
+
   <style>
     :root {
       {{cssVars}};
-      --avatar-size: 96px;
+      --avatar-size: 104px;
+      --card-radius: 24px;
+      --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --primary-soft: color-mix(in srgb, var(--primary-color, #0066cc) 10%, white);
+      --primary-medium: color-mix(in srgb, var(--primary-color, #0066cc) 18%, white);
+      --divider: color-mix(in srgb, var(--text-color, #1a1a1a) 10%, white);
+      --text-secondary: color-mix(in srgb, var(--text-color, #1a1a1a) 65%, white);
+      --text-tertiary: color-mix(in srgb, var(--text-color, #1a1a1a) 45%, white);
     }
 
     * {
@@ -42,294 +57,430 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-family: var(--font-body);
       background-color: var(--bg-color, #f5f5f5);
       color: var(--text-color, #1a1a1a);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 24px 16px;
+      padding: 32px 16px 120px;
     }
 
-    .theme-dark body,
     html.theme-dark body {
-      background-color: var(--bg-color, #1a1a1a);
-      color: var(--text-color, #f5f5f5);
+      background-color: var(--bg-color, #111);
+      color: var(--text-color, #f0f0f0);
     }
 
-    .card-container {
-      max-width: 480px;
+    /* ===== Card shell ===== */
+    .card {
+      max-width: 460px;
       width: 100%;
       background: white;
-      border-radius: 16px;
+      border-radius: var(--card-radius);
       overflow: hidden;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.03),
+        0 2px 4px rgba(0,0,0,0.02),
+        0 8px 24px rgba(0,0,0,0.06),
+        0 24px 48px rgba(0,0,0,0.04);
       position: relative;
+      animation: cardIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    .theme-dark .card-container,
-    html.theme-dark .card-container {
-      background: #2a2a2a;
+    html.theme-dark .card {
+      background: #1e1e1e;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 8px 24px rgba(0,0,0,0.3),
+        0 24px 48px rgba(0,0,0,0.2);
     }
 
     {{#if card.bgImagePath}}
-    .card-container {
+    .card {
       background-image: url('{{card.bgImagePath}}');
       background-size: cover;
       background-position: center;
     }
     {{/if}}
 
-    .banner {
-      width: 100%;
-      height: 160px;
-      background: var(--primary-color, #0066cc);
-      overflow: hidden;
+    @keyframes cardIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.98);
+      }
     }
 
-    .banner img {
+    /* ===== Banner ===== */
+    .card__banner {
+      width: 100%;
+      height: 180px;
+      background: linear-gradient(135deg, var(--primary-color, #0066cc), color-mix(in srgb, var(--primary-color, #0066cc) 70%, black));
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card__banner img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
 
-    .profile-section {
-      padding: 0 24px 24px;
-      text-align: center;
-      margin-top: -48px;
-      position: relative;
+    .card__banner::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(to top, rgba(0,0,0,0.12), transparent);
+      pointer-events: none;
     }
 
-    .avatar {
+    /* ===== Profile ===== */
+    .card__profile {
+      padding: 0 28px 28px;
+      text-align: center;
+      margin-top: -52px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card__avatar {
       width: var(--avatar-size);
       height: var(--avatar-size);
       border: 4px solid white;
       object-fit: cover;
       display: inline-block;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
 
-    .avatar.circle {
-      border-radius: 50%;
+    html.theme-dark .card__avatar,
+    html.theme-dark .card__avatar-ph {
+      border-color: #1e1e1e;
     }
 
-    .avatar.rounded-square {
-      border-radius: 16px;
-    }
+    .card__avatar.circle { border-radius: 50%; }
+    .card__avatar.rounded-square { border-radius: 20px; }
 
-    .avatar-placeholder {
+    .card__avatar-ph {
       width: var(--avatar-size);
       height: var(--avatar-size);
       border: 4px solid white;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      background: var(--primary-color, #0066cc);
+      background: linear-gradient(135deg, var(--primary-color, #0066cc), color-mix(in srgb, var(--primary-color, #0066cc) 70%, black));
       color: white;
-      font-size: 36px;
-      font-weight: 600;
+      font-family: var(--font-display);
+      font-size: 40px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     }
 
-    .avatar-placeholder.circle {
-      border-radius: 50%;
-    }
+    .card__avatar-ph.circle { border-radius: 50%; }
+    .card__avatar-ph.rounded-square { border-radius: 20px; }
 
-    .avatar-placeholder.rounded-square {
-      border-radius: 16px;
-    }
-
-    .name {
-      font-size: 24px;
-      font-weight: 700;
-      margin-top: 12px;
-      line-height: 1.2;
-    }
-
-    .title-company {
-      font-size: 16px;
-      color: var(--text-color, #666);
-      margin-top: 4px;
-      opacity: 0.8;
-    }
-
-    .bio {
-      font-size: 14px;
-      line-height: 1.6;
+    .card__name {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 400;
       margin-top: 16px;
-      opacity: 0.9;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      animation: fadeUp 0.5s 0.15s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    .contact-section {
-      padding: 0 24px 24px;
+    .card__role {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-top: 6px;
+      line-height: 1.4;
+      animation: fadeUp 0.5s 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    .contact-item {
+    .card__role strong {
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .card__bio {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      margin-top: 16px;
+      font-weight: 400;
+      max-width: 340px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeUp 0.5s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+    }
+
+    /* ===== Sections ===== */
+    .card__section {
+      padding: 0 28px;
+      margin-bottom: 24px;
+      animation: fadeUp 0.5s 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .card__section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      margin-bottom: 10px;
+      padding-left: 2px;
+    }
+
+    .card__divider {
+      height: 1px;
+      background: var(--divider);
+      margin: 0 28px 24px;
+    }
+
+    /* ===== Contact rows ===== */
+    .card__contact {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      padding: 11px 14px;
+      margin: 0 -14px;
+      border-radius: 12px;
       text-decoration: none;
       color: inherit;
+      transition: background 0.2s ease;
     }
 
-    .contact-item:last-child {
-      border-bottom: none;
+    .card__contact:hover {
+      background: var(--primary-soft);
     }
 
-    .contact-label {
+    .card__contact-label {
       font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      opacity: 0.6;
-      min-width: 60px;
+      letter-spacing: 0.8px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      flex-shrink: 0;
     }
 
-    .contact-value {
+    .card__contact-value {
       font-size: 14px;
+      font-weight: 500;
       color: var(--primary-color, #0066cc);
+      text-align: right;
       word-break: break-all;
     }
 
-    .social-section {
-      padding: 0 24px 24px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      justify-content: center;
-    }
-
-    .social-link {
+    .card__contact-value--link {
       display: inline-flex;
       align-items: center;
-      padding: 8px 16px;
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.04);
-      text-decoration: none;
-      color: var(--text-color, #333);
+      gap: 6px;
+      word-break: break-all;
+    }
+
+    .card__website-icon {
+      flex-shrink: 0;
+      opacity: 0.4;
+    }
+
+    /* ===== Address ===== */
+    .card__address {
       font-size: 14px;
-      transition: background 0.2s;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-weight: 400;
+      text-align: right;
     }
 
-    .social-link:hover {
-      background: rgba(0, 0, 0, 0.08);
-    }
-
-    .actions {
-      padding: 16px 24px 24px;
+    /* ===== Social links ===== */
+    .card__socials {
+      padding: 0 28px;
+      margin-bottom: 28px;
       display: flex;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      animation: fadeUp 0.5s 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .card__social {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 14px;
+      border-radius: 100px;
+      border: 1px solid var(--divider);
+      background: transparent;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      text-transform: capitalize;
+      transition: all 0.2s ease;
+    }
+
+    .card__social:hover {
+      border-color: var(--primary-color, #0066cc);
+      color: var(--primary-color, #0066cc);
+      background: var(--primary-soft);
+      transform: translateY(-1px);
+    }
+
+    /* ===== Actions ===== */
+    .card__actions {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      gap: 10px;
+      padding: 16px 20px calc(16px + env(safe-area-inset-bottom, 0px));
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px) saturate(1.5);
+      -webkit-backdrop-filter: blur(20px) saturate(1.5);
+      border-top: 1px solid rgba(0,0,0,0.06);
+      z-index: 10;
+      justify-content: center;
+      animation: slideUp 0.4s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    html.theme-dark .card__actions {
+      background: rgba(30,30,30,0.85);
+      border-top-color: rgba(255,255,255,0.08);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+    }
+
+    .card__actions-inner {
+      display: flex;
+      gap: 10px;
+      max-width: 460px;
+      width: 100%;
     }
 
     .btn {
       flex: 1;
-      padding: 12px 20px;
-      border-radius: 10px;
+      padding: 13px 20px;
+      border-radius: 14px;
+      font-family: var(--font-body);
       font-size: 14px;
       font-weight: 600;
       text-align: center;
       text-decoration: none;
       cursor: pointer;
       border: none;
-      transition: opacity 0.2s;
+      transition: all 0.2s ease;
+      letter-spacing: 0.02em;
     }
 
-    .btn:hover {
-      opacity: 0.9;
+    .btn:active {
+      transform: scale(0.97);
     }
 
     .btn-primary {
       background: var(--primary-color, #0066cc);
       color: white;
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--primary-color, #0066cc) 30%, transparent);
+    }
+
+    .btn-primary:hover {
+      box-shadow: 0 4px 16px color-mix(in srgb, var(--primary-color, #0066cc) 40%, transparent);
+      transform: translateY(-1px);
     }
 
     .btn-secondary {
-      background: rgba(0, 0, 0, 0.06);
-      color: var(--text-color, #333);
-    }
-
-    .websites-section {
-      padding: 0 24px 24px;
-    }
-
-    .website-link {
-      display: block;
-      padding: 12px 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-      text-decoration: none;
+      background: var(--primary-soft);
       color: var(--primary-color, #0066cc);
-      font-size: 14px;
-      word-break: break-all;
     }
 
-    .website-link:last-child {
-      border-bottom: none;
+    .btn-secondary:hover {
+      background: var(--primary-medium);
     }
 
-    .address-section {
-      padding: 0 24px 24px;
-      font-size: 14px;
-      opacity: 0.8;
-      line-height: 1.5;
-    }
+    /* ===== Responsive ===== */
+    @media (max-width: 500px) {
+      body {
+        padding: 0 0 120px;
+      }
 
-    .section-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 600;
-      opacity: 0.5;
-      margin-bottom: 12px;
-      padding: 0 24px;
+      .card {
+        border-radius: 0;
+        box-shadow: none;
+        max-width: 100%;
+      }
+
+      .card__banner {
+        height: 160px;
+      }
+
+      .card__name {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="card-container">
+  <div class="card">
     <!-- Banner -->
-    <div class="banner">
+    <div class="card__banner">
       {{#if card.bannerPath}}
       <img src="{{card.bannerPath}}" alt="Banner">
       {{/if}}
     </div>
 
     <!-- Profile -->
-    <div class="profile-section">
+    <div class="card__profile">
       {{#if card.avatarPath}}
       <img
         src="{{card.avatarPath}}"
         alt="{{card.name}}"
-        class="avatar {{card.avatarShapeClass}}"
+        class="card__avatar {{card.avatarShapeClass}}"
       >
       {{else}}
-      <div class="avatar-placeholder {{card.avatarShapeClass}}">
+      <div class="card__avatar-ph {{card.avatarShapeClass}}">
         {{card.nameInitial}}
       </div>
       {{/if}}
 
-      <h1 class="name">{{card.name}}</h1>
+      <h1 class="card__name">{{card.name}}</h1>
 
       {{#if card.jobTitle}}
-      <p class="title-company">
-        {{card.jobTitle}}{{#if card.company}} at {{card.company}}{{/if}}
+      <p class="card__role">
+        {{card.jobTitle}}{{#if card.company}} <span style="opacity:0.4">&middot;</span> <strong>{{card.company}}</strong>{{/if}}
       </p>
       {{else}}
         {{#if card.company}}
-        <p class="title-company">{{card.company}}</p>
+        <p class="card__role"><strong>{{card.company}}</strong></p>
         {{/if}}
       {{/if}}
 
       {{#if card.bio}}
-      <p class="bio">{{card.bio}}</p>
+      <p class="card__bio">{{card.bio}}</p>
       {{/if}}
     </div>
 
     <!-- Phones -->
     {{#if card.phones}}
-    <div class="contact-section">
+    <div class="card__divider"></div>
+    <div class="card__section">
       {{#each card.phones}}
-      <a href="tel:{{this.number}}" class="contact-item">
-        <span class="contact-label">{{#if this.label}}{{this.label}}{{else}}Phone{{/if}}</span>
-        <span class="contact-value">{{this.number}}</span>
+      <a href="tel:{{this.number}}" class="card__contact">
+        <span class="card__contact-label">{{#if this.label}}{{this.label}}{{else}}Phone{{/if}}</span>
+        <span class="card__contact-value">{{this.number}}</span>
       </a>
       {{/each}}
     </div>
@@ -337,11 +488,12 @@
 
     <!-- Emails -->
     {{#if card.emails}}
-    <div class="contact-section">
+    {{#unless card.phones}}<div class="card__divider"></div>{{/unless}}
+    <div class="card__section">
       {{#each card.emails}}
-      <a href="mailto:{{this.email}}" class="contact-item">
-        <span class="contact-label">{{#if this.label}}{{this.label}}{{else}}Email{{/if}}</span>
-        <span class="contact-value">{{this.email}}</span>
+      <a href="mailto:{{this.email}}" class="card__contact">
+        <span class="card__contact-label">{{#if this.label}}{{this.label}}{{else}}Email{{/if}}</span>
+        <span class="card__contact-value">{{this.email}}</span>
       </a>
       {{/each}}
     </div>
@@ -349,38 +501,51 @@
 
     <!-- Websites -->
     {{#if card.websites}}
-    <div class="websites-section">
-      <p class="section-title">Websites</p>
+    <div class="card__divider"></div>
+    <div class="card__section">
       {{#each card.websites}}
-      <a href="{{this}}" target="_blank" rel="noopener noreferrer" class="website-link">{{this}}</a>
+      <a href="{{this.url}}" target="_blank" rel="noopener noreferrer" class="card__contact">
+        <span class="card__contact-label">{{#if this.label}}{{this.label}}{{else}}Website{{/if}}</span>
+        <span class="card__contact-value card__contact-value--link">
+          {{this.url}}
+          <svg class="card__website-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </span>
+      </a>
       {{/each}}
     </div>
     {{/if}}
 
     <!-- Address -->
     {{#if card.address}}
-    <div class="address-section">
-      <p class="section-title">Address</p>
-      {{#if card.address.street}}<span>{{card.address.street}}</span><br>{{/if}}
-      {{#if card.address.city}}<span>{{card.address.city}}</span>{{/if}}
-      {{#if card.address.zip}} <span>{{card.address.zip}}</span>{{/if}}
-      {{#if card.address.country}}<br><span>{{card.address.country}}</span>{{/if}}
+    <div class="card__divider"></div>
+    <div class="card__section">
+      <div class="card__contact">
+        <span class="card__contact-label">Address</span>
+        <span class="card__address">
+          {{#if card.address.street}}{{card.address.street}}<br>{{/if}}
+          {{#if card.address.city}}{{card.address.city}}{{/if}}{{#if card.address.zip}} {{card.address.zip}}{{/if}}
+          {{#if card.address.country}}<br>{{card.address.country}}{{/if}}
+        </span>
+      </div>
     </div>
     {{/if}}
 
     <!-- Social Links -->
     {{#if card.socialLinks}}
-    <div class="social-section">
+    <div class="card__divider"></div>
+    <div class="card__socials">
       {{#each card.socialLinks}}
-      <a href="{{this.url}}" target="_blank" rel="noopener noreferrer" class="social-link">
+      <a href="{{this.url}}" target="_blank" rel="noopener noreferrer" class="card__social">
         {{this.platform}}
       </a>
       {{/each}}
     </div>
     {{/if}}
+  </div>
 
-    <!-- Actions -->
-    <div class="actions">
+  <!-- Sticky action bar -->
+  <div class="card__actions">
+    <div class="card__actions-inner">
       <a href="{{vcfUrl}}" class="btn btn-primary" download>Save Contact</a>
       <button type="button" class="btn btn-secondary" id="share-btn">Share</button>
     </div>

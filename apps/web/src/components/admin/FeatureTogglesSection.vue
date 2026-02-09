@@ -128,22 +128,23 @@ function onFooterLinkInput(event: Event) {
 
 <style scoped>
 .settings-section {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  padding: var(--space-6);
 }
 
 .settings-section__title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #f0f0f0;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-gray-100);
 }
 
 .settings-field {
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--space-5);
 }
 
 .settings-field:last-child {
@@ -152,50 +153,50 @@ function onFooterLinkInput(event: Event) {
 
 .settings-field__label {
   display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.375rem;
-  color: #333;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  margin-bottom: var(--space-1);
+  color: var(--color-text-secondary);
 }
 
 .settings-field__input {
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
   font-family: inherit;
-  background: #fff;
+  background: var(--color-surface);
 }
 
 .settings-field__input:focus {
   outline: none;
-  border-color: #1a1a1a;
-  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .settings-field__select {
   width: 100%;
   max-width: 240px;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
   font-family: inherit;
-  background: #fff;
+  background: var(--color-surface);
   cursor: pointer;
 }
 
 .settings-field__select:focus {
   outline: none;
-  border-color: #1a1a1a;
-  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .settings-field__toggle {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-2);
   cursor: pointer;
 }
 
@@ -206,7 +207,7 @@ function onFooterLinkInput(event: Event) {
 }
 
 .settings-field__toggle-label {
-  font-size: 0.875rem;
-  color: #333;
+  font-size: var(--text-base);
+  color: var(--color-text);
 }
 </style>

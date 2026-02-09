@@ -178,34 +178,35 @@ async function onUploadFavicon(file: File) {
 .admin-settings {
   max-width: 720px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: var(--space-8) var(--space-4);
 }
 
 .admin-settings__header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
 
 .admin-settings__title {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
 }
 
 .admin-settings__save-btn {
-  padding: 0.5rem 1.25rem;
-  background: #1a1a1a;
+  padding: var(--space-2) var(--space-5);
+  background: var(--color-primary-600);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
   cursor: pointer;
 }
 
 .admin-settings__save-btn:hover:not(:disabled) {
-  background: #333;
+  background: var(--color-primary-700);
 }
 
 .admin-settings__save-btn:disabled {
@@ -214,33 +215,33 @@ async function onUploadFavicon(file: File) {
 }
 
 .admin-settings__toast {
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-  font-size: 0.875rem;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-base);
 }
 
 .admin-settings__toast--success {
-  background: #e8f5e9;
-  color: #2e7d32;
-  border: 1px solid #a5d6a7;
+  background: var(--color-success-50);
+  color: var(--color-success-700);
+  border: 1px solid var(--color-success-500);
 }
 
 .admin-settings__toast--error {
-  background: #fce4ec;
-  color: #c62828;
-  border: 1px solid #ef9a9a;
+  background: var(--color-error-50);
+  color: var(--color-error-700);
+  border: 1px solid var(--color-error-500);
 }
 
 .admin-settings__loading {
   text-align: center;
-  color: #666;
-  padding: 3rem 1rem;
+  color: var(--color-text-secondary);
+  padding: var(--space-12) var(--space-4);
 }
 
 .admin-settings__sections {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-6);
 }
 </style>

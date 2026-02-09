@@ -21,7 +21,7 @@ describe('RenderService', () => {
     phones: [{ number: '+1234567890', label: 'Work' }],
     emails: [{ email: 'john@example.com', label: 'Work' }],
     address: { street: '123 Main St', city: 'Springfield', country: 'US', zip: '12345' },
-    websites: ['https://example.com'],
+    websites: [{ url: 'https://example.com' }],
     socialLinks: [{ platform: 'github', url: 'https://github.com/johndoe' }],
     bio: 'Hello, I am John.',
     avatarPath: '/uploads/avatar.jpg',

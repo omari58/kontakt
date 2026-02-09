@@ -5,6 +5,17 @@ import { SettingsService } from '../settings/settings.service';
 import { resolveCardTheme } from '../cards/theme.resolver';
 import { Card, Visibility, AvatarShape, Theme } from '@prisma/client';
 
+const FONT_MAP: Record<string, { family: string; url: string }> = {
+  'dm-serif':  { family: "'DM Serif Display', Georgia, serif", url: 'DM+Serif+Display' },
+  'playfair':  { family: "'Playfair Display', Georgia, serif", url: 'Playfair+Display:wght@400;700' },
+  'inter':     { family: "'Inter', -apple-system, sans-serif", url: 'Inter:wght@400;500;600;700' },
+  'poppins':   { family: "'Poppins', -apple-system, sans-serif", url: 'Poppins:wght@400;500;600' },
+  'cormorant': { family: "'Cormorant Garamond', Georgia, serif", url: 'Cormorant+Garamond:wght@400;600' },
+  'sora':      { family: "'Sora', -apple-system, sans-serif", url: 'Sora:wght@400;500;600' },
+  'fraunces':  { family: "'Fraunces', Georgia, serif", url: 'Fraunces:wght@400;700' },
+  'bricolage': { family: "'Bricolage Grotesque', -apple-system, sans-serif", url: 'Bricolage+Grotesque:wght@400;600;700' },
+};
+
 @Injectable()
 export class RenderService {
   constructor(
@@ -42,7 +53,12 @@ export class RenderService {
         ? 'theme-auto'
         : 'theme-light';
 
-    const cssVars = this.buildCssVars(resolved.bgColor, resolved.primaryColor, resolved.textColor);
+    const fontId = card.fontFamily || '';
+    const fontEntry = fontId ? FONT_MAP[fontId] : null;
+    const fontDisplay = fontEntry ? fontEntry.family : "'DM Serif Display', Georgia, 'Times New Roman', serif";
+    const fontUrl = fontEntry ? `https://fonts.googleapis.com/css2?family=${fontEntry.url}&display=swap` : null;
+
+    const cssVars = this.buildCssVars(resolved.bgColor, resolved.primaryColor, resolved.textColor, fontDisplay);
 
     const jsonLd = this.buildJsonLd(card, cardUrl, ogImage);
 
@@ -67,6 +83,7 @@ export class RenderService {
       vcfUrl,
       themeClass,
       cssVars,
+      fontUrl,
       jsonLd,
     };
   }
@@ -88,11 +105,13 @@ export class RenderService {
     bgColor: string,
     primaryColor: string,
     textColor: string,
+    fontDisplay: string,
   ): string {
     return [
       `--bg-color: ${bgColor}`,
       `--primary-color: ${primaryColor}`,
       `--text-color: ${textColor}`,
+      `--font-display: ${fontDisplay}`,
     ].join('; ');
   }
 

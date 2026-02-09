@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { Upload } from 'lucide-vue-next';
 
 const props = defineProps<{
   label: string;
@@ -58,6 +59,7 @@ function onFileChange(event: Event) {
       @dragleave="onDragLeave"
       @click="openFileDialog"
     >
+      <Upload :size="32" class="image-uploader__upload-icon" />
       <p class="image-uploader__text">
         Drag and drop an image here, or click to browse
       </p>
@@ -109,16 +111,16 @@ function onFileChange(event: Event) {
 
 .image-uploader__label {
   display: block;
-  font-weight: 600;
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
-  color: #333;
+  font-weight: var(--font-medium);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
 }
 
 .image-uploader__dropzone {
-  border: 2px dashed #d0d0d0;
-  border-radius: 8px;
-  padding: 2rem 1rem;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-4);
   text-align: center;
   cursor: pointer;
   transition: border-color 0.15s, background-color 0.15s;
@@ -126,14 +128,19 @@ function onFileChange(event: Event) {
 
 .image-uploader__dropzone:hover,
 .image-uploader__dropzone--active {
-  border-color: #0066cc;
-  background: #f0f7ff;
+  border-color: var(--color-primary-500);
+  background: var(--color-primary-50);
+}
+
+.image-uploader__upload-icon {
+  color: var(--color-gray-300);
+  margin-bottom: var(--space-2);
 }
 
 .image-uploader__text {
   margin: 0;
-  color: #666;
-  font-size: 0.875rem;
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
 }
 
 .image-uploader__file-input {
@@ -148,9 +155,10 @@ function onFileChange(event: Event) {
 .image-uploader__preview-img {
   max-width: 100%;
   max-height: 200px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   object-fit: cover;
   display: block;
+  box-shadow: var(--shadow-sm);
 }
 
 .image-uploader__preview-actions {
@@ -161,28 +169,28 @@ function onFileChange(event: Event) {
 
 .image-uploader__change-btn {
   padding: 0.375rem 0.75rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  background: #fff;
-  font-size: 0.8125rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: var(--text-sm);
   cursor: pointer;
 }
 
 .image-uploader__change-btn:hover {
-  background: #f5f5f5;
+  background: var(--color-gray-100);
 }
 
 .image-uploader__remove-btn {
   padding: 0.375rem 0.75rem;
-  border: 1px solid #d32f2f;
+  border: none;
   border-radius: 4px;
   background: transparent;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   cursor: pointer;
-  color: #d32f2f;
+  color: var(--color-text-muted);
 }
 
 .image-uploader__remove-btn:hover {
-  background: #fce4ec;
+  color: var(--color-error-500);
 }
 </style>

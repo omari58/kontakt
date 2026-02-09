@@ -2,6 +2,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useApi } from '@/composables/useApi';
+import { Search } from 'lucide-vue-next';
 import type { AdminCard, PaginatedResponse } from '@/types';
 
 const router = useRouter();
@@ -68,13 +69,16 @@ onMounted(() => {
     <h1 class="admin-cards__title">All Cards</h1>
 
     <div class="admin-cards__toolbar">
-      <input
-        v-model="search"
-        type="text"
-        placeholder="Search by name or company..."
-        class="admin-cards__search"
-        @input="onSearchInput"
-      />
+      <div class="admin-cards__search-wrap">
+        <Search :size="16" class="admin-cards__search-icon" />
+        <input
+          v-model="search"
+          type="text"
+          placeholder="Search by name or company..."
+          class="admin-cards__search"
+          @input="onSearchInput"
+        />
+      </div>
     </div>
 
     <div v-if="loading" class="admin-cards__loading">Loading...</div>
@@ -145,37 +149,53 @@ onMounted(() => {
 .admin-cards {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: var(--space-8) var(--space-4);
 }
 
 .admin-cards__title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-text);
+  margin-bottom: var(--space-4);
 }
 
 .admin-cards__toolbar {
-  margin-bottom: 1rem;
+  margin-bottom: var(--space-4);
+}
+
+.admin-cards__search-wrap {
+  position: relative;
+  max-width: 400px;
+}
+
+.admin-cards__search-icon {
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
 }
 
 .admin-cards__search {
   width: 100%;
-  max-width: 400px;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-3);
+  padding-left: 2.25rem;
+  background: var(--color-bg-subtle);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  font-size: var(--text-base);
 }
 
 .admin-cards__search:focus {
   outline: none;
-  border-color: #1a1a1a;
+  border-color: var(--color-border);
+  background: var(--color-surface);
 }
 
 .admin-cards__loading {
   text-align: center;
-  padding: 2rem;
-  color: #666;
+  padding: var(--space-8);
+  color: var(--color-text-muted);
 }
 
 .admin-cards__table {
@@ -185,19 +205,19 @@ onMounted(() => {
 
 .admin-cards__table th {
   text-align: left;
-  padding: 0.75rem;
-  border-bottom: 2px solid #e0e0e0;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: #555;
+  padding: var(--space-3);
+  font-size: var(--text-xs);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  font-weight: var(--font-semibold);
+  border-bottom: 1px solid var(--color-gray-200);
 }
 
 .admin-cards__table td {
-  padding: 0.75rem;
-  border-bottom: 1px solid #e0e0e0;
-  font-size: 0.875rem;
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--color-gray-100);
+  font-size: var(--text-base);
 }
 
 .admin-cards__row {
@@ -205,62 +225,62 @@ onMounted(() => {
 }
 
 .admin-cards__row:hover {
-  background: #f8f8f8;
+  background: var(--color-bg-subtle);
 }
 
 .admin-cards__slug {
-  font-family: monospace;
-  font-size: 0.8125rem;
-  color: #666;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }
 
 .admin-cards__badge {
   display: inline-block;
-  padding: 0.125rem 0.5rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 500;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
 }
 
 .admin-cards__badge--public {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--color-success-50);
+  color: var(--color-success-700);
 }
 
 .admin-cards__badge--unlisted {
-  background: #fff3e0;
-  color: #e65100;
+  background: var(--color-warning-50);
+  color: var(--color-warning-700);
 }
 
 .admin-cards__badge--disabled {
-  background: #f5f5f5;
-  color: #999;
+  background: var(--color-gray-100);
+  color: var(--color-text-muted);
 }
 
 .admin-cards__empty {
   text-align: center;
-  padding: 2rem;
-  color: #666;
+  padding: var(--space-8);
+  color: var(--color-text-muted);
 }
 
 .admin-cards__pagination {
   display: flex;
-  gap: 0.25rem;
+  gap: var(--space-1);
   justify-content: center;
-  margin-top: 1.5rem;
+  margin-top: var(--space-6);
 }
 
 .admin-cards__page-btn {
-  padding: 0.375rem 0.75rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  background: #fff;
-  font-size: 0.8125rem;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  font-size: var(--text-sm);
   cursor: pointer;
 }
 
 .admin-cards__page-btn:hover:not(:disabled) {
-  background: #f5f5f5;
+  background: var(--color-bg-subtle);
 }
 
 .admin-cards__page-btn:disabled {
@@ -269,9 +289,9 @@ onMounted(() => {
 }
 
 .admin-cards__page-btn--active {
-  background: #1a1a1a;
+  background: var(--color-gray-900);
   color: #fff;
-  border-color: #1a1a1a;
+  border-color: var(--color-gray-900);
 }
 
 @media (max-width: 768px) {

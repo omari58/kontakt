@@ -105,22 +105,23 @@ function onFaviconChange(event: Event) {
 
 <style scoped>
 .settings-section {
-  background: #fff;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 1.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xs);
+  padding: var(--space-6);
 }
 
 .settings-section__title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #f0f0f0;
+  font-size: var(--text-lg);
+  font-weight: var(--font-semibold);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-gray-100);
 }
 
 .settings-field {
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--space-5);
 }
 
 .settings-field:last-child {
@@ -129,39 +130,39 @@ function onFaviconChange(event: Event) {
 
 .settings-field__label {
   display: block;
-  font-size: 0.875rem;
-  font-weight: 500;
-  margin-bottom: 0.375rem;
-  color: #333;
+  font-size: var(--text-base);
+  font-weight: var(--font-medium);
+  margin-bottom: var(--space-1);
+  color: var(--color-text-secondary);
 }
 
 .settings-field__input {
   width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
   font-family: inherit;
-  background: #fff;
+  background: var(--color-surface);
 }
 
 .settings-field__input:focus {
   outline: none;
-  border-color: #1a1a1a;
-  box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .settings-field__upload {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-4);
 }
 
 .settings-field__preview {
   object-fit: contain;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  background: #f9f9f9;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg-subtle);
 }
 
 .settings-field__preview--logo {
@@ -175,22 +176,22 @@ function onFaviconChange(event: Event) {
 }
 
 .settings-field__placeholder {
-  font-size: 0.8125rem;
-  color: #999;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
 }
 
 .settings-field__upload-btn {
   display: inline-block;
-  padding: 0.375rem 0.75rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 6px;
-  font-size: 0.8125rem;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
   cursor: pointer;
-  background: #fff;
+  background: var(--color-surface);
 }
 
 .settings-field__upload-btn:hover {
-  background: #f5f5f5;
+  background: var(--color-gray-100);
 }
 
 .settings-field__file-input {

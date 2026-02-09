@@ -5,7 +5,7 @@ interface VCardInput {
   phones: { number: string; label: string }[] | null;
   emails: { email: string; label: string }[] | null;
   address: { street?: string; city?: string; country?: string; zip?: string } | null;
-  websites: string[] | null;
+  websites: { url: string; label?: string }[] | null;
   socialLinks: { platform: string; url: string }[] | null;
   bio: string | null;
   avatarPath: string | null;
@@ -50,8 +50,8 @@ export class VCardBuilder {
     }
 
     if (card.websites) {
-      for (const url of card.websites) {
-        lines.push(`URL:${url}`);
+      for (const site of card.websites) {
+        lines.push(`URL:${site.url}`);
       }
     }
 

@@ -20,49 +20,51 @@ const { toasts, dismiss } = useToast();
 <style scoped>
 .toast-container {
   position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 200;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  top: auto;
+  z-index: var(--z-toast);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--space-2);
   max-width: 360px;
 }
 
 .toast {
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.95);
+  border-left: 3px solid;
+  font-size: var(--text-base);
   cursor: pointer;
   animation: slide-in 0.2s ease-out;
 }
 
 .toast--success {
-  background: #e8f5e9;
-  color: #2e7d32;
-  border: 1px solid #c8e6c9;
+  border-left-color: var(--color-success-500);
+  color: var(--color-success-700);
 }
 
 .toast--error {
-  background: #fce4ec;
-  color: #c62828;
-  border: 1px solid #f8bbd0;
+  border-left-color: var(--color-error-500);
+  color: var(--color-error-700);
 }
 
 .toast--info {
-  background: #e3f2fd;
-  color: #1565c0;
-  border: 1px solid #bbdefb;
+  border-left-color: var(--color-info-500);
+  color: var(--color-info-700);
 }
 
 @keyframes slide-in {
   from {
     opacity: 0;
-    transform: translateX(100%);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 </style>

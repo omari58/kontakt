@@ -29,7 +29,7 @@ describe('ContactsService', () => {
     phones: [{ number: '+1-555-0100', label: 'work' }],
     emails: [{ email: 'john@acme.com', label: 'work' }],
     address: { street: '123 Main St', city: 'Springfield', country: 'US', zip: '62701' },
-    websites: ['https://johndoe.com'],
+    websites: [{ url: 'https://johndoe.com' }],
     socialLinks: [{ platform: 'twitter', url: 'https://twitter.com/johndoe' }],
     bio: 'A passionate developer',
     avatarPath: null,

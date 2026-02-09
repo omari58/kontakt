@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { X, Plus } from 'lucide-vue-next';
 import type { Phone, Email, Address } from '@/types';
 
 const props = defineProps<{
@@ -46,7 +47,7 @@ function updateAddress(field: keyof Address, value: string) {
           class="contact-fields__remove-btn"
           @click="emit('removePhone', index)"
         >
-          Remove
+          <X :size="14" />
         </button>
       </div>
       <button
@@ -54,7 +55,7 @@ function updateAddress(field: keyof Address, value: string) {
         class="contact-fields__add-btn"
         @click="emit('addPhone')"
       >
-        + Add Phone
+        <Plus :size="14" /> Add Phone
       </button>
     </fieldset>
 
@@ -82,7 +83,7 @@ function updateAddress(field: keyof Address, value: string) {
           class="contact-fields__remove-btn"
           @click="emit('removeEmail', index)"
         >
-          Remove
+          <X :size="14" />
         </button>
       </div>
       <button
@@ -90,7 +91,7 @@ function updateAddress(field: keyof Address, value: string) {
         class="contact-fields__add-btn"
         @click="emit('addEmail')"
       >
-        + Add Email
+        <Plus :size="14" /> Add Email
       </button>
     </fieldset>
 
@@ -132,38 +133,40 @@ function updateAddress(field: keyof Address, value: string) {
 
 <style scoped>
 .contact-fields__group {
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  border: none;
+  padding: 0;
+  margin-bottom: var(--space-4);
 }
 
 .contact-fields__legend {
-  font-weight: 600;
-  font-size: 0.875rem;
-  padding: 0 0.5rem;
-  color: #333;
+  font-weight: var(--font-semibold);
+  font-size: var(--text-sm);
+  padding: 0;
+  color: var(--color-text);
+  margin-bottom: var(--space-3);
 }
 
 .contact-fields__row {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
   align-items: center;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-gray-100);
 }
 
 .contact-fields__input {
-  padding: 0.5rem;
-  border: 1px solid #d0d0d0;
-  border-radius: 4px;
-  font-size: 0.875rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-base);
   flex: 1;
 }
 
 .contact-fields__input:focus {
   outline: none;
-  border-color: #0066cc;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.15);
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-50);
 }
 
 .contact-fields__input--label {
@@ -177,7 +180,7 @@ function updateAddress(field: keyof Address, value: string) {
 .contact-fields__address-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  gap: var(--space-2);
 }
 
 .contact-fields__address-grid .contact-fields__input--full {
@@ -185,33 +188,40 @@ function updateAddress(field: keyof Address, value: string) {
 }
 
 .contact-fields__add-btn {
-  padding: 0.375rem 0.75rem;
-  border: 1px dashed #d0d0d0;
-  border-radius: 4px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
   background: transparent;
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   cursor: pointer;
-  color: #0066cc;
+  color: var(--color-primary-600);
   margin-top: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
 }
 
 .contact-fields__add-btn:hover {
-  background: #f0f7ff;
-  border-color: #0066cc;
+  background: var(--color-primary-50);
+  border-color: var(--color-primary-500);
 }
 
 .contact-fields__remove-btn {
-  padding: 0.375rem 0.5rem;
-  border: 1px solid #d32f2f;
-  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--radius-md);
   background: transparent;
-  font-size: 0.75rem;
   cursor: pointer;
-  color: #d32f2f;
+  color: var(--color-text-muted);
   flex-shrink: 0;
 }
 
 .contact-fields__remove-btn:hover {
-  background: #fce4ec;
+  color: var(--color-error-500);
+  background: var(--color-error-50);
 }
 </style>
