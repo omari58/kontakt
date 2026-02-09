@@ -19,20 +19,17 @@ COPY apps/web ./apps/web
 
 RUN pnpm --filter web build
 
-# --- Runtime ---
-FROM nginx:alpine AS runtime
+# --- Static files stage ---
+FROM alpine:3.21 AS runtime
 
-COPY --from=build /app/apps/web/dist /usr/share/nginx/html
+# Create non-root user
+RUN addgroup -S kontakt && adduser -S kontakt -G kontakt
 
-# Support Vue Router history mode — fallback to index.html
-RUN printf 'server {\n\
-    listen 80;\n\
-    root /usr/share/nginx/html;\n\
-    index index.html;\n\
-    location / {\n\
-        try_files $uri $uri/ /index.html;\n\
-    }\n\
-}\n' > /etc/nginx/conf.d/default.conf
+# Copy built static files to a known path for Caddy volume mount
+COPY --from=build /app/apps/web/dist /srv/web
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+RUN chown -R kontakt:kontakt /srv/web
+USER kontakt
+
+# This container just holds the static files — Caddy serves them via shared volume
+CMD ["sleep", "infinity"]
