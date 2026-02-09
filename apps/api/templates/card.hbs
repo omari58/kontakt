@@ -66,8 +66,8 @@
       color: var(--text-color, #1a1a1a);
       min-height: 100vh;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      flex-direction: column;
+      align-items: center;
       padding: 32px 16px 120px;
     }
 
@@ -100,11 +100,14 @@
     }
 
     {{#if card.bgImagePath}}
-    body {
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
       background-image: url('{{card.bgImagePath}}');
       background-size: cover;
       background-position: center;
-      background-attachment: fixed;
+      z-index: -1;
     }
     {{/if}}
 
@@ -113,6 +116,19 @@
         opacity: 0;
         transform: translateY(16px) scale(0.98);
       }
+    }
+
+    /* ===== Org logo ===== */
+    .card__org-logo {
+      text-align: center;
+      margin-top: 20px;
+      animation: fadeUp 0.5s 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .card__org-logo img {
+      max-height: 36px;
+      max-width: 160px;
+      object-fit: contain;
     }
 
     /* ===== Banner ===== */
@@ -665,6 +681,12 @@
       {{/if}}
     {{/if}}
   </div>
+
+  {{#if orgLogo}}
+  <div class="card__org-logo">
+    <img src="{{orgLogo}}" alt="Organization logo">
+  </div>
+  {{/if}}
 
   <!-- Sticky action bar -->
   <div class="card__actions">
