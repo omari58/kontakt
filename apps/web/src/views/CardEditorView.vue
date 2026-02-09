@@ -254,18 +254,20 @@ onMounted(() => {
               Save the card first to upload images.
             </p>
             <template v-else>
-              <ImageUploader
-                label="Avatar"
-                :image-url="avatarUrl"
-                @upload="handleImageUpload('avatar', $event)"
-                @remove="handleImageDelete('avatar')"
-              />
-              <ImageUploader
-                label="Banner"
-                :image-url="bannerUrl"
-                @upload="handleImageUpload('banner', $event)"
-                @remove="handleImageDelete('banner')"
-              />
+              <div class="editor__images-row">
+                <ImageUploader
+                  label="Avatar"
+                  :image-url="avatarUrl"
+                  @upload="handleImageUpload('avatar', $event)"
+                  @remove="handleImageDelete('avatar')"
+                />
+                <ImageUploader
+                  label="Banner"
+                  :image-url="bannerUrl"
+                  @upload="handleImageUpload('banner', $event)"
+                  @remove="handleImageDelete('banner')"
+                />
+              </div>
               <ImageUploader
                 label="Background"
                 :image-url="backgroundUrl"
@@ -367,18 +369,13 @@ onMounted(() => {
   padding: var(--space-6);
 }
 
-.editor__header {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  margin-bottom: var(--space-6);
-}
-
 .editor__back-btn {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
-  padding: var(--space-2) var(--space-3);
+  padding: var(--space-1) var(--space-2);
+  margin-left: calc(-1 * var(--space-2));
+  margin-bottom: var(--space-2);
   border: none;
   border-radius: var(--radius-md);
   background: transparent;
@@ -394,8 +391,11 @@ onMounted(() => {
   color: var(--color-text);
 }
 
+.editor__header {
+  margin-bottom: var(--space-6);
+}
+
 .editor__title {
-  flex: 1;
   font-size: var(--text-2xl);
   font-weight: var(--font-bold);
   margin: 0;
