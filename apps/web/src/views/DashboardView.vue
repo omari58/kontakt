@@ -4,11 +4,14 @@ import { useRouter } from 'vue-router';
 import { useCards } from '@/composables/useCards';
 import { Plus, CreditCard } from 'lucide-vue-next';
 import CardListItem from '@/components/CardListItem.vue';
+import QrModal from '@/components/QrModal.vue';
+import type { Card } from '@/types';
 
 const router = useRouter();
 const { cards, loading, fetchMyCards, deleteCard } = useCards();
 
 const pendingDeleteId = ref<string | null>(null);
+const qrCard = ref<Card | null>(null);
 
 onMounted(() => {
   fetchMyCards();
@@ -80,6 +83,7 @@ async function executeDelete() {
         :card="card"
         @edit="editCard"
         @delete="confirmDelete"
+        @qr="(card) => qrCard = card"
       />
     </div>
 
@@ -98,6 +102,14 @@ async function executeDelete() {
         </div>
       </div>
     </Transition>
+
+    <!-- QR Code modal -->
+    <QrModal
+      v-if="qrCard"
+      :card="qrCard"
+      :visible="!!qrCard"
+      @close="qrCard = null"
+    />
   </div>
 </template>
 

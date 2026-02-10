@@ -10,6 +10,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   edit: [id: string];
   delete: [id: string];
+  qr: [card: Card];
 }>();
 
 const fullUrl = computed(() => `${window.location.origin}/c/${props.card.slug}`);
@@ -45,15 +46,8 @@ async function copyLink() {
   setTimeout(() => { copied.value = false; }, 2000);
 }
 
-async function downloadQr() {
-  const res = await fetch(`/api/cards/${props.card.slug}/qr?format=png&size=500`);
-  const blob = await res.blob();
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${props.card.slug}-qr.png`;
-  a.click();
-  URL.revokeObjectURL(url);
+function openQr() {
+  emit('qr', props.card);
 }
 </script>
 
@@ -92,7 +86,7 @@ async function downloadQr() {
         <button
           class="card-item__btn"
           :title="$t('cardList.downloadQr')"
-          @click="downloadQr"
+          @click="openQr"
         >
           <QrCode :size="14" />
         </button>
