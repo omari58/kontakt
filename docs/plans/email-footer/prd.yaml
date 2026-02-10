@@ -1,0 +1,10 @@
+meta:
+  title: "Email Signature Generator"
+  design_doc: "./design.md"
+  research_doc: "./research.md"
+  status: draft
+  created: "2026-02-10"
+  updated: "2026-02-10"
+
+requirements: []
+# Requirements added during /plan phase
