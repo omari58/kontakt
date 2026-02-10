@@ -45,6 +45,18 @@ spec:
                 secretKeyRef:
                   name: {{ include "kontakt.fullname" . }}
                   key: OIDC_CLIENT_SECRET
+            {{- if eq .Values.storage.driver "s3" }}
+            - name: S3_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kontakt.fullname" . }}
+                  key: S3_ACCESS_KEY_ID
+            - name: S3_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "kontakt.fullname" . }}
+                  key: S3_SECRET_ACCESS_KEY
+            {{- end }}
           livenessProbe:
             httpGet:
               path: /api/health
@@ -59,12 +71,12 @@ spec:
             periodSeconds: 5
           resources:
             {{- toYaml .Values.api.resources | nindent 12 }}
-          {{- if .Values.persistence.uploads.enabled }}
+          {{- if and (eq .Values.storage.driver "local") .Values.persistence.uploads.enabled }}
           volumeMounts:
             - name: uploads
               mountPath: {{ .Values.app.uploadDir }}
           {{- end }}
-      {{- if .Values.persistence.uploads.enabled }}
+      {{- if and (eq .Values.storage.driver "local") .Values.persistence.uploads.enabled }}
       volumes:
         - name: uploads
           persistentVolumeClaim:

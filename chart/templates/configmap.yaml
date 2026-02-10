@@ -16,3 +16,11 @@ data:
   OIDC_ADMIN_CLAIM_VALUE: {{ .Values.oidc.adminClaimValue | quote }}
   UPLOAD_DIR: {{ .Values.app.uploadDir | quote }}
   MAX_FILE_SIZE: {{ .Values.app.maxFileSize | quote }}
+  STORAGE_DRIVER: {{ .Values.storage.driver | quote }}
+  {{- if eq .Values.storage.driver "s3" }}
+  S3_BUCKET: {{ .Values.storage.s3.bucket | quote }}
+  S3_REGION: {{ .Values.storage.s3.region | quote }}
+  S3_ENDPOINT: {{ .Values.storage.s3.endpoint | quote }}
+  S3_PUBLIC_URL: {{ .Values.storage.s3.publicUrl | quote }}
+  S3_FORCE_PATH_STYLE: {{ .Values.storage.s3.forcePathStyle | quote }}
+  {{- end }}

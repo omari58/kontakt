@@ -45,6 +45,7 @@ describe('ContactsService', () => {
       delete: jest.fn().mockResolvedValue(undefined),
       read: jest.fn().mockResolvedValue(null),
       getPublicUrl: jest.fn((key: string) => `/uploads/${key}`),
+      extractKey: jest.fn((url: string) => url.replace(/^\/uploads\//, '')),
     };
 
     const module: TestingModule = await Test.createTestingModule({

@@ -18,7 +18,7 @@ export class ContactsService {
 
     let avatarBase64: string | undefined;
     if (card.avatarPath) {
-      const key = card.avatarPath.replace(/^\/uploads\//, '');
+      const key = this.storage.extractKey(card.avatarPath);
       const buffer = await this.storage.read(key);
       if (buffer) {
         avatarBase64 = buffer.toString('base64');

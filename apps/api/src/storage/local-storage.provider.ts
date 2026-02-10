@@ -39,6 +39,10 @@ export class LocalStorageProvider implements StorageProvider {
     return `/uploads/${key}`;
   }
 
+  extractKey(publicUrl: string): string {
+    return publicUrl.replace(/^\/uploads\//, '');
+  }
+
   private resolvePath(key: string): string {
     const resolved = path.resolve(this.rootDir, key);
     const normalizedRoot = path.resolve(this.rootDir);

@@ -49,6 +49,18 @@ app:
   uploadDir: /app/uploads
   maxFileSize: "5242880"
 
+# Storage driver: "local" (PVC-backed) or "s3" (S3/MinIO/R2)
+storage:
+  driver: local
+  s3:
+    bucket: ""
+    region: ""
+    endpoint: ""             # Required: S3 API endpoint
+    publicUrl: ""            # Required: public URL prefix for file access
+    forcePathStyle: "true"   # Use path-style URLs (required for MinIO/R2)
+    accessKeyId: ""
+    secretAccessKey: ""
+
 # Istio Gateway API routing
 gateway:
   parentRef:
