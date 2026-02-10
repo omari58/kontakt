@@ -2,9 +2,63 @@ meta:
   title: "QR Code Modal"
   design_doc: "./design.md"
   research_doc: "./research.md"
-  status: draft
+  status: ready
   created: "2026-02-10"
   updated: "2026-02-10"
 
-requirements: []
-# Requirements added during /plan phase
+requirements:
+  - id: REQ-001
+    name: "QR code preview before download"
+    description: "Users see a live QR code preview in a modal dialog before downloading, instead of a direct download with no preview."
+    status: pending
+    plan: "plans/qr-modal-implementation.md"
+    depends_on: []
+
+  - id: REQ-002
+    name: "QR content mode selection"
+    description: "Users can choose what the QR code encodes: the card page URL, a vCard download URL, or inline vCard data."
+    status: pending
+    plan: "plans/qr-modal-implementation.md"
+    depends_on: []
+
+  - id: REQ-003
+    name: "QR logo overlay toggle"
+    description: "Users can toggle the organization favicon as a center overlay on the QR code. The toggle is hidden when no org favicon is configured."
+    status: pending
+    plan: "plans/qr-modal-implementation.md"
+    depends_on: []
+
+  - id: REQ-004
+    name: "QR download as PNG"
+    description: "Users can download the displayed QR code as a PNG file named after the card slug."
+    status: pending
+    plan: "plans/qr-modal-implementation.md"
+    depends_on: []
+
+  - id: REQ-005
+    name: "Inline vCard QR with size warning"
+    description: "When inline vCard mode is selected, the vCard text is fetched, cached, and encoded directly in the QR. If the text exceeds ~2,900 characters, a warning is shown suggesting the download link mode instead."
+    status: pending
+    plan: "plans/qr-modal-implementation.md"
+    depends_on: []
+
+  - id: REQ-006
+    name: "Dashboard QR button opens modal"
+    description: "The QR button on CardListItem opens the QR modal instead of triggering a direct PNG download."
+    status: pending
+    plan: "plans/qr-modal-implementation.md"
+    depends_on: []
+
+  - id: REQ-007
+    name: "Card editor QR button"
+    description: "A QR button is available in the card editor preview header when editing an existing card (has a slug), opening the same QR modal."
+    status: pending
+    plan: "plans/qr-modal-implementation.md"
+    depends_on: []
+
+  - id: REQ-008
+    name: "Modal accessibility"
+    description: "The QR modal has proper accessibility: focus trap, Escape to close, aria-modal, role=dialog."
+    status: pending
+    plan: "plans/qr-modal-implementation.md"
+    depends_on: []

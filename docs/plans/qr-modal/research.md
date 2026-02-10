@@ -21,4 +21,15 @@
 - [2026-02-10]: QrModal is a shared component (not per-view) to avoid duplication between Dashboard and Card Editor.
 - [2026-02-10]: Inline vCard fetches from existing `/api/cards/:slug/vcf` endpoint and reads response as text — no new API endpoint needed.
 
+## Codebase Patterns (Planning Phase)
+
+- [2026-02-10]: `CardListItem.vue` emits `edit` and `delete` events — adding `qr` event follows same pattern. `downloadQr()` at line 48 is the function to remove.
+- [2026-02-10]: `DashboardView.vue` uses `<Transition name="modal">` with overlay/dialog pattern (lines 87-100) — QrModal should follow the same transition pattern.
+- [2026-02-10]: `CardEditorView.vue` has `.editor__preview-actions` div (line 352) with an existing `ExternalLink` icon button — QR button goes next to it, gated on `cardViewUrl` (card has slug).
+- [2026-02-10]: `useApi` composable provides `get<T>(url)` with `credentials: 'include'` — use this for fetching vCard text in the inline mode.
+- [2026-02-10]: `settingsStore.settings.org_favicon` gives the favicon path (string | null) — check this to conditionally show the logo toggle.
+- [2026-02-10]: Card type has `slug: string` and `id: string` — QR modal needs the slug for URL construction and the vCard fetch endpoint.
+- [2026-02-10]: i18n keys follow nested structure (e.g., `editor.basicInfo.title`). New keys should go under a `qrModal` top-level key.
+- [2026-02-10]: 5 locale files (en, fr, de, es, et) need updating. Only en gets real translations; others get English placeholders for the implementer.
+
 <!-- Subagents append learnings below this line -->
