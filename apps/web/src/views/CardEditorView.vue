@@ -2,15 +2,17 @@
 import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import { useCardForm } from '@/composables/useCardForm';
-import { ArrowLeft, ChevronDown, Loader2, ExternalLink } from 'lucide-vue-next';
+import { ArrowLeft, ChevronDown, Loader2, ExternalLink, QrCode } from 'lucide-vue-next';
 import ContactFields from '@/components/editor/ContactFields.vue';
 import SocialLinksEditor from '@/components/editor/SocialLinksEditor.vue';
 import ImageUploader from '@/components/editor/ImageUploader.vue';
 import StyleSettings from '@/components/editor/StyleSettings.vue';
 import CardPreview from '@/components/editor/CardPreview.vue';
+import QrModal from '@/components/QrModal.vue';
 import { useSettingsStore } from '@/stores/settings';
 import { useToast } from '@/composables/useToast';
 import { ApiError } from '@/composables/useApi';
+import type { Card } from '@/types';
 import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
@@ -65,6 +67,7 @@ const pageTitle = computed(() => isEditMode.value ? t('editor.editCard') : t('ed
 const cardViewUrl = computed(() => form.slug ? `/c/${form.slug}` : null);
 
 const savedCardId = ref<string | null>(cardId.value ?? null);
+const showQrModal = ref(false);
 
 async function handleSave() {
   const id = await saveCard();
@@ -350,6 +353,14 @@ onMounted(() => {
           <div class="editor__preview-header">
             <span class="editor__preview-label">{{ $t('editor.livePreview') }}</span>
             <div class="editor__preview-actions">
+              <button
+                v-if="cardViewUrl"
+                class="editor__open-btn"
+                :title="$t('qrModal.title')"
+                @click="showQrModal = true"
+              >
+                <QrCode :size="14" />
+              </button>
               <a
                 v-if="cardViewUrl"
                 :href="cardViewUrl"
@@ -383,6 +394,14 @@ onMounted(() => {
         </div>
       </div>
     </div>
+
+    <!-- QR Code modal -->
+    <QrModal
+      v-if="showQrModal && form.slug"
+      :card="({ slug: form.slug, id: savedCardId ?? cardId ?? '' } as Card)"
+      :visible="showQrModal"
+      @close="showQrModal = false"
+    />
   </div>
 </template>
 
