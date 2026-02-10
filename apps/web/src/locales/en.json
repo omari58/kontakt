@@ -15,7 +15,8 @@
   "nav": {
     "dashboard": "Dashboard",
     "allCards": "All Cards",
-    "settings": "Settings"
+    "settings": "Settings",
+    "signatures": "Signatures"
   },
   "auth": {
     "logOut": "Log out"
@@ -217,5 +218,52 @@
     "vcardInlineHint": "Includes name, phone, email, title, and company only.",
     "showLogo": "Show logo",
     "download": "Download PNG"
+  },
+  "signatures": {
+    "title": "Signatures",
+    "createNew": "Create Signature",
+    "empty": {
+      "title": "No signatures yet",
+      "description": "Create an email signature from one of your cards."
+    },
+    "noCards": {
+      "title": "Create a card first",
+      "description": "You need at least one card to create a signature."
+    },
+    "editor": {
+      "title": "Edit Signature",
+      "newTitle": "New Signature",
+      "name": "Signature name",
+      "namePlaceholder": "e.g., Work formal",
+      "selectCard": "Select a card",
+      "layout": "Layout",
+      "layouts": {
+        "compact": "Compact",
+        "classic": "Classic",
+        "minimal": "Minimal"
+      },
+      "fields": "Visible fields",
+      "fieldLabels": {
+        "phone": "Phone number",
+        "email": "Email address",
+        "website": "Website",
+        "socials": "Social links",
+        "pronouns": "Pronouns",
+        "calendar": "Booking link",
+        "disclaimer": "Disclaimer",
+        "cardLink": "Link to digital card"
+      },
+      "disclaimer": "Disclaimer text",
+      "disclaimerPlaceholder": "Confidentiality notice...",
+      "accentColor": "Accent color",
+      "preview": "Preview",
+      "copyHtml": "Copy to Clipboard",
+      "copied": "Copied!",
+      "copyFallback": "Copy the HTML below and paste into your email client."
+    },
+    "delete": {
+      "confirm": "Delete this signature?",
+      "message": "This cannot be undone."
+    }
   }
 }
