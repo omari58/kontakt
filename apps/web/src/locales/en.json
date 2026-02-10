@@ -182,6 +182,7 @@
     "failedUpload": "Failed to upload {type}: {detail}",
     "failedDelete": "Failed to delete {type}",
     "failedLoadCards": "Failed to load cards",
+    "failedLoadSignatures": "Failed to load signatures",
     "failedLoadSettings": "Failed to load settings",
     "failedSaveSettings": "Failed to save settings",
     "uploadFailed": "Upload failed",
