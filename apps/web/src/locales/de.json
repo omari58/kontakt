@@ -40,7 +40,7 @@
   },
   "cardList": {
     "copyUrl": "Klicken, um URL zu kopieren",
-    "downloadQr": "QR herunterladen",
+    "downloadQr": "QR Code",
     "open": "Öffnen"
   },
   "editor": {
@@ -207,5 +207,16 @@
   },
   "home": {
     "tagline": "Plattform für digitale Visitenkarten"
+  },
+  "qrModal": {
+    "title": "QR Code",
+    "contentLabel": "QR Content",
+    "cardUrl": "Card page link",
+    "vcardUrl": "vCard download link",
+    "vcardInline": "Inline vCard data",
+    "showLogo": "Show logo",
+    "download": "Download PNG",
+    "vcardTooLarge": "This vCard is large and may not scan reliably. Consider using \"vCard download link\" instead.",
+    "vcardFetchError": "Could not load vCard data. Switched to card page link."
   }
 }

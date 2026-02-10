@@ -40,7 +40,7 @@
   },
   "cardList": {
     "copyUrl": "Klõpsa URL-i kopeerimiseks",
-    "downloadQr": "Laadi QR alla",
+    "downloadQr": "QR Code",
     "open": "Ava"
   },
   "editor": {
@@ -207,5 +207,16 @@
   },
   "home": {
     "tagline": "Digitaalsete visiitkaartide platvorm"
+  },
+  "qrModal": {
+    "title": "QR Code",
+    "contentLabel": "QR Content",
+    "cardUrl": "Card page link",
+    "vcardUrl": "vCard download link",
+    "vcardInline": "Inline vCard data",
+    "showLogo": "Show logo",
+    "download": "Download PNG",
+    "vcardTooLarge": "This vCard is large and may not scan reliably. Consider using \"vCard download link\" instead.",
+    "vcardFetchError": "Could not load vCard data. Switched to card page link."
   }
 }
