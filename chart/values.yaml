@@ -1,10 +1,10 @@
 image:
   api:
-    repository: kontakt/api
-    tag: latest
+    repository: ghcr.io/omari58/kontakt-api
+    tag: "0.1.0"
   web:
-    repository: kontakt/web
-    tag: latest
+    repository: ghcr.io/omari58/kontakt-web
+    tag: "0.1.0"
   pullPolicy: IfNotPresent
 
 api:
