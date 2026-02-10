@@ -213,10 +213,9 @@
     "contentLabel": "QR Content",
     "cardUrl": "Card page link",
     "vcardUrl": "vCard download link",
-    "vcardInline": "Inline vCard data",
+    "vcardInline": "Basic contact card",
+    "vcardInlineHint": "Includes name, phone, email, title, and company only.",
     "showLogo": "Show logo",
-    "download": "Download PNG",
-    "vcardTooLarge": "This vCard is large and may not scan reliably. Consider using \"vCard download link\" instead.",
-    "vcardFetchError": "Could not load vCard data. Switched to card page link."
+    "download": "Download PNG"
   }
 }

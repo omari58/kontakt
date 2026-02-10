@@ -2,7 +2,8 @@
 import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter, onBeforeRouteLeave } from 'vue-router';
 import { useCardForm } from '@/composables/useCardForm';
-import { ArrowLeft, ChevronDown, Loader2, ExternalLink, QrCode } from 'lucide-vue-next';
+import { ArrowLeft, ChevronDown, Loader2, ExternalLink } from 'lucide-vue-next';
+import QrButton from '@/components/QrButton.vue';
 import ContactFields from '@/components/editor/ContactFields.vue';
 import SocialLinksEditor from '@/components/editor/SocialLinksEditor.vue';
 import ImageUploader from '@/components/editor/ImageUploader.vue';
@@ -353,14 +354,7 @@ onMounted(() => {
           <div class="editor__preview-header">
             <span class="editor__preview-label">{{ $t('editor.livePreview') }}</span>
             <div class="editor__preview-actions">
-              <button
-                v-if="cardViewUrl"
-                class="editor__open-btn"
-                :title="$t('qrModal.title')"
-                @click="showQrModal = true"
-              >
-                <QrCode :size="14" />
-              </button>
+              <QrButton v-if="cardViewUrl" @click="showQrModal = true" />
               <a
                 v-if="cardViewUrl"
                 :href="cardViewUrl"
@@ -398,7 +392,7 @@ onMounted(() => {
     <!-- QR Code modal -->
     <QrModal
       v-if="showQrModal && form.slug"
-      :card="({ slug: form.slug, id: savedCardId ?? cardId ?? '' } as Card)"
+      :card="({ slug: form.slug, id: savedCardId ?? cardId ?? '', name: form.name, jobTitle: form.jobTitle, company: form.company, phones: form.phones, emails: form.emails } as Card)"
       :visible="showQrModal"
       @close="showQrModal = false"
     />

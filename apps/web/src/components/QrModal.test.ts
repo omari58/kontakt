@@ -45,11 +45,10 @@ const messages = {
       contentLabel: 'QR Content',
       cardUrl: 'Card page link',
       vcardUrl: 'vCard download link',
-      vcardInline: 'Inline vCard data',
+      vcardInline: 'Basic contact card',
+      vcardInlineHint: 'Includes name, phone, email, title, and company only.',
       showLogo: 'Show logo',
       download: 'Download PNG',
-      vcardTooLarge: 'This vCard is large and may not scan reliably.',
-      vcardFetchError: 'Could not load vCard data. Switched to card page link.',
     },
   },
 };
@@ -114,7 +113,11 @@ describe('QrModal', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     setActivePinia(createPinia());
-    global.fetch = vi.fn();
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      blob: () => Promise.resolve(new Blob(['fake'], { type: 'image/png' })),
+    });
+    global.URL.createObjectURL = vi.fn().mockReturnValue('blob:mock-favicon');
   });
 
   afterEach(() => {
@@ -167,6 +170,18 @@ describe('QrModal', () => {
     expect(wrapper.find('.qr-modal__checkbox').exists()).toBe(true);
   });
 
+  it('fetches favicon and passes blob URL to QR image', async () => {
+    mountModal({ visible: true }, { org_favicon: '/uploads/favicon.png' });
+    await flushPromises();
+
+    expect(global.fetch).toHaveBeenCalledWith('/uploads/favicon.png', { credentials: 'include' });
+    expect(mockUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        image: 'blob:mock-favicon',
+      }),
+    );
+  });
+
   it('toggling logo off removes image from QR', async () => {
     const wrapper = mountModal({ visible: true }, { org_favicon: '/uploads/favicon.png' });
     await flushPromises();
@@ -177,20 +192,31 @@ describe('QrModal', () => {
     await flushPromises();
 
     expect(mockUpdate).toHaveBeenCalledWith(
-      expect.objectContaining({
-        image: undefined,
-      }),
+      expect.objectContaining({ image: undefined }),
     );
   });
 
-  it('download button calls qrCode.download()', async () => {
+  it('download PNG button calls qrCode.download with png', async () => {
     const wrapper = mountModal({ visible: true });
     await flushPromises();
 
-    await wrapper.find('.qr-modal__download-btn').trigger('click');
+    const buttons = wrapper.findAll('.qr-modal__download-btn');
+    await buttons[0].trigger('click');
     expect(mockDownload).toHaveBeenCalledWith({
       name: 'john-doe-qr',
       extension: 'png',
+    });
+  });
+
+  it('download SVG button calls qrCode.download with svg', async () => {
+    const wrapper = mountModal({ visible: true });
+    await flushPromises();
+
+    const buttons = wrapper.findAll('.qr-modal__download-btn');
+    await buttons[1].trigger('click');
+    expect(mockDownload).toHaveBeenCalledWith({
+      name: 'john-doe-qr',
+      extension: 'svg',
     });
   });
 
@@ -227,14 +253,15 @@ describe('QrModal', () => {
     expect(dialog.attributes('aria-modal')).toBe('true');
   });
 
-  it('shows vcard-too-large warning when inline vcard exceeds 2900 chars', async () => {
-    const longVcard = 'x'.repeat(3000);
-    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: true,
-      text: () => Promise.resolve(longVcard),
+  it('builds minimal vCard from card data when vcard-inline is selected', async () => {
+    const card = createCard({
+      name: 'Jane Smith',
+      jobTitle: 'Engineer',
+      company: 'Acme',
+      phones: [{ number: '+1234567890' }],
+      emails: [{ email: 'jane@example.com' }],
     });
-
-    const wrapper = mountModal({ visible: true });
+    const wrapper = mountModal({ card, visible: true });
     await flushPromises();
 
     const radios = wrapper.findAll('input[type="radio"]');
@@ -242,26 +269,29 @@ describe('QrModal', () => {
     await vcardInlineRadio!.setValue(true);
     await flushPromises();
 
-    expect(wrapper.find('.qr-modal__warning').exists()).toBe(true);
+    expect(mockUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.stringContaining('BEGIN:VCARD'),
+      }),
+    );
+    expect(mockUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.stringContaining('FN:Jane Smith'),
+      }),
+    );
   });
 
-  it('shows error toast and falls back to card-url when vcard fetch fails', async () => {
-    (global.fetch as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      ok: false,
-      status: 500,
-    });
-
+  it('shows hint text when vcard-inline mode is selected', async () => {
     const wrapper = mountModal({ visible: true });
     await flushPromises();
+
+    expect(wrapper.find('.qr-modal__hint').exists()).toBe(false);
 
     const radios = wrapper.findAll('input[type="radio"]');
     const vcardInlineRadio = radios.find(r => r.attributes('value') === 'vcard-inline');
     await vcardInlineRadio!.setValue(true);
     await flushPromises();
 
-    expect(mockShowToast).toHaveBeenCalledWith(
-      'Could not load vCard data. Switched to card page link.',
-      'error',
-    );
+    expect(wrapper.find('.qr-modal__hint').exists()).toBe(true);
   });
 });

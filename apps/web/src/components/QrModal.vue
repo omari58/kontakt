@@ -3,7 +3,6 @@ import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n';
 import QRCodeStyling from 'qr-code-styling';
 import { useSettingsStore } from '@/stores/settings';
-import { useToast } from '@/composables/useToast';
 import type { Card } from '@/types';
 import { Download, X } from 'lucide-vue-next';
 
@@ -20,21 +19,46 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 const settingsStore = useSettingsStore();
-const { show: showToast } = useToast();
 
 const qrContainer = ref<HTMLDivElement | null>(null);
 const dialogEl = ref<HTMLDivElement | null>(null);
 const qrContent = ref<QrContent>('card-url');
 const showLogo = ref(true);
-const vcardText = ref<string | null>(null);
-const vcardLoading = ref(false);
+const faviconDataUrl = ref<string | undefined>(undefined);
 
 let qrCode: QRCodeStyling | null = null;
 
 const hasFavicon = computed(() => !!settingsStore.settings.org_favicon);
 
+async function loadFaviconDataUrl(url: string) {
+  try {
+    const res = await fetch(url, { credentials: 'include' });
+    if (!res.ok) return;
+    const blob = await res.blob();
+    faviconDataUrl.value = URL.createObjectURL(blob);
+  } catch {
+    faviconDataUrl.value = undefined;
+  }
+}
+
 const cardUrl = computed(() => `${window.location.origin}/c/${props.card.slug}`);
 const vcardUrl = computed(() => `${window.location.origin}/api/cards/${props.card.slug}/vcf`);
+
+function buildMinimalVcard(): string {
+  const card = props.card;
+  const parts = card.name.trim().split(/\s+/);
+  const lastName = parts.length > 1 ? parts.slice(-1)[0] : card.name;
+  const firstName = parts.length > 1 ? parts.slice(0, -1).join(' ') : '';
+  const lines = ['BEGIN:VCARD', 'VERSION:3.0'];
+  lines.push(`N:${lastName};${firstName};;;`);
+  lines.push(`FN:${card.name}`);
+  if (card.jobTitle) lines.push(`TITLE:${card.jobTitle}`);
+  if (card.company) lines.push(`ORG:${card.company}`);
+  if (card.emails?.length) lines.push(`EMAIL:${card.emails[0].email}`);
+  if (card.phones?.length) lines.push(`TEL:${card.phones[0].number}`);
+  lines.push('END:VCARD');
+  return lines.join('\r\n');
+}
 
 const qrData = computed(() => {
   switch (qrContent.value) {
@@ -43,21 +67,17 @@ const qrData = computed(() => {
     case 'vcard-url':
       return vcardUrl.value;
     case 'vcard-inline':
-      return vcardText.value ?? cardUrl.value;
+      return buildMinimalVcard();
     default:
       return cardUrl.value;
   }
 });
 
 const qrImage = computed(() => {
-  if (showLogo.value && hasFavicon.value) {
-    return settingsStore.settings.org_favicon!;
+  if (showLogo.value && hasFavicon.value && faviconDataUrl.value) {
+    return faviconDataUrl.value;
   }
   return undefined;
-});
-
-const vcardTooLarge = computed(() => {
-  return qrContent.value === 'vcard-inline' && vcardText.value != null && vcardText.value.length > 2900;
 });
 
 function clearContainer() {
@@ -98,25 +118,8 @@ function renderQr() {
   qrCode!.append(qrContainer.value);
 }
 
-async function fetchVcard() {
-  if (vcardText.value != null) return;
-  vcardLoading.value = true;
-  try {
-    const response = await fetch(`/api/cards/${props.card.slug}/vcf`, {
-      credentials: 'include',
-    });
-    if (!response.ok) throw new Error('fetch failed');
-    vcardText.value = await response.text();
-  } catch {
-    showToast(t('qrModal.vcardFetchError'), 'error');
-    qrContent.value = 'card-url';
-  } finally {
-    vcardLoading.value = false;
-  }
-}
-
-function handleDownload() {
-  qrCode?.download({ name: `${props.card.slug}-qr`, extension: 'png' });
+function handleDownload(ext: 'png' | 'svg') {
+  qrCode?.download({ name: `${props.card.slug}-qr`, extension: ext });
 }
 
 function handleClose() {
@@ -129,18 +132,13 @@ function onKeydown(e: KeyboardEvent) {
   }
 }
 
-watch(() => qrContent.value, (mode) => {
-  if (mode === 'vcard-inline') {
-    fetchVcard();
-  }
-});
+watch(() => settingsStore.settings.org_favicon, (url) => {
+  if (url) loadFaviconDataUrl(url);
+}, { immediate: true });
 
 watch([qrData, qrImage], () => {
   if (qrCode && props.visible) {
-    qrCode.update({
-      data: qrData.value,
-      image: qrImage.value,
-    });
+    qrCode.update({ data: qrData.value, image: qrImage.value });
   }
 });
 
@@ -151,10 +149,7 @@ watch(() => props.visible, async (visible) => {
     if (!qrCode) {
       createQrCode();
     } else {
-      qrCode.update({
-        data: qrData.value,
-        image: qrImage.value,
-      });
+      qrCode.update({ data: qrData.value, image: qrImage.value });
     }
     renderQr();
     dialogEl.value?.focus();
@@ -200,9 +195,9 @@ onBeforeUnmount(() => {
         <div class="qr-modal__body">
           <div ref="qrContainer" class="qr-modal__preview" />
 
-          <div v-if="vcardTooLarge" class="qr-modal__warning">
-            {{ $t('qrModal.vcardTooLarge') }}
-          </div>
+          <p v-if="qrContent === 'vcard-inline'" class="qr-modal__hint">
+            {{ $t('qrModal.vcardInlineHint') }}
+          </p>
 
           <fieldset class="qr-modal__fieldset">
             <legend class="qr-modal__legend">{{ $t('qrModal.contentLabel') }}</legend>
@@ -242,9 +237,13 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="qr-modal__footer">
-          <button class="qr-modal__download-btn" @click="handleDownload">
+          <button class="qr-modal__download-btn" @click="handleDownload('png')">
             <Download :size="16" />
-            {{ $t('qrModal.download') }}
+            PNG
+          </button>
+          <button class="qr-modal__download-btn qr-modal__download-btn--secondary" @click="handleDownload('svg')">
+            <Download :size="16" />
+            SVG
           </button>
         </div>
       </div>
@@ -323,14 +322,12 @@ onBeforeUnmount(() => {
   min-width: 280px;
 }
 
-.qr-modal__warning {
-  background: var(--color-warning-50, #fffbeb);
-  color: var(--color-warning-700, #b45309);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
-  font-size: var(--text-sm);
+.qr-modal__hint {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
   line-height: var(--leading-normal);
   text-align: center;
+  margin: 0;
   width: 100%;
 }
 
@@ -380,6 +377,7 @@ onBeforeUnmount(() => {
 .qr-modal__footer {
   display: flex;
   justify-content: flex-end;
+  gap: var(--space-2);
   margin-top: var(--space-4);
 }
 
@@ -406,6 +404,15 @@ onBeforeUnmount(() => {
 
 .qr-modal__download-btn:active {
   transform: scale(0.97);
+}
+
+.qr-modal__download-btn--secondary {
+  background: var(--color-bg-muted);
+  color: var(--color-text);
+}
+
+.qr-modal__download-btn--secondary:hover {
+  background: var(--color-border);
 }
 
 /* Modal transition */

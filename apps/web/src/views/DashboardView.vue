@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCards } from '@/composables/useCards';
+import { useSettingsStore } from '@/stores/settings';
 import { Plus, CreditCard } from 'lucide-vue-next';
 import CardListItem from '@/components/CardListItem.vue';
 import QrModal from '@/components/QrModal.vue';
@@ -9,12 +10,14 @@ import type { Card } from '@/types';
 
 const router = useRouter();
 const { cards, loading, fetchMyCards, deleteCard } = useCards();
+const settingsStore = useSettingsStore();
 
 const pendingDeleteId = ref<string | null>(null);
 const qrCard = ref<Card | null>(null);
 
 onMounted(() => {
   fetchMyCards();
+  settingsStore.fetchSettings();
 });
 
 function createCard() {

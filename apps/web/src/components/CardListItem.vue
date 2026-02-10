@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import type { Card } from '@/types';
-import { ExternalLink, Copy, Check, Trash2, QrCode } from 'lucide-vue-next';
+import { ExternalLink, Copy, Check, Trash2 } from 'lucide-vue-next';
+import QrButton from '@/components/QrButton.vue';
 
 const props = defineProps<{
   card: Card;
@@ -83,13 +84,7 @@ function openQr() {
         <Copy v-else :size="12" class="card-item__url-icon" />
       </button>
       <div class="card-item__actions">
-        <button
-          class="card-item__btn"
-          :title="$t('cardList.downloadQr')"
-          @click="openQr"
-        >
-          <QrCode :size="14" />
-        </button>
+        <QrButton @click="openQr" />
         <a
           :href="`/c/${card.slug}`"
           target="_blank"

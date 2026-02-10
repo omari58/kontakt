@@ -33,3 +33,13 @@
 - [2026-02-10]: 5 locale files (en, fr, de, es, et) need updating. Only en gets real translations; others get English placeholders for the implementer.
 
 <!-- Subagents append learnings below this line -->
+
+## Implementation Learnings
+
+- [2026-02-10]: Task 1 — `qr-code-styling@^1.9.2` installed cleanly, only transitive dep is `qrcode-generator@1.5.2`
+- [2026-02-10]: Task 3 — Used raw `fetch` instead of `useApi` for vCard endpoint because `useApi.get()` parses JSON but the vCard endpoint returns `text/vcard` plain text. Still included `credentials: 'include'`.
+- [2026-02-10]: Task 3 — [Deviation: Rule 1] Used `removeChild` loop instead of `innerHTML = ''` for clearing QR container to satisfy security hook
+- [2026-02-10]: Task 3 — [Deviation: Rule 2] Added close button (X icon) in modal header — spec didn't include one but modal needed a visible close affordance
+- [2026-02-10]: Task 3 — Used `<fieldset>` + `<legend>` for radio group (semantic HTML for content mode selector)
+- [2026-02-10]: Task 5 — `as Card` cast on partial object is acceptable since QrModal only reads `card.slug`. If QrModal ever accesses other Card fields, this would need updating.
+- [2026-02-10]: Pre-existing test failure in `useCardForm.test.ts:108` (addWebsite/removeWebsite) — unrelated to QR modal work
