@@ -185,10 +185,25 @@
     "failedSaveSettings": "Échec de l'enregistrement des paramètres",
     "uploadFailed": "Échec du téléversement",
     "unauthorized": "Non autorisé",
-    "requestFailed": "Échec de la requête"
+    "requestFailed": "Échec de la requête",
+    "fixValidation": "Veuillez corriger les erreurs indiquées ci-dessous.",
+    "fields": {
+      "invalidEmail": "Veuillez entrer une adresse e-mail valide.",
+      "invalidUrl": "Veuillez entrer une URL valide (ex. https://example.com).",
+      "invalidColor": "Veuillez entrer une couleur hexadécimale valide (ex. #fff ou #ff0000).",
+      "required": "Ce champ est obligatoire.",
+      "invalidValue": "Cette valeur n'est pas valide.",
+      "unknownField": "Ce champ n'est pas reconnu.",
+      "fileTooLarge": "Le fichier est trop volumineux. Veuillez en choisir un plus petit.",
+      "invalidFileType": "Ce type de fichier n'est pas pris en charge. Utilisez JPEG, PNG, WebP ou GIF.",
+      "invalidSlug": "Utilisez 2 à 100 lettres minuscules, chiffres et tirets uniquement."
+    }
   },
   "success": {
-    "settingsSaved": "Paramètres enregistrés avec succès"
+    "settingsSaved": "Paramètres enregistrés avec succès",
+    "cardSaved": "Carte enregistrée avec succès.",
+    "imageUploaded": "Image téléversée.",
+    "imageDeleted": "Image supprimée."
   },
   "home": {
     "tagline": "Plateforme de cartes de visite numériques"

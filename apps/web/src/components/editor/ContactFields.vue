@@ -6,6 +6,7 @@ const props = defineProps<{
   phones: Phone[];
   emails: Email[];
   address: Address;
+  fieldErrors?: Record<string, string[]>;
 }>();
 
 const emit = defineEmits<{
@@ -35,6 +36,7 @@ function updateAddress(field: keyof Address, value: string) {
           type="tel"
           :placeholder="$t('editor.contact.phonePlaceholder')"
           class="contact-fields__input contact-fields__input--phone"
+          :class="{ 'contact-fields__input--error': fieldErrors?.phones }"
         />
         <input
           v-model="phone.label"
@@ -50,6 +52,9 @@ function updateAddress(field: keyof Address, value: string) {
           <X :size="14" />
         </button>
       </div>
+      <p v-if="fieldErrors?.phones" class="contact-fields__field-error">
+        {{ fieldErrors.phones[0] }}
+      </p>
       <button
         type="button"
         class="contact-fields__add-btn"
@@ -71,6 +76,7 @@ function updateAddress(field: keyof Address, value: string) {
           type="email"
           :placeholder="$t('editor.contact.emailPlaceholder')"
           class="contact-fields__input contact-fields__input--email"
+          :class="{ 'contact-fields__input--error': fieldErrors?.emails }"
         />
         <input
           v-model="email.label"
@@ -86,6 +92,9 @@ function updateAddress(field: keyof Address, value: string) {
           <X :size="14" />
         </button>
       </div>
+      <p v-if="fieldErrors?.emails" class="contact-fields__field-error">
+        {{ fieldErrors.emails[0] }}
+      </p>
       <button
         type="button"
         class="contact-fields__add-btn"
@@ -223,5 +232,24 @@ function updateAddress(field: keyof Address, value: string) {
 .contact-fields__remove-btn:hover {
   color: var(--color-error-500);
   background: var(--color-error-50);
+}
+
+.contact-fields__input--error {
+  border-color: var(--color-error-500);
+}
+
+.contact-fields__input--error:focus {
+  border-color: var(--color-error-500);
+  box-shadow: 0 0 0 3px var(--color-error-50);
+}
+
+.contact-fields__field-error {
+  color: var(--color-error-700);
+  font-size: var(--text-sm);
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-error-50);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-error-500);
 }
 </style>

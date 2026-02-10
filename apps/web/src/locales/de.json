@@ -185,10 +185,25 @@
     "failedSaveSettings": "Einstellungen konnten nicht gespeichert werden",
     "uploadFailed": "Hochladen fehlgeschlagen",
     "unauthorized": "Nicht autorisiert",
-    "requestFailed": "Anfrage fehlgeschlagen"
+    "requestFailed": "Anfrage fehlgeschlagen",
+    "fixValidation": "Bitte beheben Sie die unten markierten Fehler.",
+    "fields": {
+      "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "invalidUrl": "Bitte geben Sie eine gültige URL ein (z. B. https://example.com).",
+      "invalidColor": "Bitte geben Sie eine gültige Hex-Farbe ein (z. B. #fff oder #ff0000).",
+      "required": "Dieses Feld ist erforderlich.",
+      "invalidValue": "Dieser Wert ist ungültig.",
+      "unknownField": "Dieses Feld wird nicht erkannt.",
+      "fileTooLarge": "Die Datei ist zu groß. Bitte wählen Sie eine kleinere Datei.",
+      "invalidFileType": "Dieser Dateityp wird nicht unterstützt. Verwenden Sie JPEG, PNG, WebP oder GIF.",
+      "invalidSlug": "Verwenden Sie 2–100 Kleinbuchstaben, Zahlen und Bindestriche."
+    }
   },
   "success": {
-    "settingsSaved": "Einstellungen erfolgreich gespeichert"
+    "settingsSaved": "Einstellungen erfolgreich gespeichert",
+    "cardSaved": "Karte erfolgreich gespeichert.",
+    "imageUploaded": "Bild hochgeladen.",
+    "imageDeleted": "Bild entfernt."
   },
   "home": {
     "tagline": "Plattform für digitale Visitenkarten"

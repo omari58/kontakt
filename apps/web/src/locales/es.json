@@ -185,10 +185,25 @@
     "failedSaveSettings": "Error al guardar la configuración",
     "uploadFailed": "Error al subir",
     "unauthorized": "No autorizado",
-    "requestFailed": "Error en la solicitud"
+    "requestFailed": "Error en la solicitud",
+    "fixValidation": "Por favor, corrige los errores señalados a continuación.",
+    "fields": {
+      "invalidEmail": "Introduce una dirección de correo válida.",
+      "invalidUrl": "Introduce una URL válida (ej. https://example.com).",
+      "invalidColor": "Introduce un color hexadecimal válido (ej. #fff o #ff0000).",
+      "required": "Este campo es obligatorio.",
+      "invalidValue": "Este valor no es válido.",
+      "unknownField": "Este campo no es reconocido.",
+      "fileTooLarge": "El archivo es demasiado grande. Elige uno más pequeño.",
+      "invalidFileType": "Este tipo de archivo no es compatible. Usa JPEG, PNG, WebP o GIF.",
+      "invalidSlug": "Usa de 2 a 100 letras minúsculas, números y guiones."
+    }
   },
   "success": {
-    "settingsSaved": "Configuración guardada correctamente"
+    "settingsSaved": "Configuración guardada correctamente",
+    "cardSaved": "Tarjeta guardada correctamente.",
+    "imageUploaded": "Imagen subida.",
+    "imageDeleted": "Imagen eliminada."
   },
   "home": {
     "tagline": "Plataforma de tarjetas de visita digitales"

@@ -50,16 +50,7 @@ export const useSettingsStore = defineStore('settings', () => {
     const formData = new FormData();
     formData.append('file', file);
     try {
-      const response = await fetch(`/api/settings/${endpoint}`, {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,
-      });
-      if (!response.ok) {
-        const text = await response.text().catch(() => i18n.global.t('errors.uploadFailed'));
-        throw new Error(text);
-      }
-      const result = (await response.json()) as { path: string };
+      const result = await api.upload<{ path: string }>(`/api/settings/${endpoint}`, formData);
       const settingKey = endpoint === 'logo' ? 'org_logo' : 'org_favicon';
       settings.value[settingKey] = result.path;
       return result.path;

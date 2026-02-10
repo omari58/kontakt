@@ -185,10 +185,25 @@
     "failedSaveSettings": "Failed to save settings",
     "uploadFailed": "Upload failed",
     "unauthorized": "Unauthorized",
-    "requestFailed": "Request failed"
+    "requestFailed": "Request failed",
+    "fixValidation": "Please fix the errors highlighted below.",
+    "fields": {
+      "invalidEmail": "Please enter a valid email address.",
+      "invalidUrl": "Please enter a valid URL (e.g. https://example.com).",
+      "invalidColor": "Please enter a valid hex color (e.g. #fff or #ff0000).",
+      "required": "This field is required.",
+      "invalidValue": "This value is not valid.",
+      "unknownField": "This field is not recognized.",
+      "fileTooLarge": "The file is too large. Please choose a smaller file.",
+      "invalidFileType": "This file type is not supported. Use JPEG, PNG, WebP, or GIF.",
+      "invalidSlug": "Use 2\u2013100 lowercase letters, numbers, and hyphens only."
+    }
   },
   "success": {
-    "settingsSaved": "Settings saved successfully"
+    "settingsSaved": "Settings saved successfully",
+    "cardSaved": "Card saved successfully.",
+    "imageUploaded": "Image uploaded.",
+    "imageDeleted": "Image removed."
   },
   "home": {
     "tagline": "Digital business card platform"

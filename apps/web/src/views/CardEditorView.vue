@@ -9,6 +9,8 @@ import ImageUploader from '@/components/editor/ImageUploader.vue';
 import StyleSettings from '@/components/editor/StyleSettings.vue';
 import CardPreview from '@/components/editor/CardPreview.vue';
 import { useSettingsStore } from '@/stores/settings';
+import { useToast } from '@/composables/useToast';
+import { ApiError } from '@/composables/useApi';
 import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
@@ -21,6 +23,7 @@ const {
   loading,
   saving,
   error,
+  fieldErrors,
   isDirty,
   isEditMode,
   avatarUrl,
@@ -40,6 +43,8 @@ const {
   removeSocialLink,
   resetStyles,
 } = useCardForm(cardId.value);
+
+const { show: showToast } = useToast();
 
 const expandedSections = ref<Record<string, boolean>>({
   basicInfo: true,
@@ -65,6 +70,7 @@ async function handleSave() {
   const id = await saveCard();
   if (id) {
     savedCardId.value = id;
+    showToast(t('success.cardSaved'), 'success');
     if (!isEditMode.value) {
       router.push({ name: 'card-edit', params: { id } });
     }
@@ -74,16 +80,28 @@ async function handleSave() {
 async function handleImageUpload(type: 'avatar' | 'banner' | 'background', file: File) {
   const id = savedCardId.value ?? cardId.value;
   if (!id) {
-    error.value = t('editor.saveBeforeUpload');
+    showToast(t('editor.saveBeforeUpload'), 'error');
     return;
   }
-  await uploadImage(id, type, file);
+  try {
+    await uploadImage(id, type, file);
+    showToast(t('success.imageUploaded'), 'success');
+  } catch (e: unknown) {
+    const msg = e instanceof ApiError ? e.message : t('errors.failedUpload', { type, detail: '' });
+    showToast(msg, 'error');
+  }
 }
 
 async function handleImageDelete(type: 'avatar' | 'banner' | 'background') {
   const id = savedCardId.value ?? cardId.value;
   if (!id) return;
-  await deleteImage(id, type);
+  try {
+    await deleteImage(id, type);
+    showToast(t('success.imageDeleted'), 'success');
+  } catch (e: unknown) {
+    const msg = e instanceof ApiError ? e.message : t('errors.failedDelete', { type });
+    showToast(msg, 'error');
+  }
 }
 
 onBeforeRouteLeave((_to, _from, next) => {
@@ -203,6 +221,7 @@ onMounted(() => {
               :phones="form.phones"
               :emails="form.emails"
               :address="form.address"
+              :field-errors="fieldErrors"
               @add-phone="addPhone"
               @remove-phone="removePhone"
               @add-email="addEmail"
@@ -230,6 +249,7 @@ onMounted(() => {
             <SocialLinksEditor
               :social-links="form.socialLinks"
               :websites="form.websites"
+              :field-errors="fieldErrors"
               @add-social-link="addSocialLink"
               @remove-social-link="removeSocialLink"
               @add-website="addWebsite"
@@ -308,6 +328,7 @@ onMounted(() => {
               :obfuscate="form.obfuscate"
               :slug="form.slug"
               :is-edit-mode="isEditMode"
+              :field-errors="fieldErrors"
               @update:bg-color="form.bgColor = $event"
               @update:primary-color="form.primaryColor = $event"
               @update:text-color="form.textColor = $event"

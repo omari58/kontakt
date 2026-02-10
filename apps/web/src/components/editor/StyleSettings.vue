@@ -35,6 +35,7 @@ defineProps<{
   obfuscate: boolean;
   slug: string;
   isEditMode: boolean;
+  fieldErrors?: Record<string, string[]>;
 }>();
 
 const emit = defineEmits<{
@@ -104,9 +105,11 @@ const emit = defineEmits<{
               type="text"
               :value="bgColor"
               class="style-settings__color-text"
+              :class="{ 'style-settings__color-text--error': fieldErrors?.bgColor }"
               @input="emit('update:bgColor', ($event.target as HTMLInputElement).value)"
             />
           </div>
+          <span v-if="fieldErrors?.bgColor" class="style-settings__field-error">{{ fieldErrors.bgColor[0] }}</span>
         </label>
 
         <label class="style-settings__color-label">
@@ -122,9 +125,11 @@ const emit = defineEmits<{
               type="text"
               :value="textColor"
               class="style-settings__color-text"
+              :class="{ 'style-settings__color-text--error': fieldErrors?.textColor }"
               @input="emit('update:textColor', ($event.target as HTMLInputElement).value)"
             />
           </div>
+          <span v-if="fieldErrors?.textColor" class="style-settings__field-error">{{ fieldErrors.textColor[0] }}</span>
         </label>
 
         <label class="style-settings__color-label">
@@ -140,9 +145,11 @@ const emit = defineEmits<{
               type="text"
               :value="primaryColor"
               class="style-settings__color-text"
+              :class="{ 'style-settings__color-text--error': fieldErrors?.primaryColor }"
               @input="emit('update:primaryColor', ($event.target as HTMLInputElement).value)"
             />
           </div>
+          <span v-if="fieldErrors?.primaryColor" class="style-settings__field-error">{{ fieldErrors.primaryColor[0] }}</span>
         </label>
       </div>
 
@@ -220,10 +227,12 @@ const emit = defineEmits<{
             :value="slug"
             type="text"
             class="style-settings__input"
+            :class="{ 'style-settings__input--error': fieldErrors?.slug }"
             :placeholder="$t('editor.settings.slugPlaceholder')"
             @input="emit('update:slug', ($event.target as HTMLInputElement).value)"
           />
         </div>
+        <span v-if="fieldErrors?.slug" class="style-settings__field-error">{{ fieldErrors.slug[0] }}</span>
       </div>
 
       <div class="style-settings__field">
@@ -504,5 +513,34 @@ const emit = defineEmits<{
   width: 16px;
   height: 16px;
   cursor: pointer;
+}
+
+.style-settings__color-text--error {
+  border-color: var(--color-error-500);
+}
+
+.style-settings__color-text--error:focus {
+  border-color: var(--color-error-500);
+  box-shadow: 0 0 0 3px var(--color-error-50);
+}
+
+.style-settings__input--error {
+  border-color: var(--color-error-500);
+}
+
+.style-settings__input--error:focus {
+  border-color: var(--color-error-500);
+  box-shadow: 0 0 0 3px var(--color-error-50);
+}
+
+.style-settings__field-error {
+  display: block;
+  color: var(--color-error-700);
+  font-size: var(--text-sm);
+  margin-top: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-error-50);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-error-500);
 }
 </style>

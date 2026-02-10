@@ -1,5 +1,5 @@
 import { reactive, ref, computed, watch } from 'vue';
-import { useApi } from './useApi';
+import { useApi, ApiError } from './useApi';
 import i18n from '@/i18n';
 import type { Card, Phone, Email, Website, Address, SocialLink, AvatarShape, Theme, Visibility } from '@/types';
 
@@ -55,6 +55,24 @@ const THEME_DEFAULTS = {
   AUTO:  { bgColor: '#ffffff', textColor: '#111111' },
 } as const;
 
+function friendlyMessage(rawMessage: string, t: (key: string) => string): string {
+  if (rawMessage.includes('must be an email')) return t('errors.fields.invalidEmail');
+  if (rawMessage.includes('must be a URL address') || rawMessage.includes('must be an URL address'))
+    return t('errors.fields.invalidUrl');
+  if (rawMessage.includes('valid hex color')) return t('errors.fields.invalidColor');
+  if (rawMessage.includes('should not be empty')) return t('errors.fields.required');
+  if (rawMessage.includes('must be a string')) return t('errors.fields.invalidValue');
+  if (rawMessage.includes('should not exist')) return t('errors.fields.unknownField');
+  if (rawMessage.includes('File too large')) return t('errors.fields.fileTooLarge');
+  if (rawMessage.includes('Invalid file type')) return t('errors.fields.invalidFileType');
+  if (/slug must be/.test(rawMessage)) return t('errors.fields.invalidSlug');
+  return rawMessage;
+}
+
+function normalizeFieldPath(apiPath: string): string {
+  return apiPath.split('.')[0] ?? apiPath;
+}
+
 export function useCardForm(cardId?: string) {
   const api = useApi();
   const t = i18n.global.t;
@@ -63,6 +81,7 @@ export function useCardForm(cardId?: string) {
   const loading = ref(false);
   const saving = ref(false);
   const error = ref<string | null>(null);
+  const fieldErrors = ref<Record<string, string[]>>({});
   const isDirty = ref(false);
   const savedSnapshot = ref('');
 
@@ -80,6 +99,10 @@ export function useCardForm(cardId?: string) {
   watch(form, () => {
     if (savedSnapshot.value) {
       isDirty.value = JSON.stringify(form) !== savedSnapshot.value;
+    }
+    if (Object.keys(fieldErrors.value).length > 0) {
+      fieldErrors.value = {};
+      error.value = null;
     }
   }, { deep: true });
 
@@ -162,9 +185,29 @@ export function useCardForm(cardId?: string) {
     return payload;
   }
 
+  function setFieldErrors(apiFieldErrors: Record<string, string[]>) {
+    const normalized: Record<string, string[]> = {};
+    for (const [path, msgs] of Object.entries(apiFieldErrors)) {
+      const key = normalizeFieldPath(path);
+      if (!normalized[key]) normalized[key] = [];
+      normalized[key].push(...msgs.map((m) => friendlyMessage(m, t)));
+    }
+    fieldErrors.value = normalized;
+  }
+
+  function getFieldError(field: string): string | null {
+    const errors = fieldErrors.value[field];
+    return errors && errors.length > 0 ? (errors[0] ?? null) : null;
+  }
+
+  function hasFieldError(field: string): boolean {
+    return !!fieldErrors.value[field]?.length;
+  }
+
   async function saveCard(): Promise<string | null> {
     saving.value = true;
     error.value = null;
+    fieldErrors.value = {};
     try {
       if (isEditMode.value) {
         await api.put<Card>(`/api/cards/${cardId}`, buildPayload());
@@ -176,7 +219,12 @@ export function useCardForm(cardId?: string) {
         return card.id;
       }
     } catch (e: unknown) {
-      error.value = e instanceof Error ? e.message : t('errors.failedSaveCard');
+      if (e instanceof ApiError && e.hasFieldErrors) {
+        setFieldErrors(e.fieldErrors);
+        error.value = t('errors.fixValidation');
+      } else {
+        error.value = e instanceof Error ? e.message : t('errors.failedSaveCard');
+      }
       return null;
     } finally {
       saving.value = false;
@@ -190,43 +238,24 @@ export function useCardForm(cardId?: string) {
   ): Promise<string | null> {
     const formData = new FormData();
     formData.append('file', file);
-    try {
-      const response = await fetch(`/api/cards/${cardIdForUpload}/upload/${type}`, {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,
-      });
-      if (!response.ok) {
-        const text = await response.text().catch(() => '');
-        throw new Error(t('errors.failedUpload', { type, detail: `${response.status} ${text}` }));
-      }
-      const result = await response.json() as { path: string };
-      if (type === 'avatar') {
-        avatarUrl.value = result.path;
-      } else if (type === 'banner') {
-        bannerUrl.value = result.path;
-      } else {
-        backgroundUrl.value = result.path;
-      }
-      return result.path;
-    } catch (e: unknown) {
-      error.value = e instanceof Error ? e.message : t('errors.failedUpload', { type, detail: '' });
-      return null;
-    }
+    const result = await api.upload<{ path: string }>(
+      `/api/cards/${cardIdForUpload}/upload/${type}`,
+      formData,
+    );
+    if (type === 'avatar') avatarUrl.value = result.path;
+    else if (type === 'banner') bannerUrl.value = result.path;
+    else backgroundUrl.value = result.path;
+    return result.path;
   }
 
   async function deleteImage(
     cardIdForDelete: string,
     type: 'avatar' | 'banner' | 'background',
   ): Promise<void> {
-    try {
-      await api.del(`/api/cards/${cardIdForDelete}/${type}`);
-      if (type === 'avatar') avatarUrl.value = null;
-      else if (type === 'banner') bannerUrl.value = null;
-      else backgroundUrl.value = null;
-    } catch (e: unknown) {
-      error.value = e instanceof Error ? e.message : t('errors.failedDelete', { type });
-    }
+    await api.del(`/api/cards/${cardIdForDelete}/${type}`);
+    if (type === 'avatar') avatarUrl.value = null;
+    else if (type === 'banner') bannerUrl.value = null;
+    else backgroundUrl.value = null;
   }
 
   function resetStyles() {
@@ -259,6 +288,9 @@ export function useCardForm(cardId?: string) {
     loading,
     saving,
     error,
+    fieldErrors,
+    getFieldError,
+    hasFieldError,
     isDirty,
     isEditMode,
     avatarUrl,

@@ -5,6 +5,7 @@ import type { SocialLink, Website } from '@/types';
 defineProps<{
   socialLinks: SocialLink[];
   websites: Website[];
+  fieldErrors?: Record<string, string[]>;
 }>();
 
 const emit = defineEmits<{
@@ -66,6 +67,7 @@ const platformOptions = [
           type="url"
           placeholder="https://example.com"
           class="social-editor__input"
+          :class="{ 'social-editor__input--error': fieldErrors?.websites }"
         />
         <button
           type="button"
@@ -75,6 +77,9 @@ const platformOptions = [
           <X :size="14" />
         </button>
       </div>
+      <p v-if="fieldErrors?.websites" class="social-editor__field-error">
+        {{ fieldErrors.websites[0] }}
+      </p>
       <button
         type="button"
         class="social-editor__add-btn"
@@ -108,6 +113,7 @@ const platformOptions = [
           type="url"
           placeholder="https://..."
           class="social-editor__input"
+          :class="{ 'social-editor__input--error': fieldErrors?.socialLinks }"
         />
         <button
           type="button"
@@ -117,6 +123,9 @@ const platformOptions = [
           <X :size="14" />
         </button>
       </div>
+      <p v-if="fieldErrors?.socialLinks" class="social-editor__field-error">
+        {{ fieldErrors.socialLinks[0] }}
+      </p>
       <button
         type="button"
         class="social-editor__add-btn"
@@ -232,5 +241,24 @@ const platformOptions = [
 .social-editor__remove-btn:hover {
   color: var(--color-error-500);
   background: var(--color-error-50);
+}
+
+.social-editor__input--error {
+  border-color: var(--color-error-500);
+}
+
+.social-editor__input--error:focus {
+  border-color: var(--color-error-500);
+  box-shadow: 0 0 0 3px var(--color-error-50);
+}
+
+.social-editor__field-error {
+  color: var(--color-error-700);
+  font-size: var(--text-sm);
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-error-50);
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--color-error-500);
 }
 </style>

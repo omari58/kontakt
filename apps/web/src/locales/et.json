@@ -185,10 +185,25 @@
     "failedSaveSettings": "Seadete salvestamine ebaõnnestus",
     "uploadFailed": "Üleslaadimine ebaõnnestus",
     "unauthorized": "Volitamata",
-    "requestFailed": "Päring ebaõnnestus"
+    "requestFailed": "Päring ebaõnnestus",
+    "fixValidation": "Palun paranda allpool märgitud vead.",
+    "fields": {
+      "invalidEmail": "Palun sisesta kehtiv e-posti aadress.",
+      "invalidUrl": "Palun sisesta kehtiv URL (nt https://example.com).",
+      "invalidColor": "Palun sisesta kehtiv hex-värv (nt #fff või #ff0000).",
+      "required": "See väli on kohustuslik.",
+      "invalidValue": "See väärtus ei ole kehtiv.",
+      "unknownField": "Seda välja ei tunta.",
+      "fileTooLarge": "Fail on liiga suur. Palun vali väiksem fail.",
+      "invalidFileType": "Seda failitüüpi ei toetata. Kasuta JPEG, PNG, WebP või GIF.",
+      "invalidSlug": "Kasuta 2–100 väiketähte, numbreid ja sidekriipse."
+    }
   },
   "success": {
-    "settingsSaved": "Seaded edukalt salvestatud"
+    "settingsSaved": "Seaded edukalt salvestatud",
+    "cardSaved": "Kaart edukalt salvestatud.",
+    "imageUploaded": "Pilt üles laaditud.",
+    "imageDeleted": "Pilt eemaldatud."
   },
   "home": {
     "tagline": "Digitaalsete visiitkaartide platvorm"
