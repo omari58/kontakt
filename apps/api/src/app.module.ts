@@ -11,7 +11,7 @@ import { RenderModule } from './render/render.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { SettingsModule } from './settings/settings.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -22,10 +22,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
         '.env',
       ],
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), process.env.UPLOAD_DIR || 'uploads'),
-      serveRoot: '/uploads',
-    }),
+    StorageModule.forRoot(),
     PrismaModule,
     AuthModule,
     UsersModule,

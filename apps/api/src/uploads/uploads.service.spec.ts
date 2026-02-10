@@ -2,23 +2,21 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UploadsService } from './uploads.service';
 import { CardsService } from '../cards/cards.service';
 import { PrismaService } from '../prisma/prisma.service';
-import * as fs from 'fs/promises';
+import { StorageProvider } from '../storage/storage.interface';
 import * as sharp from 'sharp';
 
-jest.mock('fs/promises');
 jest.mock('sharp');
 
-const mockFs = fs as jest.Mocked<typeof fs>;
 const mockSharp = sharp as unknown as jest.Mock;
 
 describe('UploadsService', () => {
   let service: UploadsService;
   let cardsService: jest.Mocked<CardsService>;
   let prisma: { card: { update: jest.Mock } };
+  let storage: jest.Mocked<StorageProvider>;
 
   const userId = 'user-uuid-1';
   const cardId = 'card-uuid-1';
-  const uploadDir = '/tmp/test-uploads';
 
   const mockCard = {
     id: cardId,
@@ -43,24 +41,26 @@ describe('UploadsService', () => {
       },
     };
 
+    storage = {
+      save: jest.fn().mockResolvedValue(undefined),
+      delete: jest.fn().mockResolvedValue(undefined),
+      read: jest.fn().mockResolvedValue(null),
+      getPublicUrl: jest.fn((key: string) => `/uploads/${key}`),
+    };
+
     service = new UploadsService(
       cardsService,
       prisma as unknown as PrismaService,
-      uploadDir,
+      storage,
     );
 
     // Mock sharp chain
     const sharpInstance = {
       resize: jest.fn().mockReturnThis(),
       webp: jest.fn().mockReturnThis(),
-      toFile: jest.fn().mockResolvedValue({}),
+      toBuffer: jest.fn().mockResolvedValue(Buffer.alloc(512)),
     };
     mockSharp.mockReturnValue(sharpInstance);
-
-    // Mock fs
-    mockFs.mkdir.mockResolvedValue(undefined);
-    mockFs.unlink.mockResolvedValue(undefined);
-    mockFs.access.mockRejectedValue(new Error('ENOENT'));
   });
 
   function makeFile(mimetype = 'image/jpeg'): Express.Multer.File {
@@ -84,8 +84,8 @@ describe('UploadsService', () => {
       const result = await service.upload(cardId, userId, 'avatar', file);
 
       expect(cardsService.findOne).toHaveBeenCalledWith(cardId, userId);
-      expect(mockFs.mkdir).toHaveBeenCalled();
       expect(mockSharp).toHaveBeenCalledWith(file.buffer);
+      expect(storage.save).toHaveBeenCalledWith(`cards/${cardId}/avatar.webp`, expect.any(Buffer));
       expect(result.path).toContain('avatar.webp');
       expect(prisma.card.update).toHaveBeenCalled();
     });
@@ -139,12 +139,11 @@ describe('UploadsService', () => {
     it('should delete old image when replacing', async () => {
       const cardWithExisting = { ...mockCard, avatarPath: '/uploads/cards/card-uuid-1/avatar.webp' };
       cardsService.findOne.mockResolvedValue(cardWithExisting as any);
-      mockFs.access.mockResolvedValue(undefined); // file exists
 
       const file = makeFile();
       await service.upload(cardId, userId, 'avatar', file);
 
-      expect(mockFs.unlink).toHaveBeenCalled();
+      expect(storage.delete).toHaveBeenCalledWith(`cards/${cardId}/avatar.webp`);
     });
 
     it('should propagate NotFoundException from CardsService', async () => {

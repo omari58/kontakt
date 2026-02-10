@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { SettingsService } from './settings.service';
+import { SettingsUploadService } from './settings-upload.service';
 import { SettingsController } from './settings.controller';
 import { AuthModule } from '../auth/auth.module';
 
@@ -7,7 +8,7 @@ import { AuthModule } from '../auth/auth.module';
 @Module({
   imports: [AuthModule],
   controllers: [SettingsController],
-  providers: [SettingsService],
+  providers: [SettingsService, SettingsUploadService],
   exports: [SettingsService],
 })
 export class SettingsModule {}

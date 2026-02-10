@@ -1,9 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, Logger, Inject } from '@nestjs/common';
 import { CardsService } from '../cards/cards.service';
 import { VCardBuilder } from './vcard.builder';
-import * as fs from 'fs';
-import { join, resolve } from 'path';
+import { STORAGE_PROVIDER } from '../storage/storage.constants';
+import { StorageProvider } from '../storage/storage.interface';
 
 @Injectable()
 export class ContactsService {
@@ -11,7 +10,7 @@ export class ContactsService {
 
   constructor(
     private readonly cardsService: CardsService,
-    private readonly configService: ConfigService,
+    @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
   ) {}
 
   async generateVCard(slug: string): Promise<{ vcf: string; filename: string }> {
@@ -19,21 +18,10 @@ export class ContactsService {
 
     let avatarBase64: string | undefined;
     if (card.avatarPath) {
-      const uploadDir = this.configService.get<string>('UPLOAD_DIR', 'uploads');
-      const baseDir = resolve(process.cwd(), uploadDir);
-      const safePath = card.avatarPath.replace(/^\/+/, '');
-      const avatarFullPath = join(baseDir, safePath);
-
-      if (!avatarFullPath.startsWith(resolve(baseDir))) {
-        this.logger.debug(`Skipping avatar with invalid path for card ${card.id}`);
-      } else {
-        try {
-          await fs.promises.access(avatarFullPath);
-          const buffer = await fs.promises.readFile(avatarFullPath);
-          avatarBase64 = buffer.toString('base64');
-        } catch {
-          // File does not exist on disk, skip avatar
-        }
+      const key = card.avatarPath.replace(/^\/uploads\//, '');
+      const buffer = await this.storage.read(key);
+      if (buffer) {
+        avatarBase64 = buffer.toString('base64');
       }
     }
 

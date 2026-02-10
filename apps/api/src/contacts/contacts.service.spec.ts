@@ -1,23 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { ContactsService } from './contacts.service';
 import { CardsService } from '../cards/cards.service';
+import { STORAGE_PROVIDER } from '../storage/storage.constants';
+import { StorageProvider } from '../storage/storage.interface';
 import { Visibility } from '@prisma/client';
-import * as fs from 'fs';
-
-jest.mock('fs', () => ({
-  ...jest.requireActual('fs'),
-  promises: {
-    access: jest.fn(),
-    readFile: jest.fn(),
-  },
-}));
 
 describe('ContactsService', () => {
   let service: ContactsService;
   let cardsService: CardsService;
-  let configService: ConfigService;
+  let storage: jest.Mocked<StorageProvider>;
 
   const mockCard = {
     id: 'card-uuid-1',
@@ -48,6 +40,13 @@ describe('ContactsService', () => {
   };
 
   beforeEach(async () => {
+    storage = {
+      save: jest.fn().mockResolvedValue(undefined),
+      delete: jest.fn().mockResolvedValue(undefined),
+      read: jest.fn().mockResolvedValue(null),
+      getPublicUrl: jest.fn((key: string) => `/uploads/${key}`),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ContactsService,
@@ -58,17 +57,14 @@ describe('ContactsService', () => {
           },
         },
         {
-          provide: ConfigService,
-          useValue: {
-            get: jest.fn().mockReturnValue('uploads'),
-          },
+          provide: STORAGE_PROVIDER,
+          useValue: storage,
         },
       ],
     }).compile();
 
     service = module.get<ContactsService>(ContactsService);
     cardsService = module.get<CardsService>(CardsService);
-    configService = module.get<ConfigService>(ConfigService);
   });
 
   afterEach(() => {
@@ -104,23 +100,23 @@ describe('ContactsService', () => {
     });
 
     it('should embed avatar as base64 when avatarPath exists', async () => {
-      const cardWithAvatar = { ...mockCard, avatarPath: 'avatars/test.webp' };
+      const cardWithAvatar = { ...mockCard, avatarPath: '/uploads/cards/card-uuid-1/avatar.webp' };
       (cardsService.findBySlug as jest.Mock).mockResolvedValue(cardWithAvatar);
 
       const mockBuffer = Buffer.from('fake-image-data');
-      (fs.promises.access as jest.Mock).mockResolvedValue(undefined);
-      (fs.promises.readFile as jest.Mock).mockResolvedValue(mockBuffer);
+      storage.read.mockResolvedValue(mockBuffer);
 
       const result = await service.generateVCard('john-doe');
 
+      expect(storage.read).toHaveBeenCalledWith('cards/card-uuid-1/avatar.webp');
       expect(result.vcf).toContain('PHOTO:data:image/webp;base64,');
       expect(result.vcf).toContain(mockBuffer.toString('base64'));
     });
 
     it('should skip avatar when file does not exist on disk', async () => {
-      const cardWithAvatar = { ...mockCard, avatarPath: 'avatars/missing.webp' };
+      const cardWithAvatar = { ...mockCard, avatarPath: '/uploads/cards/card-uuid-1/missing.webp' };
       (cardsService.findBySlug as jest.Mock).mockResolvedValue(cardWithAvatar);
-      (fs.promises.access as jest.Mock).mockRejectedValue(new Error('ENOENT'));
+      storage.read.mockResolvedValue(null);
 
       const result = await service.generateVCard('john-doe');
 

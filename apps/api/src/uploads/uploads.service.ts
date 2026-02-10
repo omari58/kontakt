@@ -1,9 +1,10 @@
-import { Injectable, BadRequestException, Logger } from '@nestjs/common';
+import { Injectable, BadRequestException, Inject } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CardsService } from '../cards/cards.service';
 import * as sharp from 'sharp';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import { STORAGE_PROVIDER } from '../storage/storage.constants';
+import { StorageProvider } from '../storage/storage.interface';
+import { Card } from '@prisma/client';
 
 export type ImageType = 'avatar' | 'banner' | 'background';
 
@@ -13,8 +14,6 @@ const IMAGE_CONFIGS: Record<ImageType, { width: number; height?: number; fit: ke
   background: { width: 1920, fit: 'inside' },
 };
 
-import { Card } from '@prisma/client';
-
 const DB_FIELD_MAP: Record<ImageType, keyof Pick<Card, 'avatarPath' | 'bannerPath' | 'bgImagePath'>> = {
   avatar: 'avatarPath',
   banner: 'bannerPath',
@@ -23,12 +22,10 @@ const DB_FIELD_MAP: Record<ImageType, keyof Pick<Card, 'avatarPath' | 'bannerPat
 
 @Injectable()
 export class UploadsService {
-  private readonly logger = new Logger(UploadsService.name);
-
   constructor(
     private readonly cardsService: CardsService,
     private readonly prisma: PrismaService,
-    private readonly uploadDir: string,
+    @Inject(STORAGE_PROVIDER) private readonly storage: StorageProvider,
   ) {}
 
   async upload(
@@ -41,37 +38,30 @@ export class UploadsService {
       throw new BadRequestException(`Invalid image type: ${type}. Allowed: avatar, banner, background`);
     }
 
-    // Verify ownership (throws 404/403 if not authorized)
     const card = await this.cardsService.findOne(cardId, userId);
 
-    const cardDir = path.join(this.uploadDir, 'cards', cardId);
-    await fs.mkdir(cardDir, { recursive: true });
-
-    const filename = `${type}.webp`;
-    const filePath = path.join(cardDir, filename);
-    const publicPath = `/uploads/cards/${cardId}/${filename}`;
-
-    // Delete old image if it exists (construct path deterministically)
+    const key = `cards/${cardId}/${type}.webp`;
     const dbField = DB_FIELD_MAP[type];
-    const oldPath = card[dbField];
-    if (oldPath) {
-      const oldFilePath = path.join(cardDir, `${type}.webp`);
-      await this.deleteFileIfExists(oldFilePath);
+
+    if (card[dbField]) {
+      await this.storage.delete(key);
     }
 
-    // Process image with sharp
     const config = IMAGE_CONFIGS[type];
     const resizeOptions: sharp.ResizeOptions = { fit: config.fit };
     if (config.fit !== 'cover') {
       resizeOptions.withoutEnlargement = true;
     }
 
-    await sharp(file.buffer)
+    const buffer = await sharp(file.buffer)
       .resize(config.width, config.height, resizeOptions)
       .webp()
-      .toFile(filePath);
+      .toBuffer();
 
-    // Update card record
+    await this.storage.save(key, buffer);
+
+    const publicPath = this.storage.getPublicUrl(key);
+
     await this.prisma.card.update({
       where: { id: cardId },
       data: { [dbField]: publicPath },
@@ -83,17 +73,8 @@ export class UploadsService {
   async deleteImage(cardId: string, userId: string, type: ImageType): Promise<void> {
     await this.cardsService.findOne(cardId, userId);
     const dbField = DB_FIELD_MAP[type];
-    const filePath = path.join(this.uploadDir, 'cards', cardId, `${type}.webp`);
-    await this.deleteFileIfExists(filePath);
+    const key = `cards/${cardId}/${type}.webp`;
+    await this.storage.delete(key);
     await this.prisma.card.update({ where: { id: cardId }, data: { [dbField]: null } });
-  }
-
-  private async deleteFileIfExists(filePath: string): Promise<void> {
-    try {
-      await fs.access(filePath);
-      await fs.unlink(filePath);
-    } catch (error) {
-      this.logger.debug(`File not found for deletion: ${filePath}`);
-    }
   }
 }
