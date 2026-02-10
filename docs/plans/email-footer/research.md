@@ -2,15 +2,15 @@
 
 ## Initial Findings
 
-- [2026-02-10]: Card model already contains all core contact data (name, title, company, phones, emails, websites, socialLinks, address, avatar). Only signature-specific fields need adding (pronouns, calendarUrl, signatureDisclaimer, signatureLayout).
+- [2026-02-10]: Card model already contains all core contact data (name, title, company, phones, emails, websites, socialLinks, address, avatar). Identity fields `pronouns` and `calendarUrl` will be added to Card. Signature presentation config lives in a separate `Signature` model (1:N relationship with Card).
 
 - [2026-02-10]: Existing server-side rendering pattern (Handlebars + `card.hbs`) uses CSS custom properties and `color-mix()` — email signatures can't use either. Client-side generation with inline styles is the right approach.
 
 - [2026-02-10]: Theme resolver (`theme.resolver.ts`) handles branding (primaryColor, bgColor, etc.) with org-level defaults. Signature should use `primaryColor` for accent elements but needs direct hex values, not CSS variables.
 
-- [2026-02-10]: Card editor uses collapsible sections pattern — "Email Signature" fits naturally as a new section alongside Basic Info, Contact, Web & Social, Images, Appearance, Settings.
+- [2026-02-10]: Card editor uses collapsible sections pattern. Initially considered adding signature as a section there, but decided signatures should be a standalone feature with their own route/nav item — they're a distribution channel for cards, not a card attribute.
 
-- [2026-02-10]: `useCardForm()` composable manages all card form state and CRUD. Signature fields will be added to the same form object and saved with the existing card save flow.
+- [2026-02-10]: `useCards()` composable provides the CRUD pattern for user-scoped resources. `useSignatures()` will follow the same pattern with `useApi()` for fetch calls.
 
 - [2026-02-10]: vCard builder (`vcard.builder.ts`) shows the pattern for generating downloadable artifacts from card data — signature generation follows the same concept but client-side.
 
@@ -35,5 +35,15 @@
 - Gmail's signature editor accepts pasted HTML directly.
 - Apple Mail's signature preferences accept pasted rich text.
 - Outlook allows pasting HTML into signature settings.
+
+## Architecture Decision: Standalone vs Card-embedded
+
+- [2026-02-10]: Decided signatures should be a **standalone feature** (separate nav item, route, model) rather than embedded in the card editor. Rationale:
+  - Email signatures are a *distribution channel* for cards — important enough for top-level nav
+  - One card can have multiple signatures (formal, casual, mobile)
+  - Separation of concerns: Card = identity data, Signature = presentation/rendering config
+  - Avoids bloating the Card model with presentation fields
+  - `pronouns` and `calendarUrl` stay on Card (identity data useful on public card page too)
+  - Signature-specific config (layout, field toggles, disclaimer, accent color) in `Signature.config` JSON field
 
 <!-- Subagents append learnings below this line -->

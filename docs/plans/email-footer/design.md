@@ -8,32 +8,54 @@ By generating professional HTML email signatures directly from existing card dat
 
 ## Solution Overview
 
-A new **"Email Signature" section in the Card Editor** that:
+A **standalone "Signatures" feature** — a first-class section in the main navigation alongside Dashboard. Signatures are separate entities that reference a Card and render from its live data.
 
-1. Pulls data from the existing card (name, title, company, phone, email, website, socials, avatar)
-2. Adds signature-specific fields: **pronouns**, **calendar/booking link**, **disclaimer text**
-3. Offers **3 layout templates**: Compact (horizontal), Classic (stacked), Minimal (text-only)
-4. Shows a **live preview** of the signature in a sandboxed iframe
-5. Provides a **"Copy to Clipboard" button** that puts email-client-compatible HTML on the clipboard
-6. Includes a **"View my card" link** pointing to `/c/{slug}` in every signature
+Key characteristics:
 
-**Key decision: client-side generation.** The HTML is built entirely in the Vue frontend — no new API endpoints. Card data is already available in the editor, and this avoids round-trips and new server-side templates.
+1. **Standalone route** (`/signatures`) in the main nav with list + editor views
+2. **One-to-many**: a Card can have multiple signatures (e.g., formal, casual, mobile-friendly)
+3. **Live data**: signatures render from the card's current data — update the card, re-copy the signature
+4. **3 layout templates**: Compact (horizontal), Classic (stacked), Minimal (text-only)
+5. **Signature-specific config**: layout, disclaimer, field visibility toggles, custom accent color
+6. **Client-side HTML generation**: the composable builds the HTML in the browser, no server-side rendering needed
+7. **Copy to clipboard**: one-click copy of email-client-compatible HTML
+
+Identity fields (`pronouns`, `calendarUrl`) live on the Card model since they're contact/identity data useful beyond signatures (on the public card page too).
 
 ## Architecture
 
-### Data Model Changes
+### Data Model
 
-New fields on the `Card` model (Prisma schema):
+**New fields on `Card` model:**
 
-| Field | Type | Default | Notes |
-|-------|------|---------|-------|
-| `pronouns` | `String?` | `null` | Free text: "he/him", "she/her", etc. |
-| `calendarUrl` | `String?` | `null` | Booking link (Calendly, Cal.com, etc.) |
-| `signatureDisclaimer` | `String?` | `null` | Legal disclaimer text, max ~200 chars |
-| `signatureLayout` | `SignatureLayout?` | `null` | Enum: `COMPACT`, `CLASSIC`, `MINIMAL` |
+| Field         | Type      | Default | Notes                                        |
+| ------------- | --------- | ------- | -------------------------------------------- |
+| `pronouns`    | `String?` | `null`  | Free text: "he/him", "she/her", etc.         |
+| `calendarUrl` | `String?` | `null`  | Booking link (Calendly, Cal.com, etc.)       |
 
-New Prisma enum:
+**New `Signature` model:**
+
 ```prisma
+model Signature {
+  id        String   @id @default(cuid())
+  name      String   // User-given name: "Work formal", "Personal casual"
+  cardId    String
+  card      Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  layout    SignatureLayout @default(CLASSIC)
+  config    Json            @default("{}")
+  // config stores: { fields: { phone, email, website, socials, pronouns,
+  //   calendar, disclaimer, cardLink }, disclaimer: "...", accentColor: "#..." }
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([cardId])
+}
+
 enum SignatureLayout {
   COMPACT
   CLASSIC
@@ -41,48 +63,87 @@ enum SignatureLayout {
 }
 ```
 
-These fields are stored on the Card model for cross-device persistence and API consistency.
+The `config` JSON field stores all presentation settings — field visibility toggles, disclaimer text, accent color override. This keeps the schema stable as signature options evolve.
 
-### Frontend Components
+**Relationship**: `Card` 1→N `Signature`. Deleting a card cascades to its signatures.
+
+### API
+
+New `signatures` NestJS module following existing patterns:
+
+```
+apps/api/src/signatures/
+├── signatures.module.ts
+├── signatures.controller.ts    # CRUD endpoints
+├── signatures.service.ts       # Business logic
+└── dto/
+    ├── create-signature.dto.ts
+    ├── update-signature.dto.ts
+    └── signature-response.dto.ts
+```
+
+**Endpoints** (all require `JwtAuthGuard`):
+
+| Method   | Route                  | Description                       |
+| -------- | ---------------------- | --------------------------------- |
+| `GET`    | `/api/me/signatures`   | List current user's signatures    |
+| `POST`   | `/api/me/signatures`   | Create signature (requires cardId)|
+| `GET`    | `/api/me/signatures/:id` | Get signature detail            |
+| `PATCH`  | `/api/me/signatures/:id` | Update signature config         |
+| `DELETE` | `/api/me/signatures/:id` | Delete signature                |
+
+Follows the existing `/api/me/cards` pattern for user-scoped resources.
+
+### Frontend
 
 ```
 apps/web/src/
-├── composables/
-│   └── useSignatureHtml.ts      # Generates raw HTML string from card data + options
+├── views/
+│   ├── SignaturesView.vue          # List page: all user's signatures
+│   └── SignatureEditorView.vue     # Editor: card picker, layout, config, preview, copy
 ├── components/
-│   └── editor/
-│       ├── SignatureBuilder.vue  # Main section: layout picker, field toggles, preview, copy button
-│       └── SignaturePreview.vue  # Sandboxed iframe rendering the generated HTML
-└── views/
-    └── CardEditorView.vue       # Add "Email Signature" collapsible section
+│   └── signatures/
+│       ├── SignatureCard.vue        # List item card (name, layout badge, linked card, actions)
+│       ├── SignatureLayoutPicker.vue # Visual layout selector (3 options)
+│       ├── SignatureFieldToggles.vue # Checkboxes for which fields to show
+│       └── SignaturePreview.vue     # Sandboxed iframe rendering the HTML
+├── composables/
+│   ├── useSignatures.ts            # CRUD composable for signatures (like useCards)
+│   └── useSignatureHtml.ts         # Generates HTML string from card data + signature config
+├── stores/
+│   └── signatures.ts               # Pinia store (optional, if needed for caching)
+└── types/
+    └── index.ts                    # Add Signature, SignatureConfig interfaces
 ```
 
-**`useSignatureHtml(card, options)`** composable:
-- Input: card data (reactive) + signature options (layout, which fields to show)
+**Router additions:**
+- `/signatures` → `SignaturesView.vue`
+- `/signatures/new` → `SignatureEditorView.vue` (create mode)
+- `/signatures/:id` → `SignatureEditorView.vue` (edit mode)
+
+**Nav addition:** "Signatures" item in `AppNav.vue` between Dashboard and any admin routes.
+
+### Composables
+
+**`useSignatures()`** — CRUD wrapper (mirrors `useCards`):
+- `signatures` ref, `fetchSignatures()`, `createSignature()`, `updateSignature()`, `deleteSignature()`
+- Uses `useApi()` composable for fetch calls
+
+**`useSignatureHtml(card, signatureConfig)`**:
+- Input: card data (reactive) + signature config (layout, field toggles, disclaimer, accent color)
 - Output: computed HTML string
 - Builds table-based HTML with fully inline CSS
-- Uses card's `primaryColor` for accent elements
+- Uses accent color (from config, falling back to card's `primaryColor`)
 - Web-safe font stacks (no Google Fonts in email)
 - All image URLs are absolute (`{APP_URL}{avatarPath}`)
-
-**`SignatureBuilder.vue`**:
-- Layout picker with visual thumbnails for 3 styles
-- Field toggles: checkboxes for which fields to include (phone, email, website, socials, pronouns, calendar, disclaimer, "view my card" link)
-- Signature-specific inputs: pronouns text field, calendar URL, disclaimer textarea
-- "Copy to Clipboard" button with success toast
-- "Copy as HTML source" fallback link
-
-**`SignaturePreview.vue`**:
-- Receives HTML string as prop
-- Renders in a sandboxed `<iframe>` via `srcdoc` attribute
-- Isolates email HTML styles from the Vue app's CSS
-- Auto-resizes iframe height to content
 
 ### Layout Templates
 
 #### 1. Compact (Horizontal)
+
 Best for short, modern signatures. Avatar + info in a single row.
-```
+
+```text
 ┌──────────────────────────────────────────┐
 │ [avatar]  Jane Doe | Product Lead, Acme  │
 │           (she/her)                      │
@@ -92,8 +153,10 @@ Best for short, modern signatures. Avatar + info in a single row.
 ```
 
 #### 2. Classic (Stacked)
+
 More traditional, works well with longer info. Avatar top-left.
-```
+
+```text
 ┌──────────────────────────────────────────┐
 │ [avatar]  Jane Doe                       │
 │           Product Lead at Acme           │
@@ -109,8 +172,10 @@ More traditional, works well with longer info. Avatar top-left.
 ```
 
 #### 3. Minimal (Text-only)
+
 No images. Maximum email client compatibility.
-```
+
+```text
 ┌──────────────────────────────────────────┐
 │ Jane Doe · Product Lead at Acme (she/her)│
 │ jane@acme.com · +1 555-0100 · acme.com  │
@@ -158,27 +223,31 @@ Social icons in email signatures are tricky — we can't use SVG (email clients 
 
 ## Data Flow
 
-1. User opens Card Editor → clicks "Email Signature" section
-2. `SignatureBuilder.vue` reads card data from `useCardForm()` composable
-3. User selects layout, toggles fields, fills signature-specific inputs
-4. `useSignatureHtml()` reactively generates HTML from current card data + options
-5. `SignaturePreview.vue` renders HTML in sandboxed iframe
-6. User clicks "Copy to Clipboard" → HTML goes to clipboard
-7. User pastes into email client signature settings
-8. Signature-specific fields save with the card on normal "Save" action
+1. User navigates to `/signatures` → sees list of existing signatures (or empty state with "Create Signature" CTA)
+2. User clicks "New Signature" → `SignatureEditorView` opens
+3. User picks a card from a dropdown (their cards are fetched)
+4. Card data loads → editor shows layout picker, field toggles, config inputs
+5. `useSignatureHtml()` reactively generates HTML from card data + current config
+6. `SignaturePreview.vue` renders HTML in sandboxed iframe (live updates)
+7. User names the signature (e.g., "Work formal") and saves → `POST /api/me/signatures`
+8. User clicks "Copy to Clipboard" → HTML goes to clipboard with success toast
+9. User pastes into email client signature settings
+10. Later: user updates their card → opens signature → preview reflects new card data → re-copies
 
 ## Edge Cases & Error Handling
 
-| Case | Handling |
-|------|----------|
-| No avatar uploaded | Hide avatar cell, widen info column |
-| No social links | Hide social icons row |
-| No phone or email | Hide that line |
-| Long disclaimer (>200 chars) | Enforce max length in input |
-| Card with `obfuscate: true` | Signature uses real values (it's the user's own) |
-| Browser doesn't support Clipboard API | Show raw HTML in a textarea with "Select All + Copy" |
-| Dark mode in email clients | Use explicit background colors; avoid transparent backgrounds |
-| Image blocking in email clients | Meaningful `alt` text on avatar; Minimal layout as fallback |
+| Case                              | Handling                                                       |
+| --------------------------------- | -------------------------------------------------------------- |
+| No avatar uploaded on card        | Hide avatar cell, widen info column                            |
+| No social links on card           | Hide social icons row                                          |
+| No phone or email on card         | Hide that line                                                 |
+| Long disclaimer (>200 chars)      | Enforce max length in input                                    |
+| Card with `obfuscate: true`       | Signature uses real values (it's the user's own)               |
+| Browser doesn't support Clipboard | Show raw HTML in a textarea with "Select All + Copy"           |
+| Dark mode in email clients        | Use explicit background colors; avoid transparent backgrounds  |
+| Image blocking in email clients   | Meaningful `alt` text on avatar; Minimal layout as fallback    |
+| Referenced card is deleted        | Cascade delete removes signatures; no orphans                  |
+| User has no cards yet             | "Create a card first" prompt on signatures page                |
 
 ## Open Questions
 
