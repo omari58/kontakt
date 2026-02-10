@@ -71,8 +71,6 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
     restart: unless-stopped
-    volumes:
-      - web_dist:/srv/share
     profiles:
       - prod
     networks:
@@ -85,7 +83,7 @@ services:
       api:
         condition: service_started
       web:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "80:80"
       - "443:443"
@@ -93,7 +91,6 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
-      - web_dist:/srv/web:ro
     profiles:
       - prod
     networks:
@@ -103,7 +100,6 @@ volumes:
   pgdata:
   keycloak_data:
   uploads:
-  web_dist:
   caddy_data:
   caddy_config:
 

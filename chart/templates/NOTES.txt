@@ -1,0 +1,12 @@
+Kontakt has been deployed!
+
+Components:
+  - API: {{ include "kontakt.fullname" . }}-api
+  - Web: {{ include "kontakt.fullname" . }}-web
+
+{{- if .Values.gateway.hostname }}
+
+Access the application at: https://{{ .Values.gateway.hostname }}
+{{- end }}
+
+Database migrations run automatically via ArgoCD PreSync hook before each deployment.

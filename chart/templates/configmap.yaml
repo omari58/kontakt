@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "kontakt.fullname" . }}
+  labels:
+    {{- include "kontakt.labels" . | nindent 4 }}
+data:
+  PORT: {{ .Values.api.port | quote }}
+  NODE_ENV: production
+  APP_URL: {{ .Values.app.url | quote }}
+  CORS_ORIGIN: {{ default .Values.app.url .Values.app.corsOrigin | quote }}
+  OIDC_ISSUER: {{ .Values.oidc.issuer | quote }}
+  OIDC_CLIENT_ID: {{ .Values.oidc.clientId | quote }}
+  OIDC_CALLBACK_URL: {{ .Values.oidc.callbackUrl | quote }}
+  OIDC_ADMIN_CLAIM: {{ .Values.oidc.adminClaim | quote }}
+  OIDC_ADMIN_CLAIM_VALUE: {{ .Values.oidc.adminClaimValue | quote }}
+  UPLOAD_DIR: {{ .Values.app.uploadDir | quote }}
+  MAX_FILE_SIZE: {{ .Values.app.maxFileSize | quote }}
