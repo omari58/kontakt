@@ -123,10 +123,10 @@ async function handleSave() {
   try {
     if (isEditMode.value) {
       await api.put(`/api/me/signatures/${sigId.value}`, body);
-      showToast(t('success.settingsSaved'), 'success');
+      showToast(t('success.signatureSaved'), 'success');
     } else {
       const created = await api.post<Signature>('/api/me/signatures', body);
-      showToast(t('success.settingsSaved'), 'success');
+      showToast(t('success.signatureSaved'), 'success');
       router.push({ name: 'signature-edit', params: { id: created.id } });
     }
   } catch (e) {

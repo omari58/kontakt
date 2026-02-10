@@ -206,7 +206,8 @@
     "cardSaved": "Card saved successfully.",
     "imageUploaded": "Image uploaded.",
     "imageDeleted": "Image removed.",
-    "signatureDeleted": "Signature deleted."
+    "signatureDeleted": "Signature deleted.",
+    "signatureSaved": "Signature saved."
   },
   "home": {
     "tagline": "Digital business card platform"
