@@ -46,4 +46,24 @@
   - `pronouns` and `calendarUrl` stay on Card (identity data useful on public card page too)
   - Signature-specific config (layout, field toggles, disclaimer, accent color) in `Signature.config` JSON field
 
+## Codebase Pattern Analysis (Planning Phase)
+
+- [2026-02-10]: Cards module is the reference for API structure: `CardsController` + `MyCardsController` + `AdminCardsController` pattern. Signatures needs only a user-scoped controller (like `MyCardsController`) — no admin endpoints for v1.
+
+- [2026-02-10]: Prisma uses UUID primary keys (`@default(uuid())`) for User/Card, but design specifies `cuid()` for Signature. Using `cuid()` is fine as a valid Prisma strategy.
+
+- [2026-02-10]: Card model already has JSON fields for complex types (phones, emails, socialLinks). Signature `config` JSON follows the same pattern.
+
+- [2026-02-10]: DTO pattern uses `static fromCard()` factory methods. Signature response DTO needs `static fromSignature()` with a card summary (id, name, slug, avatarPath) for the list view.
+
+- [2026-02-10]: Frontend uses `storeToRefs()` wrapper pattern — cards store has thin `useCards()` composable. Signatures will mirror this exactly.
+
+- [2026-02-10]: Router uses lazy-loaded components with meta guards. Signature routes need `requiresAuth: true` but not `requiresAdmin`.
+
+- [2026-02-10]: AppNav uses lucide-vue-next icons. `FileSignature` or `PenLine` icons available for signatures nav item.
+
+- [2026-02-10]: i18n keys are nested by feature namespace. Signatures needs `signatures.*` namespace following the `editor.*` and `dashboard.*` pattern.
+
+- [2026-02-10]: DashboardView uses three-state pattern (loading/empty/content) with skeleton loaders and delete confirmation modal. SignaturesView will need a fourth state: "no cards" (user needs cards before signatures).
+
 <!-- Subagents append learnings below this line -->
