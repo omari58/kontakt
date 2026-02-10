@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  oidcSub   String   @unique
-  email     String
-  name      String
-  role      Role     @default(USER)
-  cards     Card[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String      @id @default(uuid())
+  oidcSub    String      @unique
+  email      String
+  name       String
+  role       Role        @default(USER)
+  cards      Card[]
+  signatures Signature[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model Card {
@@ -49,6 +50,7 @@ model Card {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   events       AnalyticsEvent[]
+  signatures   Signature[]
 
   @@index([userId])
 }
@@ -69,6 +71,22 @@ model AnalyticsEvent {
 
   @@index([cardId, type])
   @@index([cardId, createdAt])
+}
+
+model Signature {
+  id        String          @id @default(cuid())
+  name      String
+  cardId    String
+  card      Card            @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  layout    SignatureLayout  @default(CLASSIC)
+  config    Json            @default("{}")
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([cardId])
 }
 
 enum Role {
@@ -102,4 +120,10 @@ enum EventType {
   VCF_DOWNLOAD
   WALLET_ADD_APPLE
   WALLET_ADD_GOOGLE
+}
+
+enum SignatureLayout {
+  COMPACT
+  CLASSIC
+  MINIMAL
 }
