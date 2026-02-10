@@ -159,6 +159,14 @@ export class CreateCardDto {
   bio?: string;
 
   @IsOptional()
+  @IsString()
+  pronouns?: string;
+
+  @IsOptional()
+  @IsUrl()
+  calendarUrl?: string;
+
+  @IsOptional()
   @Matches(HEX_COLOR_REGEX, { message: 'bgColor must be a valid hex color (e.g. #fff or #ff0000)' })
   bgColor?: string;
 

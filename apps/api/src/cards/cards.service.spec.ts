@@ -24,6 +24,8 @@ describe('CardsService', () => {
     websites: null,
     socialLinks: null,
     bio: null,
+    pronouns: null,
+    calendarUrl: null,
     avatarPath: null,
     bannerPath: null,
     bgImagePath: null,
@@ -37,6 +39,7 @@ describe('CardsService', () => {
     obfuscate: false,
     createdAt: new Date('2025-01-01'),
     updatedAt: new Date('2025-01-01'),
+    fontFamily: null,
   };
 
   beforeEach(async () => {
@@ -296,6 +299,56 @@ describe('CardsService', () => {
       await expect(service.delete('card-uuid-1', otherUserId)).rejects.toThrow(
         ForbiddenException,
       );
+    });
+  });
+
+  describe('identity fields (pronouns, calendarUrl)', () => {
+    it('should create a card with pronouns and calendarUrl', async () => {
+      const cardWithIdentity = {
+        ...mockCard,
+        pronouns: 'she/her',
+        calendarUrl: 'https://cal.com/jane',
+      };
+      (prisma.card.create as jest.Mock).mockResolvedValue(cardWithIdentity);
+
+      const dto = {
+        name: 'Jane Doe',
+        pronouns: 'she/her',
+        calendarUrl: 'https://cal.com/jane',
+      };
+      const result = await service.create(userId, dto);
+
+      expect(prisma.card.create).toHaveBeenCalledWith({
+        data: expect.objectContaining({
+          pronouns: 'she/her',
+          calendarUrl: 'https://cal.com/jane',
+        }),
+      });
+      expect(result.pronouns).toBe('she/her');
+      expect(result.calendarUrl).toBe('https://cal.com/jane');
+    });
+
+    it('should update card with new pronouns value', async () => {
+      const updatedCard = { ...mockCard, pronouns: 'they/them' };
+      (prisma.card.update as jest.Mock).mockResolvedValue(updatedCard);
+
+      const result = await service.update('card-uuid-1', userId, {
+        pronouns: 'they/them',
+      });
+
+      expect(prisma.card.update).toHaveBeenCalledWith({
+        where: { id: 'card-uuid-1' },
+        data: expect.objectContaining({ pronouns: 'they/them' }),
+      });
+      expect(result.pronouns).toBe('they/them');
+    });
+
+    it('should accept null/omitted pronouns and calendarUrl', async () => {
+      const dto = { name: 'John Doe' };
+      const result = await service.create(userId, dto);
+
+      expect(result.pronouns).toBeNull();
+      expect(result.calendarUrl).toBeNull();
     });
   });
 });

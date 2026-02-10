@@ -210,6 +210,34 @@ describe('CreateCardDto', () => {
     });
   });
 
+  describe('identity fields (pronouns, calendarUrl)', () => {
+    it('should pass with valid pronouns and calendarUrl', async () => {
+      const dto = toDto({
+        name: 'Test',
+        pronouns: 'she/her',
+        calendarUrl: 'https://cal.com/jane',
+      });
+      const errors = await validate(dto);
+      expect(errors).toHaveLength(0);
+    });
+
+    it('should pass when pronouns and calendarUrl are omitted', async () => {
+      const dto = toDto({ name: 'Test' });
+      const errors = await validate(dto);
+      expect(errors).toHaveLength(0);
+    });
+
+    it('should fail with invalid calendarUrl', async () => {
+      const dto = toDto({
+        name: 'Test',
+        calendarUrl: 'not-a-url',
+      });
+      const errors = await validate(dto);
+      const err = errors.find((e) => e.property === 'calendarUrl');
+      expect(err).toBeDefined();
+    });
+  });
+
   describe('website validation', () => {
     it('should pass with valid URLs', async () => {
       const dto = toDto({

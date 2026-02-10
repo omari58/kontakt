@@ -14,6 +14,8 @@ export class CardResponseDto {
   websites!: string[] | null;
   socialLinks!: SocialLinkDto[] | null;
   bio!: string | null;
+  pronouns!: string | null;
+  calendarUrl!: string | null;
   avatarPath!: string | null;
   bannerPath!: string | null;
   bgImagePath!: string | null;

@@ -32,6 +32,8 @@ model Card {
   websites     Json?        // [url]
   socialLinks  Json?        // [{platform, url}]
   bio          String?
+  pronouns     String?
+  calendarUrl  String?
   avatarPath   String?
   bannerPath   String?
   bgImagePath  String?
