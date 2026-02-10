@@ -301,6 +301,36 @@ describe('useSignatureHtml', () => {
     });
   });
 
+  describe('XSS protection', () => {
+    it('escapes adversarial input in card fields', () => {
+      const card = ref(
+        makeCard({
+          name: '<script>alert("xss")</script>',
+          jobTitle: 'Engineer\' onclick="hack()"',
+          company: '<img src=x onerror=alert(1)>',
+          emails: [{ email: 'a"onmouseover="alert(1)@example.com', label: 'work' }],
+        }),
+      );
+      const config = ref(makeConfig());
+      const layout = ref<SignatureLayout>('CLASSIC');
+
+      const { html } = useSignatureHtml(card, config, layout);
+
+      // Raw HTML tags must be escaped
+      expect(html.value).not.toContain('<script>');
+      expect(html.value).not.toContain('<img src=x');
+      expect(html.value).toContain('&lt;script&gt;');
+      expect(html.value).toContain('&lt;img src=x onerror=alert(1)&gt;');
+      // Single quotes must be escaped
+      expect(html.value).toContain('&#39;');
+      // Quotes in attribute contexts must be escaped
+      expect(html.value).toContain('&quot;onmouseover=&quot;');
+      expect(html.value).not.toMatch(/onclick="hack\(\)"/);
+      expect(html.value).not.toMatch(/onmouseover="alert\(1\)"/);
+
+    });
+  });
+
   describe('plain text output', () => {
     it('strips HTML and preserves info', () => {
       const card = ref(makeCard());
