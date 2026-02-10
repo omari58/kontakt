@@ -53,6 +53,8 @@ export interface Card {
   websites: Website[] | null;
   socialLinks: SocialLink[] | null;
   bio: string | null;
+  pronouns: string | null;
+  calendarUrl: string | null;
   avatarPath: string | null;
   bannerPath: string | null;
   bgImagePath: string | null;
@@ -87,4 +89,35 @@ export interface Setting {
 
 export interface UpdateSettingsPayload {
   settings: Setting[];
+}
+
+export type SignatureLayout = 'COMPACT' | 'CLASSIC' | 'MINIMAL';
+
+export interface SignatureFieldToggles {
+  phone: boolean;
+  email: boolean;
+  website: boolean;
+  socials: boolean;
+  pronouns: boolean;
+  calendar: boolean;
+  disclaimer: boolean;
+  cardLink: boolean;
+}
+
+export interface SignatureConfig {
+  fields: SignatureFieldToggles;
+  disclaimer: string;
+  accentColor: string;
+}
+
+export interface Signature {
+  id: string;
+  name: string;
+  cardId: string;
+  card: { id: string; name: string; slug: string; avatarPath: string | null };
+  userId: string;
+  layout: SignatureLayout;
+  config: SignatureConfig;
+  createdAt: string;
+  updatedAt: string;
 }
