@@ -86,3 +86,11 @@
 - [2026-02-11]: `escapeHtml` must escape all 5 standard entities including single quotes (`'` → `&#39;`) for defense-in-depth, even when generated HTML uses double-quoted attributes.
 - [2026-02-11]: TypeScript non-null assertions (`!`) are needed after array element access when a `.length` guard exists but TS can't infer through optional chaining (e.g., `card.emails[0]!.email` after `card.emails?.length` check).
 - [2026-02-11]: `APP_URL` resolved at module load time via `import.meta.env.VITE_APP_URL || window.location.origin`. Test stubs for `window.location` must run before module import to take effect.
+
+## Frontend Views Implementation Learnings
+
+- [2026-02-11]: i18n JSON keys cannot simultaneously be a string value and an object parent. When `signatures.editor.fields` was needed as both a section heading string and a parent for field labels, the solution was `fields` for the heading and `fieldLabels` for the sub-keys.
+- [2026-02-11]: SignaturePreview iframe should use `sandbox=""` (not `sandbox="allow-same-origin"`) for defense-in-depth. Auto-resize via `contentDocument.scrollHeight` requires same-origin access, but the `min-height: 120px` fallback is acceptable. The try/catch in the resize logic handles this gracefully.
+- [2026-02-11]: SignaturesView needed a fourth state beyond the DashboardView's three-state pattern: "no cards" (prerequisite check before "no signatures").
+- [2026-02-11]: Save toast must use a feature-specific i18n key (`success.signatureSaved`) not a borrowed key (`success.settingsSaved`) — semantically wrong messages confuse users.
+- [2026-02-11]: Vue Router route ordering matters: `/signatures/new` must come before `/signatures/:id` so the literal `new` segment is matched before the dynamic `:id` param.
