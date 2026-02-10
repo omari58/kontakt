@@ -76,3 +76,13 @@
 - [2026-02-10]: Controller uses `@Patch` (not `@Put`) for signature updates — more appropriate for partial updates. Note: `local-api.sh` only supports `put`, not `patch`, so manual curl was needed for PATCH testing.
 - [2026-02-10]: `SignatureResponseDto.fromSignature()` uses explicit field-by-field mapping (vs CardResponseDto's `Object.assign` approach) to expose only a trimmed `CardSummary` instead of the full Card object.
 - [2026-02-10]: `as unknown as Prisma.InputJsonValue` cast needed for config JSON field — same pattern as CardsService for phones/emails/socialLinks JSON fields.
+
+## Frontend Engine Implementation Learnings
+
+- [2026-02-11]: Card interface additions (`pronouns`, `calendarUrl`) used `string | null` (not optional `?:`) to match existing nullable field pattern. This required updating existing test mocks (e.g., `QrModal.test.ts`) that create Card objects.
+- [2026-02-11]: NestJS static assets are served with prefix `/public` (`main.ts:115`), so icon URLs must be `/public/assets/social/{platform}.png`, not `/assets/social/{platform}.png` as the plan spec originally assumed.
+- [2026-02-11]: Caddyfile needed a `/public/*` route added to proxy static assets to the API in production.
+- [2026-02-11]: `SOCIAL_PLATFORMS` constant has 28 platforms (not 10 as listed in the plan). Icons were created for all 28.
+- [2026-02-11]: `escapeHtml` must escape all 5 standard entities including single quotes (`'` → `&#39;`) for defense-in-depth, even when generated HTML uses double-quoted attributes.
+- [2026-02-11]: TypeScript non-null assertions (`!`) are needed after array element access when a `.length` guard exists but TS can't infer through optional chaining (e.g., `card.emails[0]!.email` after `card.emails?.length` check).
+- [2026-02-11]: `APP_URL` resolved at module load time via `import.meta.env.VITE_APP_URL || window.location.origin`. Test stubs for `window.location` must run before module import to take effect.

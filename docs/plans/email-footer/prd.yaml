@@ -45,7 +45,7 @@ requirements:
   - id: REQ-006
     name: "Three layout templates"
     description: "Three signature layouts are available: Compact (horizontal, single row), Classic (stacked with divider), and Minimal (text-only, no images)."
-    status: pending
+    status: done
     plan: "plans/frontend-engine.md"
     depends_on: []
 
@@ -80,14 +80,14 @@ requirements:
   - id: REQ-011
     name: "Email client compatible HTML"
     description: "Generated HTML uses table-based layout, fully inline CSS, explicit image dimensions, absolute URLs, web-safe fonts, and no JavaScript — compatible with Gmail, Outlook, Apple Mail, and Yahoo Mail."
-    status: pending
+    status: done
     plan: "plans/frontend-engine.md"
     depends_on: [REQ-006]
 
   - id: REQ-012
     name: "Social icons in signatures"
     description: "Social links render as hosted PNG icons (20x20) in Compact and Classic layouts, and as text labels in Minimal layout."
-    status: pending
+    status: done
     plan: "plans/frontend-engine.md"
     depends_on: [REQ-006]
 
