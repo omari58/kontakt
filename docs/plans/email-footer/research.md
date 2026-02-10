@@ -67,3 +67,12 @@
 - [2026-02-10]: DashboardView uses three-state pattern (loading/empty/content) with skeleton loaders and delete confirmation modal. SignaturesView will need a fourth state: "no cards" (user needs cards before signatures).
 
 <!-- Subagents append learnings below this line -->
+
+## Backend Implementation Learnings
+
+- [2026-02-10]: `pnpm db:generate` must be run after migration for dev server to pick up new Prisma types. The implementer ran it during migration but the dev server needed a manual regenerate to resolve `SignatureLayout`/`Signature` import errors.
+- [2026-02-10]: Card service uses `...rest` spread for create/update — new fields on Card model (pronouns, calendarUrl) flow through without service code changes.
+- [2026-02-10]: `UpdateSignatureDto` was defined independently (not using `PartialType`) to exclude `cardId` from being updatable. This is a deliberate deviation from the Card pattern where `UpdateCardDto` uses `PartialType(CreateCardDto)`.
+- [2026-02-10]: Controller uses `@Patch` (not `@Put`) for signature updates — more appropriate for partial updates. Note: `local-api.sh` only supports `put`, not `patch`, so manual curl was needed for PATCH testing.
+- [2026-02-10]: `SignatureResponseDto.fromSignature()` uses explicit field-by-field mapping (vs CardResponseDto's `Object.assign` approach) to expose only a trimmed `CardSummary` instead of the full Card object.
+- [2026-02-10]: `as unknown as Prisma.InputJsonValue` cast needed for config JSON field — same pattern as CardsService for phones/emails/socialLinks JSON fields.

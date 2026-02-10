@@ -10,14 +10,14 @@ requirements:
   - id: REQ-001
     name: "Card identity fields"
     description: "Card data includes optional pronouns (free text) and calendar booking URL so these can appear in signatures and on the public card page."
-    status: pending
+    status: done
     plan: "plans/backend.md"
     depends_on: []
 
   - id: REQ-002
     name: "Create signatures linked to cards"
     description: "Users can create named signatures linked to one of their cards, choosing a layout template and configuration options."
-    status: pending
+    status: done
     plan: "plans/backend.md"
     depends_on: [REQ-001]
 
@@ -38,7 +38,7 @@ requirements:
   - id: REQ-005
     name: "Delete signatures"
     description: "Users can delete a signature. Deleting a card cascades to remove its associated signatures."
-    status: pending
+    status: done
     plan: "plans/backend.md"
     depends_on: [REQ-002]
 
