@@ -68,15 +68,15 @@ function buildCompactHtml(card: Card, config: SignatureConfig): string {
   // Line 3: Contact info
   const contactParts: string[] = [];
   if (fields.email && card.emails?.length) {
-    const email = card.emails[0].email;
+    const email = card.emails[0]!.email;
     contactParts.push(`<a href="mailto:${escapeHtml(email)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(email)}</a>`);
   }
   if (fields.phone && card.phones?.length) {
-    const phone = card.phones[0].number;
+    const phone = card.phones[0]!.number;
     contactParts.push(`<a href="tel:${escapeHtml(phone)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(phone)}</a>`);
   }
   if (fields.website && card.websites?.length) {
-    const site = card.websites[0];
+    const site = card.websites[0]!;
     contactParts.push(`<a href="${escapeHtml(site.url)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(site.label || site.url)}</a>`);
   }
   if (contactParts.length > 0) {
@@ -88,7 +88,7 @@ function buildCompactHtml(card: Card, config: SignatureConfig): string {
   if (fields.socials && card.socialLinks?.length) {
     for (const link of card.socialLinks) {
       actionParts.push(
-        `<a href="${escapeHtml(link.url)}" style="text-decoration:none;"><img src="${APP_URL}/assets/social/${escapeHtml(link.platform.toLowerCase())}.png" width="20" height="20" alt="${escapeHtml(platformName(link.platform))}" style="display:inline-block;vertical-align:middle;" /></a>`,
+        `<a href="${escapeHtml(link.url)}" style="text-decoration:none;"><img src="${APP_URL}/public/assets/social/${escapeHtml(link.platform.toLowerCase())}.png" width="20" height="20" alt="${escapeHtml(platformName(link.platform))}" style="display:inline-block;vertical-align:middle;" /></a>`,
       );
     }
   }
@@ -172,7 +172,7 @@ function buildClassicHtml(card: Card, config: SignatureConfig): string {
   if (fields.socials && card.socialLinks?.length) {
     const icons = card.socialLinks.map(
       (link) =>
-        `<a href="${escapeHtml(link.url)}" style="text-decoration:none;"><img src="${APP_URL}/assets/social/${escapeHtml(link.platform.toLowerCase())}.png" width="20" height="20" alt="${escapeHtml(platformName(link.platform))}" style="display:inline-block;vertical-align:middle;margin-right:4px;" /></a>`,
+        `<a href="${escapeHtml(link.url)}" style="text-decoration:none;"><img src="${APP_URL}/public/assets/social/${escapeHtml(link.platform.toLowerCase())}.png" width="20" height="20" alt="${escapeHtml(platformName(link.platform))}" style="display:inline-block;vertical-align:middle;margin-right:4px;" /></a>`,
     );
     lines.push(`<div style="margin-top:8px;">${icons.join('')}</div>`);
   }
@@ -221,15 +221,15 @@ function buildMinimalHtml(card: Card, config: SignatureConfig): string {
   // Line 2: Contact details separated by middot
   const contactParts: string[] = [];
   if (fields.email && card.emails?.length) {
-    const email = card.emails[0].email;
+    const email = card.emails[0]!.email;
     contactParts.push(`<a href="mailto:${escapeHtml(email)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(email)}</a>`);
   }
   if (fields.phone && card.phones?.length) {
-    const phone = card.phones[0].number;
+    const phone = card.phones[0]!.number;
     contactParts.push(`<a href="tel:${escapeHtml(phone)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(phone)}</a>`);
   }
   if (fields.website && card.websites?.length) {
-    const site = card.websites[0];
+    const site = card.websites[0]!;
     contactParts.push(`<a href="${escapeHtml(site.url)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(site.label || site.url)}</a>`);
   }
   if (contactParts.length > 0) {

@@ -223,7 +223,7 @@ describe('useSignatureHtml', () => {
 
       const { html } = useSignatureHtml(card, config, layout);
 
-      expect(html.value).toContain('/assets/social/linkedin.png');
+      expect(html.value).toContain('/public/assets/social/linkedin.png');
       expect(html.value).toContain('width="20"');
       expect(html.value).toContain('height="20"');
     });
@@ -235,7 +235,7 @@ describe('useSignatureHtml', () => {
 
       const { html } = useSignatureHtml(card, config, layout);
 
-      expect(html.value).toContain('/assets/social/linkedin.png');
+      expect(html.value).toContain('/public/assets/social/linkedin.png');
     });
 
     it('uses text labels in minimal layout', () => {
@@ -282,7 +282,7 @@ describe('useSignatureHtml', () => {
 
       const { html } = useSignatureHtml(card, config, layout);
 
-      expect(html.value).toMatch(/src="[^"]*\/assets\/social\/linkedin\.png"/);
+      expect(html.value).toMatch(/src="[^"]*\/public\/assets\/social\/linkedin\.png"/);
     });
   });
 
