@@ -13,7 +13,6 @@ import QrModal from '@/components/QrModal.vue';
 import { useSettingsStore } from '@/stores/settings';
 import { useToast } from '@/composables/useToast';
 import { ApiError } from '@/composables/useApi';
-import type { Card } from '@/types';
 import { useI18n } from 'vue-i18n';
 
 const route = useRoute();
@@ -392,7 +391,7 @@ onMounted(() => {
     <!-- QR Code modal -->
     <QrModal
       v-if="showQrModal && form.slug"
-      :card="({ slug: form.slug, id: savedCardId ?? cardId ?? '', name: form.name, jobTitle: form.jobTitle, company: form.company, phones: form.phones, emails: form.emails } as Card)"
+      :card="{ slug: form.slug, name: form.name, jobTitle: form.jobTitle, company: form.company, phones: form.phones, emails: form.emails }"
       :visible="showQrModal"
       @close="showQrModal = false"
     />

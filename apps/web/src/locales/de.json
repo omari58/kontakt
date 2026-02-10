@@ -209,13 +209,13 @@
     "tagline": "Plattform für digitale Visitenkarten"
   },
   "qrModal": {
-    "title": "QR Code",
-    "contentLabel": "QR Content",
-    "cardUrl": "Card page link",
-    "vcardUrl": "vCard download link",
-    "vcardInline": "Basic contact card",
-    "vcardInlineHint": "Includes name, phone, email, title, and company only.",
-    "showLogo": "Show logo",
-    "download": "Download PNG"
+    "title": "QR-Code",
+    "contentLabel": "QR-Inhalt",
+    "cardUrl": "Kartenseiten-Link",
+    "vcardUrl": "vCard-Download-Link",
+    "vcardInline": "Einfache Kontaktkarte",
+    "vcardInlineHint": "Enthält nur Name, Telefon, E-Mail, Titel und Firma.",
+    "showLogo": "Logo anzeigen",
+    "download": "PNG herunterladen"
   }
 }

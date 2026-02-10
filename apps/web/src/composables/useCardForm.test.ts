@@ -105,7 +105,7 @@ describe('useCardForm', () => {
     const result = track(withSetup(() => useCardForm()));
     result.addWebsite();
     expect(result.form.websites).toHaveLength(1);
-    expect(result.form.websites[0]).toBe('');
+    expect(result.form.websites[0]).toEqual({ url: '', label: '' });
 
     result.removeWebsite(0);
     expect(result.form.websites).toHaveLength(0);

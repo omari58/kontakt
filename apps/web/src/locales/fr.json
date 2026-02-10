@@ -209,13 +209,13 @@
     "tagline": "Plateforme de cartes de visite numériques"
   },
   "qrModal": {
-    "title": "QR Code",
-    "contentLabel": "QR Content",
-    "cardUrl": "Card page link",
-    "vcardUrl": "vCard download link",
-    "vcardInline": "Basic contact card",
-    "vcardInlineHint": "Includes name, phone, email, title, and company only.",
-    "showLogo": "Show logo",
-    "download": "Download PNG"
+    "title": "Code QR",
+    "contentLabel": "Contenu QR",
+    "cardUrl": "Lien de la carte",
+    "vcardUrl": "Lien de téléchargement vCard",
+    "vcardInline": "Carte de contact basique",
+    "vcardInlineHint": "Inclut uniquement le nom, le téléphone, l'e-mail, le poste et l'entreprise.",
+    "showLogo": "Afficher le logo",
+    "download": "Télécharger PNG"
   }
 }

@@ -209,13 +209,13 @@
     "tagline": "Digitaalsete visiitkaartide platvorm"
   },
   "qrModal": {
-    "title": "QR Code",
-    "contentLabel": "QR Content",
-    "cardUrl": "Card page link",
-    "vcardUrl": "vCard download link",
-    "vcardInline": "Basic contact card",
-    "vcardInlineHint": "Includes name, phone, email, title, and company only.",
-    "showLogo": "Show logo",
-    "download": "Download PNG"
+    "title": "QR-kood",
+    "contentLabel": "QR-sisu",
+    "cardUrl": "Kaardilehe link",
+    "vcardUrl": "vCard allalaadimise link",
+    "vcardInline": "Lihtne kontaktkaart",
+    "vcardInlineHint": "Sisaldab ainult nime, telefoni, e-posti, ametinimetust ja ettevõtet.",
+    "showLogo": "Näita logo",
+    "download": "Laadi alla PNG"
   }
 }

@@ -3,13 +3,21 @@ import { ref, computed, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n';
 import QRCodeStyling from 'qr-code-styling';
 import { useSettingsStore } from '@/stores/settings';
-import type { Card } from '@/types';
 import { Download, X } from 'lucide-vue-next';
 
 type QrContent = 'card-url' | 'vcard-url' | 'vcard-inline';
 
+interface QrCardData {
+  slug: string;
+  name: string;
+  jobTitle?: string | null;
+  company?: string | null;
+  phones?: { number: string }[] | null;
+  emails?: { email: string }[] | null;
+}
+
 const props = defineProps<{
-  card: Card;
+  card: QrCardData;
   visible: boolean;
 }>();
 
@@ -35,8 +43,10 @@ async function loadFaviconDataUrl(url: string) {
     const res = await fetch(url, { credentials: 'include' });
     if (!res.ok) return;
     const blob = await res.blob();
+    if (faviconDataUrl.value) URL.revokeObjectURL(faviconDataUrl.value);
     faviconDataUrl.value = URL.createObjectURL(blob);
   } catch {
+    if (faviconDataUrl.value) URL.revokeObjectURL(faviconDataUrl.value);
     faviconDataUrl.value = undefined;
   }
 }
@@ -44,16 +54,24 @@ async function loadFaviconDataUrl(url: string) {
 const cardUrl = computed(() => `${window.location.origin}/c/${props.card.slug}`);
 const vcardUrl = computed(() => `${window.location.origin}/api/cards/${props.card.slug}/vcf`);
 
+function escapeVcard(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\n/g, '\\n');
+}
+
 function buildMinimalVcard(): string {
   const card = props.card;
   const parts = card.name.trim().split(/\s+/);
   const lastName = parts.length > 1 ? parts.slice(-1)[0] : card.name;
   const firstName = parts.length > 1 ? parts.slice(0, -1).join(' ') : '';
   const lines = ['BEGIN:VCARD', 'VERSION:3.0'];
-  lines.push(`N:${lastName};${firstName};;;`);
-  lines.push(`FN:${card.name}`);
-  if (card.jobTitle) lines.push(`TITLE:${card.jobTitle}`);
-  if (card.company) lines.push(`ORG:${card.company}`);
+  lines.push(`N:${escapeVcard(lastName)};${escapeVcard(firstName)};;;`);
+  lines.push(`FN:${escapeVcard(card.name)}`);
+  if (card.jobTitle) lines.push(`TITLE:${escapeVcard(card.jobTitle)}`);
+  if (card.company) lines.push(`ORG:${escapeVcard(card.company)}`);
   if (card.emails?.length) lines.push(`EMAIL:${card.emails[0].email}`);
   if (card.phones?.length) lines.push(`TEL:${card.phones[0].number}`);
   lines.push('END:VCARD');
@@ -129,6 +147,26 @@ function handleClose() {
 function onKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape') {
     handleClose();
+    return;
+  }
+  if (e.key === 'Tab' && dialogEl.value) {
+    const focusable = dialogEl.value.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first || document.activeElement === dialogEl.value) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   }
 }
 
@@ -172,6 +210,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   document.removeEventListener('keydown', onKeydown);
+  if (faviconDataUrl.value) URL.revokeObjectURL(faviconDataUrl.value);
 });
 </script>
 
@@ -183,10 +222,11 @@ onBeforeUnmount(() => {
         class="qr-modal__dialog"
         role="dialog"
         aria-modal="true"
+        aria-labelledby="qr-modal-title"
         tabindex="-1"
       >
         <div class="qr-modal__header">
-          <h2 class="qr-modal__title">{{ $t('qrModal.title') }}</h2>
+          <h2 id="qr-modal-title" class="qr-modal__title">{{ $t('qrModal.title') }}</h2>
           <button class="qr-modal__close-btn" @click="handleClose" :aria-label="$t('common.cancel')">
             <X :size="18" />
           </button>
