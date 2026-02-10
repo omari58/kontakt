@@ -49,8 +49,8 @@ watch(() => props.html, async () => {
         ref="iframeRef"
         class="sig-preview__iframe"
         :srcdoc="srcdoc"
-        sandbox="allow-same-origin"
-        title="Signature preview"
+        sandbox=""
+        :title="t('signatures.editor.preview')"
         @load="onIframeLoad"
       />
     </div>
