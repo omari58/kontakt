@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
-import { LayoutDashboard, FileSignature, CreditCard, Settings } from 'lucide-vue-next';
+import { FileSignature, CreditCard, Settings } from 'lucide-vue-next';
 
 const { isAdmin } = useAuth();
 
@@ -12,7 +12,7 @@ defineEmits<{
 <template>
   <nav class="app-nav">
     <router-link to="/" class="app-nav__link" @click="$emit('navigate')">
-      <LayoutDashboard :size="16" class="app-nav__icon" />
+      <CreditCard :size="16" class="app-nav__icon" />
       {{ $t('nav.dashboard') }}
     </router-link>
     <router-link to="/signatures" class="app-nav__link" @click="$emit('navigate')">
