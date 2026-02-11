@@ -55,6 +55,8 @@ function makeConfig(overrides: Partial<SignatureConfig> = {}): SignatureConfig {
     },
     disclaimer: 'Confidential',
     accentColor: '#2563eb',
+    contactColumns: 1,
+    cardLinkText: '',
     ...overrides,
   };
 }

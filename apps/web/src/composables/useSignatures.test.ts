@@ -24,6 +24,8 @@ const mockSignature: Signature = {
     },
     disclaimer: 'Confidential',
     accentColor: '#2563eb',
+    contactColumns: 1,
+    cardLinkText: '',
   },
   createdAt: '2024-01-01T00:00:00Z',
   updatedAt: '2024-01-01T00:00:00Z',

@@ -45,6 +45,8 @@ const fields = ref<FieldTogglesType>({
 });
 const disclaimer = ref('');
 const accentColor = ref('#2563eb');
+const contactColumns = ref<1 | 2>(1);
+const cardLinkText = ref('');
 
 // Derived
 const selectedCard = computed<Card | null>(() =>
@@ -75,6 +77,8 @@ const previewConfig = computed<SignatureConfig>(() => ({
   fields: fields.value,
   disclaimer: disclaimer.value,
   accentColor: accentColor.value,
+  contactColumns: contactColumns.value,
+  cardLinkText: cardLinkText.value,
 }));
 
 const { html: signatureHtml } = useSignatureHtml(previewCard, previewConfig, layout);
@@ -98,6 +102,8 @@ async function loadSignature() {
     fields.value = { ...sig.config.fields };
     disclaimer.value = sig.config.disclaimer;
     accentColor.value = sig.config.accentColor;
+    contactColumns.value = sig.config.contactColumns ?? 1;
+    cardLinkText.value = sig.config.cardLinkText ?? '';
   } catch (e) {
     error.value = e instanceof Error ? e.message : t('errors.requestFailed');
   } finally {
@@ -118,6 +124,8 @@ async function handleSave() {
       fields: fields.value,
       disclaimer: disclaimer.value,
       accentColor: accentColor.value,
+      contactColumns: contactColumns.value,
+      cardLinkText: cardLinkText.value,
     },
   };
 
@@ -224,6 +232,34 @@ onMounted(async () => {
         <!-- Field toggles -->
         <div v-if="selectedCard" class="sig-editor__field">
           <SignatureFieldToggles v-model="fields" :card="selectedCard" />
+        </div>
+
+        <!-- Contact columns -->
+        <div class="sig-editor__field">
+          <label class="sig-editor__label">{{ t('signatures.editor.contactColumns') }}</label>
+          <div class="sig-editor__radio-group">
+            <label class="sig-editor__radio">
+              <input type="radio" :value="1" v-model.number="contactColumns" />
+              {{ t('signatures.editor.contactColumns1') }}
+            </label>
+            <label class="sig-editor__radio">
+              <input type="radio" :value="2" v-model.number="contactColumns" />
+              {{ t('signatures.editor.contactColumns2') }}
+            </label>
+          </div>
+        </div>
+
+        <!-- Card link text -->
+        <div v-if="fields.cardLink" class="sig-editor__field">
+          <label class="sig-editor__label" for="sig-card-link-text">{{ t('signatures.editor.cardLinkText') }}</label>
+          <input
+            id="sig-card-link-text"
+            v-model="cardLinkText"
+            type="text"
+            class="sig-editor__input"
+            :placeholder="t('signatures.editor.cardLinkTextPlaceholder')"
+            maxlength="50"
+          />
         </div>
 
         <!-- Disclaimer -->
@@ -437,6 +473,25 @@ onMounted(async () => {
   outline: none;
   border-color: var(--color-primary-500);
   box-shadow: 0 0 0 3px var(--color-primary-50);
+}
+
+.sig-editor__radio-group {
+  display: flex;
+  gap: var(--space-4);
+}
+
+.sig-editor__radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.sig-editor__radio input {
+  accent-color: var(--color-primary-500);
+  cursor: pointer;
 }
 
 .sig-editor__color-input {

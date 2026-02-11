@@ -257,6 +257,11 @@
         "disclaimer": "Disclaimer",
         "cardLink": "Link to digital card"
       },
+      "contactColumns": "Contact layout",
+      "contactColumns1": "Single column",
+      "contactColumns2": "Two columns",
+      "cardLinkText": "Card link text",
+      "cardLinkTextPlaceholder": "View my card",
       "disclaimer": "Disclaimer text",
       "disclaimerPlaceholder": "Confidentiality notice...",
       "accentColor": "Accent color",

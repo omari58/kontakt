@@ -109,6 +109,8 @@ export interface SignatureConfig {
   fields: SignatureFieldToggles;
   disclaimer: string;
   accentColor: string;
+  contactColumns: 1 | 2;
+  cardLinkText: string;
 }
 
 export interface Signature {

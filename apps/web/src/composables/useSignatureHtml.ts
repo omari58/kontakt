@@ -98,7 +98,7 @@ function buildCompactHtml(card: Card, config: SignatureConfig): string {
     }
   }
   if (fields.cardLink) {
-    actionParts.push(`<a href="${APP_URL}/c/${escapeHtml(card.slug)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">Card</a>`);
+    actionParts.push(`<a href="${APP_URL}/c/${escapeHtml(card.slug)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">${escapeHtml(config.cardLinkText || 'View my card')}</a>`);
   }
   if (fields.calendar && card.calendarUrl) {
     actionParts.push(`<a href="${escapeHtml(card.calendarUrl)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">Book a meeting</a>`);
@@ -156,20 +156,37 @@ function buildClassicHtml(card: Card, config: SignatureConfig): string {
   // Horizontal rule
   lines.push(`<table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:8px 0;"><tr><td style="border-top:1px solid ${escapeHtml(accent)};font-size:1px;line-height:1px;">&nbsp;</td></tr></table>`);
 
-  // Contact details stacked
+  // Contact details
+  const contactItems: string[] = [];
   if (fields.email && card.emails?.length) {
     for (const e of card.emails) {
-      lines.push(`<div style="font-size:13px;"><a href="mailto:${escapeHtml(e.email)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(e.email)}</a></div>`);
+      contactItems.push(`<a href="mailto:${escapeHtml(e.email)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(e.email)}</a>`);
     }
   }
   if (fields.phone && card.phones?.length) {
     for (const p of card.phones) {
-      lines.push(`<div style="font-size:13px;"><a href="tel:${escapeHtml(p.number)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(p.number)}</a></div>`);
+      contactItems.push(`<a href="tel:${escapeHtml(p.number)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(p.number)}</a>`);
     }
   }
   if (fields.website && card.websites?.length) {
     for (const w of card.websites) {
-      lines.push(`<div style="font-size:13px;"><a href="${escapeHtml(w.url)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(w.label || w.url)}</a></div>`);
+      contactItems.push(`<a href="${escapeHtml(w.url)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(w.label || w.url)}</a>`);
+    }
+  }
+  if (contactItems.length > 0) {
+    if (config.contactColumns === 2) {
+      lines.push(`<table cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:13px;">`);
+      for (let i = 0; i < contactItems.length; i += 2) {
+        lines.push(`<tr>`);
+        lines.push(`<td style="padding:1px 8px 1px 0;vertical-align:top;">${contactItems[i]}</td>`);
+        lines.push(`<td style="padding:1px 0;vertical-align:top;">${contactItems[i + 1] ?? ''}</td>`);
+        lines.push(`</tr>`);
+      }
+      lines.push(`</table>`);
+    } else {
+      for (const item of contactItems) {
+        lines.push(`<div style="font-size:13px;">${item}</div>`);
+      }
     }
   }
 
@@ -185,7 +202,7 @@ function buildClassicHtml(card: Card, config: SignatureConfig): string {
   // Card link + calendar link
   const linkParts: string[] = [];
   if (fields.cardLink) {
-    linkParts.push(`<a href="${APP_URL}/c/${escapeHtml(card.slug)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">View my card</a>`);
+    linkParts.push(`<a href="${APP_URL}/c/${escapeHtml(card.slug)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">${escapeHtml(config.cardLinkText || 'View my card')}</a>`);
   }
   if (fields.calendar && card.calendarUrl) {
     linkParts.push(`<a href="${escapeHtml(card.calendarUrl)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">Book a meeting</a>`);
