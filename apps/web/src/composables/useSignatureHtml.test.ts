@@ -43,6 +43,7 @@ function makeCard(overrides: Partial<Card> = {}): Card {
 function makeConfig(overrides: Partial<SignatureConfig> = {}): SignatureConfig {
   return {
     fields: {
+      avatar: true,
       phone: true,
       email: true,
       website: true,
@@ -132,6 +133,7 @@ describe('useSignatureHtml', () => {
       const config = ref(
         makeConfig({
           fields: {
+            avatar: false,
             phone: false,
             email: false,
             website: false,

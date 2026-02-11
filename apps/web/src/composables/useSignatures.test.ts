@@ -12,6 +12,7 @@ const mockSignature: Signature = {
   layout: 'CLASSIC',
   config: {
     fields: {
+      avatar: true,
       phone: true,
       email: true,
       website: true,

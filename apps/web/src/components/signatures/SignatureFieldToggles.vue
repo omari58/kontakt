@@ -17,11 +17,12 @@ const { t } = useI18n();
 type FieldKey = keyof SignatureFieldToggles;
 
 const fields: FieldKey[] = [
-  'phone', 'email', 'website', 'socials',
+  'avatar', 'phone', 'email', 'website', 'socials',
   'pronouns', 'calendar', 'disclaimer', 'cardLink',
 ];
 
 const cardHasData = computed<Record<FieldKey, boolean>>(() => ({
+  avatar: !!props.card.avatarPath,
   phone: Array.isArray(props.card.phones) && props.card.phones.length > 0,
   email: Array.isArray(props.card.emails) && props.card.emails.length > 0,
   website: Array.isArray(props.card.websites) && props.card.websites.length > 0,

@@ -247,6 +247,7 @@
       },
       "fields": "Visible fields",
       "fieldLabels": {
+        "avatar": "Profile photo",
         "phone": "Phone number",
         "email": "Email address",
         "website": "Website",

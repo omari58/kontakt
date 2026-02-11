@@ -33,6 +33,7 @@ const name = ref('');
 const selectedCardId = ref<string | null>(null);
 const layout = ref<SignatureLayout>('CLASSIC');
 const fields = ref<FieldTogglesType>({
+  avatar: true,
   phone: true,
   email: true,
   website: true,

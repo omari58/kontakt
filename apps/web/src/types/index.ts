@@ -94,6 +94,7 @@ export interface UpdateSettingsPayload {
 export type SignatureLayout = 'COMPACT' | 'CLASSIC' | 'MINIMAL';
 
 export interface SignatureFieldToggles {
+  avatar: boolean;
   phone: boolean;
   email: boolean;
   website: boolean;
