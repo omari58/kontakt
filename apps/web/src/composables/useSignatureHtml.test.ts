@@ -57,6 +57,10 @@ function makeConfig(overrides: Partial<SignatureConfig> = {}): SignatureConfig {
     accentColor: '#2563eb',
     contactColumns: 1,
     cardLinkText: '',
+    avatarShape: 'rounded-square',
+    selectedPhones: [],
+    selectedEmails: [],
+    selectedWebsites: [],
     ...overrides,
   };
 }

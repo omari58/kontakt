@@ -39,6 +39,12 @@ function resolveAccentColor(config: SignatureConfig, card: Card): string {
   return config.accentColor || card.primaryColor || '#2563eb';
 }
 
+function filterByIndices<T>(items: T[] | null | undefined, selected: number[]): T[] {
+  if (!items?.length) return [];
+  if (!selected.length) return items;
+  return selected.filter((i) => i < items.length).map((i) => items[i]!);
+}
+
 function buildCompactHtml(card: Card, config: SignatureConfig): string {
   const accent = resolveAccentColor(config, card);
   const fields = config.fields;
@@ -49,8 +55,9 @@ function buildCompactHtml(card: Card, config: SignatureConfig): string {
 
   // Avatar cell
   if (fields.avatar && card.avatarPath) {
+    const radius = (config.avatarShape ?? 'rounded-square') === 'circle' ? '50%' : '4px';
     lines.push(`<td style="vertical-align:top;padding-right:12px;">`);
-    lines.push(`<img src="${escapeHtml(resolveUrl(card.avatarPath))}" width="48" height="48" alt="${escapeHtml(card.name)}" style="display:block;border-radius:4px;" />`);
+    lines.push(`<img src="${escapeHtml(resolveUrl(card.avatarPath))}" width="48" height="48" alt="${escapeHtml(card.name)}" style="display:block;border-radius:${radius};" />`);
     lines.push(`</td>`);
   }
 
@@ -72,20 +79,34 @@ function buildCompactHtml(card: Card, config: SignatureConfig): string {
 
   // Line 3: Contact info
   const contactParts: string[] = [];
-  if (fields.email && card.emails?.length) {
-    const email = card.emails[0]!.email;
-    contactParts.push(`<a href="mailto:${escapeHtml(email)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(email)}</a>`);
+  if (fields.email) {
+    for (const e of filterByIndices(card.emails, config.selectedEmails)) {
+      contactParts.push(`<a href="mailto:${escapeHtml(e.email)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(e.email)}</a>`);
+    }
   }
-  if (fields.phone && card.phones?.length) {
-    const phone = card.phones[0]!.number;
-    contactParts.push(`<a href="tel:${escapeHtml(phone)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(phone)}</a>`);
+  if (fields.phone) {
+    for (const p of filterByIndices(card.phones, config.selectedPhones)) {
+      contactParts.push(`<a href="tel:${escapeHtml(p.number)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(p.number)}</a>`);
+    }
   }
-  if (fields.website && card.websites?.length) {
-    const site = card.websites[0]!;
-    contactParts.push(`<a href="${escapeHtml(site.url)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(site.label || site.url)}</a>`);
+  if (fields.website) {
+    for (const w of filterByIndices(card.websites, config.selectedWebsites)) {
+      contactParts.push(`<a href="${escapeHtml(w.url)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(w.label || w.url)}</a>`);
+    }
   }
   if (contactParts.length > 0) {
-    lines.push(`<div style="font-size:12px;">${contactParts.join(' &middot; ')}</div>`);
+    if (config.contactColumns === 2) {
+      lines.push(`<table cellpadding="0" cellspacing="0" border="0" style="font-size:12px;">`);
+      for (let i = 0; i < contactParts.length; i += 2) {
+        lines.push(`<tr>`);
+        lines.push(`<td style="padding:1px 8px 1px 0;vertical-align:top;">${contactParts[i]}</td>`);
+        lines.push(`<td style="padding:1px 0;vertical-align:top;">${contactParts[i + 1] ?? ''}</td>`);
+        lines.push(`</tr>`);
+      }
+      lines.push(`</table>`);
+    } else {
+      lines.push(`<div style="font-size:12px;">${contactParts.join(' &middot; ')}</div>`);
+    }
   }
 
   // Social icons + card link
@@ -129,8 +150,9 @@ function buildClassicHtml(card: Card, config: SignatureConfig): string {
 
   // Avatar cell
   if (fields.avatar && card.avatarPath) {
+    const radius = (config.avatarShape ?? 'rounded-square') === 'circle' ? '50%' : '8px';
     lines.push(`<td style="vertical-align:top;padding-right:16px;">`);
-    lines.push(`<img src="${escapeHtml(resolveUrl(card.avatarPath))}" width="80" height="80" alt="${escapeHtml(card.name)}" style="display:block;" />`);
+    lines.push(`<img src="${escapeHtml(resolveUrl(card.avatarPath))}" width="80" height="80" alt="${escapeHtml(card.name)}" style="display:block;border-radius:${radius};" />`);
     lines.push(`</td>`);
   }
 
@@ -145,7 +167,7 @@ function buildClassicHtml(card: Card, config: SignatureConfig): string {
   if (card.jobTitle) titleParts.push(escapeHtml(card.jobTitle));
   if (card.company) titleParts.push(escapeHtml(card.company));
   if (titleParts.length > 0) {
-    lines.push(`<div style="font-size:13px;color:#555555;">${titleParts.join(' at ')}</div>`);
+    lines.push(`<div style="font-size:13px;color:#555555;">${titleParts.join(' &middot; ')}</div>`);
   }
 
   // Pronouns
@@ -158,18 +180,18 @@ function buildClassicHtml(card: Card, config: SignatureConfig): string {
 
   // Contact details
   const contactItems: string[] = [];
-  if (fields.email && card.emails?.length) {
-    for (const e of card.emails) {
+  if (fields.email) {
+    for (const e of filterByIndices(card.emails, config.selectedEmails)) {
       contactItems.push(`<a href="mailto:${escapeHtml(e.email)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(e.email)}</a>`);
     }
   }
-  if (fields.phone && card.phones?.length) {
-    for (const p of card.phones) {
+  if (fields.phone) {
+    for (const p of filterByIndices(card.phones, config.selectedPhones)) {
       contactItems.push(`<a href="tel:${escapeHtml(p.number)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(p.number)}</a>`);
     }
   }
-  if (fields.website && card.websites?.length) {
-    for (const w of card.websites) {
+  if (fields.website) {
+    for (const w of filterByIndices(card.websites, config.selectedWebsites)) {
       contactItems.push(`<a href="${escapeHtml(w.url)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(w.label || w.url)}</a>`);
     }
   }
@@ -242,17 +264,20 @@ function buildMinimalHtml(card: Card, config: SignatureConfig): string {
 
   // Line 2: Contact details separated by middot
   const contactParts: string[] = [];
-  if (fields.email && card.emails?.length) {
-    const email = card.emails[0]!.email;
-    contactParts.push(`<a href="mailto:${escapeHtml(email)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(email)}</a>`);
+  if (fields.email) {
+    for (const e of filterByIndices(card.emails, config.selectedEmails)) {
+      contactParts.push(`<a href="mailto:${escapeHtml(e.email)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(e.email)}</a>`);
+    }
   }
-  if (fields.phone && card.phones?.length) {
-    const phone = card.phones[0]!.number;
-    contactParts.push(`<a href="tel:${escapeHtml(phone)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(phone)}</a>`);
+  if (fields.phone) {
+    for (const p of filterByIndices(card.phones, config.selectedPhones)) {
+      contactParts.push(`<a href="tel:${escapeHtml(p.number)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(p.number)}</a>`);
+    }
   }
-  if (fields.website && card.websites?.length) {
-    const site = card.websites[0]!;
-    contactParts.push(`<a href="${escapeHtml(site.url)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(site.label || site.url)}</a>`);
+  if (fields.website) {
+    for (const w of filterByIndices(card.websites, config.selectedWebsites)) {
+      contactParts.push(`<a href="${escapeHtml(w.url)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(w.label || w.url)}</a>`);
+    }
   }
   if (contactParts.length > 0) {
     lines.push(`<tr><td style="font-size:12px;">${contactParts.join(' &middot; ')}</td></tr>`);

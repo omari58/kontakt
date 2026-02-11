@@ -102,6 +102,13 @@ export function useApi() {
     });
   }
 
+  function patch<T>(url: string, body?: unknown): Promise<T> {
+    return request<T>(url, {
+      method: 'PATCH',
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    });
+  }
+
   function del<T>(url: string): Promise<T> {
     return request<T>(url, { method: 'DELETE' });
   }
@@ -110,5 +117,5 @@ export function useApi() {
     return request<T>(url, { method: 'POST', body: formData });
   }
 
-  return { get, post, put, del, upload };
+  return { get, post, put, patch, del, upload };
 }

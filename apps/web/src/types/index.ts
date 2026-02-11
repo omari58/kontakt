@@ -105,12 +105,18 @@ export interface SignatureFieldToggles {
   cardLink: boolean;
 }
 
+export type SignatureAvatarShape = 'circle' | 'rounded-square';
+
 export interface SignatureConfig {
   fields: SignatureFieldToggles;
   disclaimer: string;
   accentColor: string;
   contactColumns: 1 | 2;
   cardLinkText: string;
+  avatarShape: SignatureAvatarShape;
+  selectedPhones: number[];
+  selectedEmails: number[];
+  selectedWebsites: number[];
 }
 
 export interface Signature {

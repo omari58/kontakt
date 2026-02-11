@@ -10,7 +10,7 @@ import { useToast } from '@/composables/useToast';
 import SignatureLayoutPicker from '@/components/signatures/SignatureLayoutPicker.vue';
 import SignatureFieldToggles from '@/components/signatures/SignatureFieldToggles.vue';
 import SignaturePreview from '@/components/signatures/SignaturePreview.vue';
-import type { Card, Signature, SignatureLayout, SignatureConfig, SignatureFieldToggles as FieldTogglesType } from '@/types';
+import type { Card, Signature, SignatureLayout, SignatureConfig, SignatureFieldToggles as FieldTogglesType, SignatureAvatarShape } from '@/types';
 
 const route = useRoute();
 const router = useRouter();
@@ -47,6 +47,10 @@ const disclaimer = ref('');
 const accentColor = ref('#2563eb');
 const contactColumns = ref<1 | 2>(1);
 const cardLinkText = ref('');
+const avatarShape = ref<SignatureAvatarShape>('rounded-square');
+const selectedPhones = ref<number[]>([]);
+const selectedEmails = ref<number[]>([]);
+const selectedWebsites = ref<number[]>([]);
 
 // Derived
 const selectedCard = computed<Card | null>(() =>
@@ -79,14 +83,22 @@ const previewConfig = computed<SignatureConfig>(() => ({
   accentColor: accentColor.value,
   contactColumns: contactColumns.value,
   cardLinkText: cardLinkText.value,
+  avatarShape: avatarShape.value,
+  selectedPhones: selectedPhones.value,
+  selectedEmails: selectedEmails.value,
+  selectedWebsites: selectedWebsites.value,
 }));
 
 const { html: signatureHtml } = useSignatureHtml(previewCard, previewConfig, layout);
 
-// Set accent color from selected card's primaryColor when card changes
+// Set accent color and default selections when card changes
 watch(selectedCard, (card) => {
-  if (card?.primaryColor && !isEditMode.value) {
-    accentColor.value = card.primaryColor;
+  if (!card) return;
+  if (!isEditMode.value) {
+    if (card.primaryColor) accentColor.value = card.primaryColor;
+    selectedPhones.value = card.phones?.map((_, i) => i) ?? [];
+    selectedEmails.value = card.emails?.map((_, i) => i) ?? [];
+    selectedWebsites.value = card.websites?.map((_, i) => i) ?? [];
   }
 });
 
@@ -104,6 +116,10 @@ async function loadSignature() {
     accentColor.value = sig.config.accentColor;
     contactColumns.value = sig.config.contactColumns ?? 1;
     cardLinkText.value = sig.config.cardLinkText ?? '';
+    avatarShape.value = sig.config.avatarShape ?? 'rounded-square';
+    selectedPhones.value = sig.config.selectedPhones ?? [];
+    selectedEmails.value = sig.config.selectedEmails ?? [];
+    selectedWebsites.value = sig.config.selectedWebsites ?? [];
   } catch (e) {
     error.value = e instanceof Error ? e.message : t('errors.requestFailed');
   } finally {
@@ -116,25 +132,33 @@ async function handleSave() {
   saving.value = true;
   error.value = null;
 
-  const body = {
-    name: name.value.trim(),
-    cardId: selectedCardId.value,
-    layout: layout.value,
-    config: {
-      fields: fields.value,
-      disclaimer: disclaimer.value,
-      accentColor: accentColor.value,
-      contactColumns: contactColumns.value,
-      cardLinkText: cardLinkText.value,
-    },
+  const config = {
+    fields: fields.value,
+    disclaimer: disclaimer.value,
+    accentColor: accentColor.value,
+    contactColumns: contactColumns.value,
+    cardLinkText: cardLinkText.value,
+    avatarShape: avatarShape.value,
+    selectedPhones: selectedPhones.value,
+    selectedEmails: selectedEmails.value,
+    selectedWebsites: selectedWebsites.value,
   };
 
   try {
     if (isEditMode.value) {
-      await api.put(`/api/me/signatures/${sigId.value}`, body);
+      await api.patch(`/api/me/signatures/${sigId.value}`, {
+        name: name.value.trim(),
+        layout: layout.value,
+        config,
+      });
       showToast(t('success.signatureSaved'), 'success');
     } else {
-      const created = await api.post<Signature>('/api/me/signatures', body);
+      const created = await api.post<Signature>('/api/me/signatures', {
+        name: name.value.trim(),
+        cardId: selectedCardId.value,
+        layout: layout.value,
+        config,
+      });
       showToast(t('success.signatureSaved'), 'success');
       router.push({ name: 'signature-edit', params: { id: created.id } });
     }
@@ -231,7 +255,28 @@ onMounted(async () => {
 
         <!-- Field toggles -->
         <div v-if="selectedCard" class="sig-editor__field">
-          <SignatureFieldToggles v-model="fields" :card="selectedCard" />
+          <SignatureFieldToggles
+            v-model="fields"
+            :card="selectedCard"
+            v-model:selected-phones="selectedPhones"
+            v-model:selected-emails="selectedEmails"
+            v-model:selected-websites="selectedWebsites"
+          />
+        </div>
+
+        <!-- Avatar shape -->
+        <div v-if="fields.avatar && selectedCard?.avatarPath" class="sig-editor__field">
+          <label class="sig-editor__label">{{ t('signatures.editor.avatarShape') }}</label>
+          <div class="sig-editor__radio-group">
+            <label class="sig-editor__radio">
+              <input type="radio" value="circle" v-model="avatarShape" />
+              {{ t('signatures.editor.avatarShapeCircle') }}
+            </label>
+            <label class="sig-editor__radio">
+              <input type="radio" value="rounded-square" v-model="avatarShape" />
+              {{ t('signatures.editor.avatarShapeRounded') }}
+            </label>
+          </div>
         </div>
 
         <!-- Contact columns -->
