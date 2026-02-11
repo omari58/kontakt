@@ -6,6 +6,11 @@ const APP_URL =
   (typeof window !== 'undefined' && window.location.origin) ||
   '';
 
+function resolveUrl(path: string): string {
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `${APP_URL}${path}`;
+}
+
 function escapeHtml(text: string): string {
   return text
     .replace(/&/g, '&amp;')
@@ -45,7 +50,7 @@ function buildCompactHtml(card: Card, config: SignatureConfig): string {
   // Avatar cell
   if (card.avatarPath) {
     lines.push(`<td style="vertical-align:top;padding-right:12px;">`);
-    lines.push(`<img src="${APP_URL}${escapeHtml(card.avatarPath)}" width="48" height="48" alt="${escapeHtml(card.name)}" style="display:block;border-radius:4px;" />`);
+    lines.push(`<img src="${escapeHtml(resolveUrl(card.avatarPath))}" width="48" height="48" alt="${escapeHtml(card.name)}" style="display:block;border-radius:4px;" />`);
     lines.push(`</td>`);
   }
 
@@ -125,7 +130,7 @@ function buildClassicHtml(card: Card, config: SignatureConfig): string {
   // Avatar cell
   if (card.avatarPath) {
     lines.push(`<td style="vertical-align:top;padding-right:16px;">`);
-    lines.push(`<img src="${APP_URL}${escapeHtml(card.avatarPath)}" width="80" height="80" alt="${escapeHtml(card.name)}" style="display:block;" />`);
+    lines.push(`<img src="${escapeHtml(resolveUrl(card.avatarPath))}" width="80" height="80" alt="${escapeHtml(card.name)}" style="display:block;" />`);
     lines.push(`</td>`);
   }
 
