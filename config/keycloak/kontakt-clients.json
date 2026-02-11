@@ -12,7 +12,8 @@
       "serviceAccountsEnabled": false,
       "publicClient": false,
       "attributes": {
-        "pkce.code.challenge.method": "S256"
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:5173##http://localhost"
       },
       "redirectUris": [
         "http://localhost:4000/api/auth/callback",

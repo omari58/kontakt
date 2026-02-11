@@ -14,6 +14,7 @@ export interface AuthResult {
     role: string;
   };
   token: string;
+  idToken?: string;
 }
 
 export interface AuthorizationUrlResult {

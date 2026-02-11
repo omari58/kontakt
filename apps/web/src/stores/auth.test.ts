@@ -86,20 +86,12 @@ describe('useAuthStore', () => {
     expect(window.location.href).toBe('/api/auth/login');
   });
 
-  it('logout() calls POST /api/auth/logout and redirects', async () => {
-    vi.mocked(fetch).mockResolvedValue(
-      new Response(null, { status: 200 }),
-    );
-
+  it('logout() clears user and redirects to /api/auth/logout', () => {
     const store = useAuthStore();
     store.user = { ...mockUser };
-    await store.logout();
+    store.logout();
 
-    expect(fetch).toHaveBeenCalledWith('/api/auth/logout', expect.objectContaining({
-      method: 'POST',
-      credentials: 'include',
-    }));
     expect(store.user).toBeNull();
-    expect(window.location.href).toBe('/');
+    expect(window.location.href).toBe('/api/auth/logout');
   });
 });
