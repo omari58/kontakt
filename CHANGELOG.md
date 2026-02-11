@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.3](https://github.com/omari58/kontakt/compare/v0.1.2...v0.1.3) (2026-02-11)
+
+
+### Features
+
+* **chart:** add existingSecret and ExternalSecret support ([0927d10](https://github.com/omari58/kontakt/commit/0927d108476c414c638f633d0d1f0403286174b0))
+
+
+### Bug Fixes
+
+* add sync-wave annotations for ArgoCD deployment ordering ([b46148c](https://github.com/omari58/kontakt/commit/b46148c21dc5f25081ff625373bc3910663f6ff8))
+* enable trust proxy for correct protocol behind reverse proxy ([81fe142](https://github.com/omari58/kontakt/commit/81fe1422897d472d3dfbc2ba4a1e6797c608d1a7))
+* make ServiceAccount and ExternalSecret PreSync hooks ([c757976](https://github.com/omari58/kontakt/commit/c757976783cac10f5dd8d4396d636b6ee7170836))
+
 ## [0.1.2](https://github.com/omari58/kontakt/compare/v0.1.1...v0.1.2) (2026-02-11)
 
 
