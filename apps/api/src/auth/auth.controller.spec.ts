@@ -18,6 +18,7 @@ describe('AuthController', () => {
     handleCallback: jest.fn(),
     getUserById: jest.fn(),
     generateToken: jest.fn(),
+    getLogoutUrl: jest.fn(),
   };
 
   const mockConfigService = {
@@ -103,6 +104,7 @@ describe('AuthController', () => {
       mockAuthService.handleCallback.mockResolvedValue({
         user: mockUser,
         token: 'jwt-token',
+        idToken: 'test-id-token',
       });
 
       const mockReq = {
@@ -118,6 +120,12 @@ describe('AuthController', () => {
         clearCookie: jest.fn(),
         redirect: jest.fn(),
       };
+
+      mockConfigService.get.mockImplementation((key: string, fallback?: string) => {
+        if (key === 'CORS_ORIGIN') return 'http://localhost:5173';
+        if (key === 'SESSION_LIFETIME') return '24h';
+        return fallback;
+      });
 
       await controller.callback(mockReq as any, mockRes as any);
 
@@ -148,7 +156,7 @@ describe('AuthController', () => {
         }),
       );
       // Should redirect to frontend dashboard
-      expect(mockRes.redirect).toHaveBeenCalledWith('/');
+      expect(mockRes.redirect).toHaveBeenCalledWith('http://localhost:5173');
     });
 
     it('should return 401 when code verifier cookie is missing', async () => {
@@ -234,14 +242,22 @@ describe('AuthController', () => {
     });
   });
 
-  describe('POST /auth/logout', () => {
-    it('should clear session cookie with matching options', () => {
+  describe('GET /auth/logout', () => {
+    it('should clear cookies and redirect to OIDC logout', async () => {
+      const mockReq = {
+        cookies: { oidc_id_token: 'test-id-token' },
+      };
       const mockRes = {
         clearCookie: jest.fn(),
-        json: jest.fn(),
+        redirect: jest.fn(),
       };
 
-      controller.logout(mockRes as any);
+      mockConfigService.get.mockReturnValue('http://localhost:5173');
+      mockAuthService.getLogoutUrl = jest
+        .fn()
+        .mockResolvedValue('https://keycloak/logout?redirect=http://localhost:5173');
+
+      await controller.logout(mockReq as any, mockRes as any);
 
       expect(mockRes.clearCookie).toHaveBeenCalledWith(
         'kontakt_session',
@@ -250,7 +266,20 @@ describe('AuthController', () => {
           sameSite: 'lax',
         }),
       );
-      expect(mockRes.json).toHaveBeenCalledWith({ message: 'Logged out' });
+      expect(mockRes.clearCookie).toHaveBeenCalledWith(
+        'oidc_id_token',
+        expect.objectContaining({
+          httpOnly: true,
+          sameSite: 'lax',
+        }),
+      );
+      expect(mockAuthService.getLogoutUrl).toHaveBeenCalledWith(
+        'http://localhost:5173',
+        'test-id-token',
+      );
+      expect(mockRes.redirect).toHaveBeenCalledWith(
+        'https://keycloak/logout?redirect=http://localhost:5173',
+      );
     });
   });
 
