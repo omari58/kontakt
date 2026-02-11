@@ -63,7 +63,9 @@
       "company": "Empresa",
       "companyPlaceholder": "Nombre de la empresa",
       "bio": "Bio",
-      "bioPlaceholder": "Una breve biografía o descripción"
+      "bioPlaceholder": "Una breve biografía o descripción",
+      "pronouns": "Pronombres",
+      "pronounsPlaceholder": "ej. él, ella, elle"
     },
     "contact": {
       "title": "Contacto",
@@ -83,6 +85,10 @@
     },
     "webSocial": {
       "title": "Web y redes sociales",
+      "calendarUrl": "Enlace de calendario / reserva",
+      "calendarUrlPlaceholder": "ej. https://cal.com/tunombre",
+      "calendarText": "Texto del enlace de calendario",
+      "calendarTextPlaceholder": "ej. Reservar una reunión",
       "websites": "Sitios web",
       "label": "Etiqueta",
       "addWebsite": "Añadir sitio web",
@@ -127,7 +133,8 @@
     "phone": "Teléfono",
     "email": "Correo",
     "website": "Sitio web",
-    "address": "Dirección"
+    "address": "Dirección",
+    "bookMeeting": "Reservar una reunión"
   },
   "admin": {
     "settings": {
@@ -252,6 +259,8 @@
       "contactColumns2": "Dos columnas",
       "cardLinkText": "Texto del enlace",
       "cardLinkTextPlaceholder": "Ver mi tarjeta",
+      "calendarText": "Texto del enlace de calendario",
+      "calendarTextPlaceholder": "Reservar una reunión",
       "avatarShape": "Forma del avatar",
       "avatarShapeCircle": "Círculo",
       "avatarShapeRounded": "Cuadrado redondeado",

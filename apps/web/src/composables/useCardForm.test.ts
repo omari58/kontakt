@@ -130,6 +130,9 @@ describe('useCardForm', () => {
       jobTitle: 'Engineer',
       company: 'Acme',
       bio: 'Hello',
+      pronouns: 'he/him',
+      calendarUrl: 'https://cal.com/johndoe',
+      calendarText: 'Schedule a call',
       phones: [{ number: '123', label: 'Work' }],
       emails: [{ email: 'john@example.com', label: 'Work' }],
       address: { street: '123 Main', city: 'NY', country: 'US', zip: '10001' },
@@ -161,6 +164,9 @@ describe('useCardForm', () => {
     expect(result.form.jobTitle).toBe('Engineer');
     expect(result.form.company).toBe('Acme');
     expect(result.form.bio).toBe('Hello');
+    expect(result.form.pronouns).toBe('he/him');
+    expect(result.form.calendarUrl).toBe('https://cal.com/johndoe');
+    expect(result.form.calendarText).toBe('Schedule a call');
     expect(result.form.phones).toEqual([{ number: '123', label: 'Work' }]);
     expect(result.form.emails).toEqual([{ email: 'john@example.com', label: 'Work' }]);
     expect(result.form.bgColor).toBe('#f0f0f0');

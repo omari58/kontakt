@@ -55,6 +55,7 @@ export interface Card {
   bio: string | null;
   pronouns: string | null;
   calendarUrl: string | null;
+  calendarText: string | null;
   avatarPath: string | null;
   bannerPath: string | null;
   bgImagePath: string | null;
@@ -113,6 +114,7 @@ export interface SignatureConfig {
   accentColor: string;
   contactColumns: 1 | 2;
   cardLinkText: string;
+  calendarText: string;
   avatarShape: SignatureAvatarShape;
   selectedPhones: number[];
   selectedEmails: number[];

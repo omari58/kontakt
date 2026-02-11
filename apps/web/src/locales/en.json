@@ -63,7 +63,9 @@
       "company": "Company",
       "companyPlaceholder": "Company name",
       "bio": "Bio",
-      "bioPlaceholder": "A short bio or description"
+      "bioPlaceholder": "A short bio or description",
+      "pronouns": "Pronouns",
+      "pronounsPlaceholder": "e.g. he/him, she/her, they/them"
     },
     "contact": {
       "title": "Contact",
@@ -83,6 +85,10 @@
     },
     "webSocial": {
       "title": "Web & Social",
+      "calendarUrl": "Calendar / Booking Link",
+      "calendarUrlPlaceholder": "e.g. https://cal.com/yourname",
+      "calendarText": "Calendar Link Text",
+      "calendarTextPlaceholder": "e.g. Book a meeting",
       "websites": "Websites",
       "label": "Label",
       "addWebsite": "Add Website",
@@ -127,7 +133,8 @@
     "phone": "Phone",
     "email": "Email",
     "website": "Website",
-    "address": "Address"
+    "address": "Address",
+    "bookMeeting": "Book a meeting"
   },
   "admin": {
     "settings": {
@@ -262,6 +269,8 @@
       "contactColumns2": "Two columns",
       "cardLinkText": "Card link text",
       "cardLinkTextPlaceholder": "View my card",
+      "calendarText": "Calendar link text",
+      "calendarTextPlaceholder": "Book a meeting",
       "avatarShape": "Avatar shape",
       "avatarShapeCircle": "Circle",
       "avatarShapeRounded": "Rounded square",

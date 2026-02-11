@@ -26,6 +26,7 @@ const mockSignature: Signature = {
     accentColor: '#2563eb',
     contactColumns: 1,
     cardLinkText: '',
+    calendarText: '',
     avatarShape: 'rounded-square',
     selectedPhones: [],
     selectedEmails: [],

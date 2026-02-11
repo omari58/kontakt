@@ -122,7 +122,7 @@ function buildCompactHtml(card: Card, config: SignatureConfig): string {
     actionParts.push(`<a href="${APP_URL}/c/${escapeHtml(card.slug)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">${escapeHtml(config.cardLinkText || 'View my card')}</a>`);
   }
   if (fields.calendar && card.calendarUrl) {
-    actionParts.push(`<a href="${escapeHtml(card.calendarUrl)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">Book a meeting</a>`);
+    actionParts.push(`<a href="${escapeHtml(card.calendarUrl)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">${escapeHtml(config.calendarText || 'Book a meeting')}</a>`);
   }
   if (actionParts.length > 0) {
     lines.push(`<div style="margin-top:4px;">${actionParts.join(' ')}</div>`);
@@ -227,7 +227,7 @@ function buildClassicHtml(card: Card, config: SignatureConfig): string {
     linkParts.push(`<a href="${APP_URL}/c/${escapeHtml(card.slug)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">${escapeHtml(config.cardLinkText || 'View my card')}</a>`);
   }
   if (fields.calendar && card.calendarUrl) {
-    linkParts.push(`<a href="${escapeHtml(card.calendarUrl)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">Book a meeting</a>`);
+    linkParts.push(`<a href="${escapeHtml(card.calendarUrl)}" style="color:${escapeHtml(accent)};text-decoration:none;font-size:12px;">${escapeHtml(config.calendarText || 'Book a meeting')}</a>`);
   }
   if (linkParts.length > 0) {
     lines.push(`<div style="margin-top:4px;">${linkParts.join(' &middot; ')}</div>`);
@@ -294,10 +294,10 @@ function buildMinimalHtml(card: Card, config: SignatureConfig): string {
   // Card link + calendar as text links
   const linkParts: string[] = [];
   if (fields.cardLink) {
-    linkParts.push(`<a href="${APP_URL}/c/${escapeHtml(card.slug)}" style="color:${escapeHtml(accent)};text-decoration:none;">View my card</a>`);
+    linkParts.push(`<a href="${APP_URL}/c/${escapeHtml(card.slug)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(config.cardLinkText || 'View my card')}</a>`);
   }
   if (fields.calendar && card.calendarUrl) {
-    linkParts.push(`<a href="${escapeHtml(card.calendarUrl)}" style="color:${escapeHtml(accent)};text-decoration:none;">Book a meeting</a>`);
+    linkParts.push(`<a href="${escapeHtml(card.calendarUrl)}" style="color:${escapeHtml(accent)};text-decoration:none;">${escapeHtml(config.calendarText || 'Book a meeting')}</a>`);
   }
   if (linkParts.length > 0) {
     lines.push(`<tr><td style="font-size:12px;">${linkParts.join(' &middot; ')}</td></tr>`);

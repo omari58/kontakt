@@ -47,6 +47,7 @@ const disclaimer = ref('');
 const accentColor = ref('#2563eb');
 const contactColumns = ref<1 | 2>(1);
 const cardLinkText = ref('');
+const calendarText = ref('');
 const avatarShape = ref<SignatureAvatarShape>('rounded-square');
 const selectedPhones = ref<number[]>([]);
 const selectedEmails = ref<number[]>([]);
@@ -83,6 +84,7 @@ const previewConfig = computed<SignatureConfig>(() => ({
   accentColor: accentColor.value,
   contactColumns: contactColumns.value,
   cardLinkText: cardLinkText.value,
+  calendarText: calendarText.value,
   avatarShape: avatarShape.value,
   selectedPhones: selectedPhones.value,
   selectedEmails: selectedEmails.value,
@@ -116,6 +118,7 @@ async function loadSignature() {
     accentColor.value = sig.config.accentColor;
     contactColumns.value = sig.config.contactColumns ?? 1;
     cardLinkText.value = sig.config.cardLinkText ?? '';
+    calendarText.value = sig.config.calendarText ?? '';
     avatarShape.value = sig.config.avatarShape ?? 'rounded-square';
     selectedPhones.value = sig.config.selectedPhones ?? [];
     selectedEmails.value = sig.config.selectedEmails ?? [];
@@ -138,6 +141,7 @@ async function handleSave() {
     accentColor: accentColor.value,
     contactColumns: contactColumns.value,
     cardLinkText: cardLinkText.value,
+    calendarText: calendarText.value,
     avatarShape: avatarShape.value,
     selectedPhones: selectedPhones.value,
     selectedEmails: selectedEmails.value,
@@ -303,6 +307,19 @@ onMounted(async () => {
             type="text"
             class="sig-editor__input"
             :placeholder="t('signatures.editor.cardLinkTextPlaceholder')"
+            maxlength="50"
+          />
+        </div>
+
+        <!-- Calendar link text -->
+        <div v-if="fields.calendar" class="sig-editor__field">
+          <label class="sig-editor__label" for="sig-calendar-text">{{ t('signatures.editor.calendarText') }}</label>
+          <input
+            id="sig-calendar-text"
+            v-model="calendarText"
+            type="text"
+            class="sig-editor__input"
+            :placeholder="t('signatures.editor.calendarTextPlaceholder')"
             maxlength="50"
           />
         </div>

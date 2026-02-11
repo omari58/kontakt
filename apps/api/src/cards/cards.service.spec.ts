@@ -26,6 +26,7 @@ describe('CardsService', () => {
     bio: null,
     pronouns: null,
     calendarUrl: null,
+    calendarText: null,
     avatarPath: null,
     bannerPath: null,
     bgImagePath: null,

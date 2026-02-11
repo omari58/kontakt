@@ -69,6 +69,7 @@ function createCard(overrides: Partial<Card> = {}): Card {
     bio: null,
     pronouns: null,
     calendarUrl: null,
+    calendarText: null,
     avatarPath: null,
     bannerPath: null,
     bgImagePath: null,

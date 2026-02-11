@@ -17,6 +17,7 @@ describe('CardResponseDto', () => {
     bio: 'Hello',
     pronouns: 'he/him',
     calendarUrl: 'https://cal.com/john',
+    calendarText: 'Schedule a call',
     avatarPath: '/uploads/cards/card-uuid-1/avatar.webp',
     bannerPath: null,
     bgImagePath: null,
@@ -49,6 +50,7 @@ describe('CardResponseDto', () => {
     expect(dto.bio).toBe(mockCard.bio);
     expect(dto.pronouns).toBe(mockCard.pronouns);
     expect(dto.calendarUrl).toBe(mockCard.calendarUrl);
+    expect(dto.calendarText).toBe(mockCard.calendarText);
     expect(dto.avatarPath).toBe(mockCard.avatarPath);
     expect(dto.bannerPath).toBeNull();
     expect(dto.bgImagePath).toBeNull();

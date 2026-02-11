@@ -63,7 +63,9 @@
       "company": "Ettevõte",
       "companyPlaceholder": "Ettevõtte nimi",
       "bio": "Lühitutvustus",
-      "bioPlaceholder": "Lühike tutvustus või kirjeldus"
+      "bioPlaceholder": "Lühike tutvustus või kirjeldus",
+      "pronouns": "Asesõnad",
+      "pronounsPlaceholder": "nt tema/teda"
     },
     "contact": {
       "title": "Kontakt",
@@ -83,6 +85,10 @@
     },
     "webSocial": {
       "title": "Veeb ja sotsiaalmeedia",
+      "calendarUrl": "Kalendri- / broneerimislink",
+      "calendarUrlPlaceholder": "nt https://cal.com/sinunimi",
+      "calendarText": "Kalendrilingi tekst",
+      "calendarTextPlaceholder": "nt Broneeri kohtumine",
       "websites": "Veebilehed",
       "label": "Silt",
       "addWebsite": "Lisa veebileht",
@@ -127,7 +133,8 @@
     "phone": "Telefon",
     "email": "E-post",
     "website": "Veebileht",
-    "address": "Aadress"
+    "address": "Aadress",
+    "bookMeeting": "Broneeri kohtumine"
   },
   "admin": {
     "settings": {
@@ -252,6 +259,8 @@
       "contactColumns2": "Kaks veergu",
       "cardLinkText": "Kaardilingi tekst",
       "cardLinkTextPlaceholder": "Vaata minu kaarti",
+      "calendarText": "Kalendrilingi tekst",
+      "calendarTextPlaceholder": "Broneeri kohtumine",
       "avatarShape": "Avatari kuju",
       "avatarShapeCircle": "Ring",
       "avatarShapeRounded": "Ümarate nurkadega ruut",

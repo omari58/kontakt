@@ -26,6 +26,7 @@ describe('SignaturesService', () => {
     bio: null,
     pronouns: null,
     calendarUrl: null,
+    calendarText: null,
     avatarPath: '/uploads/avatar.webp',
     bannerPath: null,
     bgImagePath: null,

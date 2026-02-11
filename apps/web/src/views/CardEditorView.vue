@@ -202,6 +202,16 @@ onMounted(() => {
                 rows="3"
               />
             </div>
+            <div class="editor__field">
+              <label class="editor__label" for="pronouns">{{ $t('editor.basicInfo.pronouns') }}</label>
+              <input
+                id="pronouns"
+                v-model="form.pronouns"
+                type="text"
+                class="editor__input"
+                :placeholder="$t('editor.basicInfo.pronounsPlaceholder')"
+              />
+            </div>
           </div>
         </div>
 
@@ -249,6 +259,27 @@ onMounted(() => {
             />
           </button>
           <div v-show="expandedSections.webSocial" class="editor__section-body">
+            <div class="editor__field">
+              <label class="editor__label" for="calendarUrl">{{ $t('editor.webSocial.calendarUrl') }}</label>
+              <input
+                id="calendarUrl"
+                v-model="form.calendarUrl"
+                type="url"
+                class="editor__input"
+                :placeholder="$t('editor.webSocial.calendarUrlPlaceholder')"
+              />
+            </div>
+            <div v-if="form.calendarUrl" class="editor__field">
+              <label class="editor__label" for="calendarText">{{ $t('editor.webSocial.calendarText') }}</label>
+              <input
+                id="calendarText"
+                v-model="form.calendarText"
+                type="text"
+                class="editor__input"
+                :placeholder="$t('editor.webSocial.calendarTextPlaceholder')"
+                maxlength="50"
+              />
+            </div>
             <SocialLinksEditor
               :social-links="form.socialLinks"
               :websites="form.websites"

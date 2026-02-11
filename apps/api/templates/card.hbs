@@ -219,6 +219,14 @@
       color: var(--text-color);
     }
 
+    .card__pronouns {
+      font-size: 13px;
+      color: var(--text-tertiary);
+      margin-top: 4px;
+      font-weight: 400;
+      animation: fadeUp 0.5s 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
     .card__bio {
       font-size: 14px;
       line-height: 1.65;
@@ -379,6 +387,35 @@
     .card__social:hover {
       border-color: var(--primary-color, #0066cc);
       color: var(--primary-color, #0066cc);
+      background: var(--primary-soft);
+      transform: translateY(-1px);
+    }
+
+    /* ===== Calendar ===== */
+    .card__calendar {
+      padding: 0 28px;
+      margin-bottom: 28px;
+      text-align: center;
+      animation: fadeUp 0.5s 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    .card__calendar-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 20px;
+      border-radius: 100px;
+      border: 1px solid var(--divider);
+      background: transparent;
+      color: var(--primary-color, #0066cc);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .card__calendar-link:hover {
+      border-color: var(--primary-color, #0066cc);
       background: var(--primary-soft);
       transform: translateY(-1px);
     }
@@ -615,6 +652,10 @@
         {{/if}}
       {{/if}}
 
+      {{#if card.pronouns}}
+      <p class="card__pronouns">{{card.pronouns}}</p>
+      {{/if}}
+
       {{#if card.bio}}
       <p class="card__bio">{{card.bio}}</p>
       {{/if}}
@@ -712,6 +753,17 @@
         {{this.platform}}
       </a>
       {{/each}}
+    </div>
+    {{/if}}
+
+    <!-- Calendar link -->
+    {{#if card.calendarUrl}}
+    <div class="card__divider"></div>
+    <div class="card__calendar">
+      <a href="{{card.calendarUrl}}" target="_blank" rel="noopener noreferrer" class="card__calendar-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        {{#if card.calendarText}}{{card.calendarText}}{{else}}Book a meeting{{/if}}
+      </a>
     </div>
     {{/if}}
 

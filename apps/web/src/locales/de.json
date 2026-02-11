@@ -63,7 +63,9 @@
       "company": "Unternehmen",
       "companyPlaceholder": "Unternehmensname",
       "bio": "Bio",
-      "bioPlaceholder": "Eine kurze Biografie oder Beschreibung"
+      "bioPlaceholder": "Eine kurze Biografie oder Beschreibung",
+      "pronouns": "Pronomen",
+      "pronounsPlaceholder": "z. B. er/ihm, sie/ihr, they/them"
     },
     "contact": {
       "title": "Kontakt",
@@ -83,6 +85,10 @@
     },
     "webSocial": {
       "title": "Web & Social Media",
+      "calendarUrl": "Kalender- / Buchungslink",
+      "calendarUrlPlaceholder": "z. B. https://cal.com/ihrname",
+      "calendarText": "Kalenderlink-Text",
+      "calendarTextPlaceholder": "z. B. Termin buchen",
       "websites": "Webseiten",
       "label": "Bezeichnung",
       "addWebsite": "Webseite hinzufügen",
@@ -127,7 +133,8 @@
     "phone": "Telefon",
     "email": "E-Mail",
     "website": "Webseite",
-    "address": "Adresse"
+    "address": "Adresse",
+    "bookMeeting": "Termin buchen"
   },
   "admin": {
     "settings": {
@@ -252,6 +259,8 @@
       "contactColumns2": "Zweispaltig",
       "cardLinkText": "Kartenlink-Text",
       "cardLinkTextPlaceholder": "Meine Karte ansehen",
+      "calendarText": "Kalenderlink-Text",
+      "calendarTextPlaceholder": "Termin buchen",
       "avatarShape": "Avatarform",
       "avatarShapeCircle": "Kreis",
       "avatarShapeRounded": "Abgerundetes Quadrat",
