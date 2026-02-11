@@ -15,7 +15,8 @@
   "nav": {
     "dashboard": "Töölaud",
     "allCards": "Kõik kaardid",
-    "settings": "Seaded"
+    "settings": "Seaded",
+    "signatures": "Allkirjad"
   },
   "auth": {
     "logOut": "Logi välja"
@@ -181,6 +182,7 @@
     "failedUpload": "{type} üleslaadimine ebaõnnestus: {detail}",
     "failedDelete": "{type} kustutamine ebaõnnestus",
     "failedLoadCards": "Kaartide laadimine ebaõnnestus",
+    "failedLoadSignatures": "Allkirjade laadimine ebaõnnestus",
     "failedLoadSettings": "Seadete laadimine ebaõnnestus",
     "failedSaveSettings": "Seadete salvestamine ebaõnnestus",
     "uploadFailed": "Üleslaadimine ebaõnnestus",
@@ -203,10 +205,68 @@
     "settingsSaved": "Seaded edukalt salvestatud",
     "cardSaved": "Kaart edukalt salvestatud.",
     "imageUploaded": "Pilt üles laaditud.",
-    "imageDeleted": "Pilt eemaldatud."
+    "imageDeleted": "Pilt eemaldatud.",
+    "signatureDeleted": "Allkiri kustutatud.",
+    "signatureSaved": "Allkiri salvestatud."
   },
   "home": {
     "tagline": "Digitaalsete visiitkaartide platvorm"
+  },
+  "signatures": {
+    "title": "Allkirjad",
+    "createNew": "Loo allkiri",
+    "empty": {
+      "title": "Allkirju pole veel",
+      "description": "Loo e-posti allkiri ühest oma kaardist."
+    },
+    "noCards": {
+      "title": "Loo kõigepealt kaart",
+      "description": "Allkirja loomiseks on vaja vähemalt ühte kaarti."
+    },
+    "editor": {
+      "title": "Muuda allkirja",
+      "newTitle": "Uus allkiri",
+      "name": "Allkirja nimi",
+      "namePlaceholder": "nt Töö ametlik",
+      "selectCard": "Vali kaart",
+      "layout": "Paigutus",
+      "layouts": {
+        "compact": "Kompaktne",
+        "classic": "Klassikaline",
+        "minimal": "Minimaalne"
+      },
+      "fields": "Nähtavad väljad",
+      "fieldLabels": {
+        "avatar": "Profiilipilt",
+        "phone": "Telefoninumber",
+        "email": "E-posti aadress",
+        "website": "Veebileht",
+        "socials": "Sotsiaalmeedia lingid",
+        "pronouns": "Asesõnad",
+        "calendar": "Broneerimislink",
+        "disclaimer": "Vastutusest loobumine",
+        "cardLink": "Link digitaalkaardile"
+      },
+      "contactColumns": "Kontaktipaigutus",
+      "contactColumns1": "Üks veerg",
+      "contactColumns2": "Kaks veergu",
+      "cardLinkText": "Kaardilingi tekst",
+      "cardLinkTextPlaceholder": "Vaata minu kaarti",
+      "avatarShape": "Avatari kuju",
+      "avatarShapeCircle": "Ring",
+      "avatarShapeRounded": "Ümarate nurkadega ruut",
+      "disclaimer": "Vastutusest loobumise tekst",
+      "disclaimerPlaceholder": "Konfidentsiaalsuse märge...",
+      "accentColor": "Aktsentvärv",
+      "preview": "Eelvaade",
+      "copyHtml": "Kopeeri lõikelauale",
+      "copied": "Kopeeritud!",
+      "copyFallback": "Kopeeri allolev HTML ja kleebi oma e-posti klienti."
+    },
+    "delete": {
+      "confirm": "Kustuta see allkiri?",
+      "message": "Seda ei saa tagasi võtta."
+    }
   },
   "qrModal": {
     "title": "QR-kood",

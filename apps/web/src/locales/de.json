@@ -15,7 +15,8 @@
   "nav": {
     "dashboard": "Übersicht",
     "allCards": "Alle Karten",
-    "settings": "Einstellungen"
+    "settings": "Einstellungen",
+    "signatures": "Signaturen"
   },
   "auth": {
     "logOut": "Abmelden"
@@ -181,6 +182,7 @@
     "failedUpload": "Hochladen von {type} fehlgeschlagen: {detail}",
     "failedDelete": "Löschen von {type} fehlgeschlagen",
     "failedLoadCards": "Karten konnten nicht geladen werden",
+    "failedLoadSignatures": "Signaturen konnten nicht geladen werden",
     "failedLoadSettings": "Einstellungen konnten nicht geladen werden",
     "failedSaveSettings": "Einstellungen konnten nicht gespeichert werden",
     "uploadFailed": "Hochladen fehlgeschlagen",
@@ -203,10 +205,68 @@
     "settingsSaved": "Einstellungen erfolgreich gespeichert",
     "cardSaved": "Karte erfolgreich gespeichert.",
     "imageUploaded": "Bild hochgeladen.",
-    "imageDeleted": "Bild entfernt."
+    "imageDeleted": "Bild entfernt.",
+    "signatureDeleted": "Signatur gelöscht.",
+    "signatureSaved": "Signatur gespeichert."
   },
   "home": {
     "tagline": "Plattform für digitale Visitenkarten"
+  },
+  "signatures": {
+    "title": "Signaturen",
+    "createNew": "Signatur erstellen",
+    "empty": {
+      "title": "Noch keine Signaturen",
+      "description": "Erstellen Sie eine E-Mail-Signatur aus einer Ihrer Karten."
+    },
+    "noCards": {
+      "title": "Erstellen Sie zuerst eine Karte",
+      "description": "Sie benötigen mindestens eine Karte, um eine Signatur zu erstellen."
+    },
+    "editor": {
+      "title": "Signatur bearbeiten",
+      "newTitle": "Neue Signatur",
+      "name": "Signaturname",
+      "namePlaceholder": "z. B. Arbeit formell",
+      "selectCard": "Karte auswählen",
+      "layout": "Layout",
+      "layouts": {
+        "compact": "Kompakt",
+        "classic": "Klassisch",
+        "minimal": "Minimal"
+      },
+      "fields": "Sichtbare Felder",
+      "fieldLabels": {
+        "avatar": "Profilfoto",
+        "phone": "Telefonnummer",
+        "email": "E-Mail-Adresse",
+        "website": "Webseite",
+        "socials": "Soziale Links",
+        "pronouns": "Pronomen",
+        "calendar": "Buchungslink",
+        "disclaimer": "Haftungsausschluss",
+        "cardLink": "Link zur digitalen Karte"
+      },
+      "contactColumns": "Kontaktlayout",
+      "contactColumns1": "Einspaltig",
+      "contactColumns2": "Zweispaltig",
+      "cardLinkText": "Kartenlink-Text",
+      "cardLinkTextPlaceholder": "Meine Karte ansehen",
+      "avatarShape": "Avatarform",
+      "avatarShapeCircle": "Kreis",
+      "avatarShapeRounded": "Abgerundetes Quadrat",
+      "disclaimer": "Haftungsausschlusstext",
+      "disclaimerPlaceholder": "Vertraulichkeitshinweis...",
+      "accentColor": "Akzentfarbe",
+      "preview": "Vorschau",
+      "copyHtml": "In Zwischenablage kopieren",
+      "copied": "Kopiert!",
+      "copyFallback": "Kopieren Sie den HTML-Code unten und fügen Sie ihn in Ihren E-Mail-Client ein."
+    },
+    "delete": {
+      "confirm": "Diese Signatur löschen?",
+      "message": "Dies kann nicht rückgängig gemacht werden."
+    }
   },
   "qrModal": {
     "title": "QR-Code",

@@ -15,7 +15,8 @@
   "nav": {
     "dashboard": "Tableau de bord",
     "allCards": "Toutes les cartes",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "signatures": "Signatures"
   },
   "auth": {
     "logOut": "Se déconnecter"
@@ -181,6 +182,7 @@
     "failedUpload": "Échec du téléversement de {type} : {detail}",
     "failedDelete": "Échec de la suppression de {type}",
     "failedLoadCards": "Échec du chargement des cartes",
+    "failedLoadSignatures": "Échec du chargement des signatures",
     "failedLoadSettings": "Échec du chargement des paramètres",
     "failedSaveSettings": "Échec de l'enregistrement des paramètres",
     "uploadFailed": "Échec du téléversement",
@@ -203,10 +205,68 @@
     "settingsSaved": "Paramètres enregistrés avec succès",
     "cardSaved": "Carte enregistrée avec succès.",
     "imageUploaded": "Image téléversée.",
-    "imageDeleted": "Image supprimée."
+    "imageDeleted": "Image supprimée.",
+    "signatureDeleted": "Signature supprimée.",
+    "signatureSaved": "Signature enregistrée."
   },
   "home": {
     "tagline": "Plateforme de cartes de visite numériques"
+  },
+  "signatures": {
+    "title": "Signatures",
+    "createNew": "Créer une signature",
+    "empty": {
+      "title": "Aucune signature pour le moment",
+      "description": "Créez une signature e-mail à partir de l'une de vos cartes."
+    },
+    "noCards": {
+      "title": "Créez d'abord une carte",
+      "description": "Vous avez besoin d'au moins une carte pour créer une signature."
+    },
+    "editor": {
+      "title": "Modifier la signature",
+      "newTitle": "Nouvelle signature",
+      "name": "Nom de la signature",
+      "namePlaceholder": "ex. Travail formel",
+      "selectCard": "Sélectionner une carte",
+      "layout": "Mise en page",
+      "layouts": {
+        "compact": "Compact",
+        "classic": "Classique",
+        "minimal": "Minimal"
+      },
+      "fields": "Champs visibles",
+      "fieldLabels": {
+        "avatar": "Photo de profil",
+        "phone": "Numéro de téléphone",
+        "email": "Adresse e-mail",
+        "website": "Site web",
+        "socials": "Liens sociaux",
+        "pronouns": "Pronoms",
+        "calendar": "Lien de réservation",
+        "disclaimer": "Avertissement",
+        "cardLink": "Lien vers la carte digitale"
+      },
+      "contactColumns": "Disposition des contacts",
+      "contactColumns1": "Une colonne",
+      "contactColumns2": "Deux colonnes",
+      "cardLinkText": "Texte du lien",
+      "cardLinkTextPlaceholder": "Voir ma carte",
+      "avatarShape": "Forme de l'avatar",
+      "avatarShapeCircle": "Cercle",
+      "avatarShapeRounded": "Carré arrondi",
+      "disclaimer": "Texte d'avertissement",
+      "disclaimerPlaceholder": "Avis de confidentialité...",
+      "accentColor": "Couleur d'accent",
+      "preview": "Aperçu",
+      "copyHtml": "Copier dans le presse-papiers",
+      "copied": "Copié !",
+      "copyFallback": "Copiez le HTML ci-dessous et collez-le dans votre client de messagerie."
+    },
+    "delete": {
+      "confirm": "Supprimer cette signature ?",
+      "message": "Cette action est irréversible."
+    }
   },
   "qrModal": {
     "title": "Code QR",
