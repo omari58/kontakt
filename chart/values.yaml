@@ -75,6 +75,25 @@ persistence:
     storageClass: ""
     accessMode: ReadWriteMany
 
+# Use an existing Secret instead of creating one.
+# The secret must contain keys: DATABASE_URL, JWT_SECRET, OIDC_CLIENT_SECRET
+# (and S3_ACCESS_KEY_ID + S3_SECRET_ACCESS_KEY if storage.driver is "s3").
+existingSecret: ""
+
+# External Secrets Operator integration (creates the secret from a secret store)
+# When enabled, also set existingSecret to "" — the ExternalSecret creates the secret
+# using the chart's fullname automatically.
+externalSecrets:
+  enabled: false
+  refreshInterval: "30s"
+  secretStoreRef:
+    name: ""
+    kind: ClusterSecretStore
+  # Direct key mappings from vault: secretKey → { vaultPath, vaultKey }
+  data: {}
+  # Template for constructed values (e.g. DATABASE_URL from individual parts)
+  template: {}
+
 serviceAccount:
   create: true
   name: ""

@@ -33,5 +33,5 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "kontakt.fullname" . }}
+                  name: {{ include "kontakt.secretName" . }}
                   key: DATABASE_URL

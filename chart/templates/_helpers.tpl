@@ -39,6 +39,13 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Secret name — use existingSecret if provided, otherwise the chart-managed secret.
+*/}}
+{{- define "kontakt.secretName" -}}
+{{- default (include "kontakt.fullname" .) .Values.existingSecret }}
+{{- end }}
+
+{{/*
 Service account name.
 */}}
 {{- define "kontakt.serviceAccountName" -}}
