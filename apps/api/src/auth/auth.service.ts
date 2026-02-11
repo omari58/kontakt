@@ -106,8 +106,9 @@ export class AuthService implements OnModuleInit {
     });
 
     const token = this.generateToken(user);
+    const idToken = tokens.id_token as string | undefined;
 
-    return { user, token };
+    return { user, token, idToken };
   }
 
   generateToken(user: { id: string; email: string; name: string; role: string }): string {
@@ -155,6 +156,18 @@ export class AuthService implements OnModuleInit {
     }
 
     return current;
+  }
+
+  async getLogoutUrl(postLogoutRedirectUri: string, idToken?: string): Promise<string> {
+    await this.ensureOidcConfig();
+    const params: Record<string, string> = {
+      post_logout_redirect_uri: postLogoutRedirectUri,
+    };
+    if (idToken) {
+      params.id_token_hint = idToken;
+    }
+    const endSessionUrl = oidc.buildEndSessionUrl(this.oidcConfig, params);
+    return endSessionUrl.href;
   }
 
   async getUserById(id: string): Promise<User | null> {

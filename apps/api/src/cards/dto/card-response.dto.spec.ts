@@ -15,6 +15,9 @@ describe('CardResponseDto', () => {
     websites: [{ url: 'https://example.com' }],
     socialLinks: [{ platform: 'github', url: 'https://github.com/john' }],
     bio: 'Hello',
+    pronouns: 'he/him',
+    calendarUrl: 'https://cal.com/john',
+    calendarText: 'Schedule a call',
     avatarPath: '/uploads/cards/card-uuid-1/avatar.webp',
     bannerPath: null,
     bgImagePath: null,
@@ -45,6 +48,9 @@ describe('CardResponseDto', () => {
     expect(dto.websites).toEqual(mockCard.websites);
     expect(dto.socialLinks).toEqual(mockCard.socialLinks);
     expect(dto.bio).toBe(mockCard.bio);
+    expect(dto.pronouns).toBe(mockCard.pronouns);
+    expect(dto.calendarUrl).toBe(mockCard.calendarUrl);
+    expect(dto.calendarText).toBe(mockCard.calendarText);
     expect(dto.avatarPath).toBe(mockCard.avatarPath);
     expect(dto.bannerPath).toBeNull();
     expect(dto.bgImagePath).toBeNull();

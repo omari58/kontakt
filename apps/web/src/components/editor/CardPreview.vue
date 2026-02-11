@@ -144,6 +144,8 @@ const platformLabels: Record<string, string> = {
       </p>
       <p v-else-if="form.company" class="card__role"><strong>{{ form.company }}</strong></p>
 
+      <p v-if="form.pronouns" class="card__pronouns">{{ form.pronouns }}</p>
+
       <p v-if="form.bio" class="card__bio">{{ form.bio }}</p>
     </div>
 
@@ -209,6 +211,17 @@ const platformLabels: Record<string, string> = {
         >
           {{ platformLabels[link.platform] || link.platform }}
         </span>
+      </div>
+    </template>
+
+    <!-- Calendar link -->
+    <template v-if="form.calendarUrl">
+      <div class="card__divider" />
+      <div class="card__calendar">
+        <a :href="form.calendarUrl" target="_blank" rel="noopener noreferrer" class="card__calendar-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          {{ form.calendarText || t('preview.bookMeeting') }}
+        </a>
       </div>
     </template>
 
@@ -358,6 +371,13 @@ const platformLabels: Record<string, string> = {
   opacity: 0.4;
 }
 
+.card__pronouns {
+  font-size: 11px;
+  color: var(--p-text-tertiary);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
 .card__bio {
   font-size: 12px;
   line-height: 1.6;
@@ -471,6 +491,33 @@ const platformLabels: Record<string, string> = {
 .card__social:hover {
   border-color: var(--p-primary);
   color: var(--p-primary);
+  background: var(--p-primary-soft);
+}
+
+/* ===== Calendar ===== */
+.card__calendar {
+  padding: 0 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.card__calendar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 100px;
+  border: 1px solid var(--p-divider);
+  background: transparent;
+  color: var(--p-primary);
+  font-size: 11px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.card__calendar-link:hover {
+  border-color: var(--p-primary);
   background: var(--p-primary-soft);
 }
 

@@ -1,7 +1,7 @@
 {
   "realm": "kontakt",
   "enabled": true,
-  "registrationAllowed": false,
+  "registrationAllowed": true,
   "resetPasswordAllowed": false,
   "verifyEmail": false,
   "editUsernameAllowed": false,

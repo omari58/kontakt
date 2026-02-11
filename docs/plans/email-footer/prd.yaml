@@ -1,0 +1,106 @@
+meta:
+  title: "Email Signature Generator"
+  design_doc: "./design.md"
+  research_doc: "./research.md"
+  status: ready
+  created: "2026-02-10"
+  updated: "2026-02-10"
+
+requirements:
+  - id: REQ-001
+    name: "Card identity fields"
+    description: "Card data includes optional pronouns (free text) and calendar booking URL so these can appear in signatures and on the public card page."
+    status: done
+    plan: "plans/backend.md"
+    depends_on: []
+
+  - id: REQ-002
+    name: "Create signatures linked to cards"
+    description: "Users can create named signatures linked to one of their cards, choosing a layout template and configuration options."
+    status: done
+    plan: "plans/backend.md"
+    depends_on: [REQ-001]
+
+  - id: REQ-003
+    name: "List user signatures"
+    description: "Users can view a list of all their signatures showing name, layout, and linked card."
+    status: pending
+    plan: "plans/frontend-views.md"
+    depends_on: [REQ-002]
+
+  - id: REQ-004
+    name: "Edit signature configuration"
+    description: "Users can update a signature's name, layout, field visibility toggles, disclaimer text, and accent color."
+    status: pending
+    plan: "plans/frontend-views.md"
+    depends_on: [REQ-002]
+
+  - id: REQ-005
+    name: "Delete signatures"
+    description: "Users can delete a signature. Deleting a card cascades to remove its associated signatures."
+    status: done
+    plan: "plans/backend.md"
+    depends_on: [REQ-002]
+
+  - id: REQ-006
+    name: "Three layout templates"
+    description: "Three signature layouts are available: Compact (horizontal, single row), Classic (stacked with divider), and Minimal (text-only, no images)."
+    status: done
+    plan: "plans/frontend-engine.md"
+    depends_on: []
+
+  - id: REQ-007
+    name: "Field visibility toggles"
+    description: "Users can toggle which card fields appear in the signature: phone, email, website, social links, pronouns, calendar link, disclaimer, and card link."
+    status: pending
+    plan: "plans/frontend-views.md"
+    depends_on: [REQ-006]
+
+  - id: REQ-008
+    name: "Disclaimer and accent color"
+    description: "Users can set optional disclaimer text (max 200 chars) and an accent color override per signature."
+    status: pending
+    plan: "plans/frontend-views.md"
+    depends_on: [REQ-002]
+
+  - id: REQ-009
+    name: "Live signature preview"
+    description: "The signature editor shows a live preview in a sandboxed iframe that updates reactively as the user changes configuration."
+    status: pending
+    plan: "plans/frontend-views.md"
+    depends_on: [REQ-006]
+
+  - id: REQ-010
+    name: "Copy signature to clipboard"
+    description: "One-click copy places email-client-compatible HTML on the clipboard using text/html MIME type, with a textarea fallback for unsupported browsers."
+    status: pending
+    plan: "plans/frontend-views.md"
+    depends_on: [REQ-006]
+
+  - id: REQ-011
+    name: "Email client compatible HTML"
+    description: "Generated HTML uses table-based layout, fully inline CSS, explicit image dimensions, absolute URLs, web-safe fonts, and no JavaScript — compatible with Gmail, Outlook, Apple Mail, and Yahoo Mail."
+    status: done
+    plan: "plans/frontend-engine.md"
+    depends_on: [REQ-006]
+
+  - id: REQ-012
+    name: "Social icons in signatures"
+    description: "Social links render as hosted PNG icons (20x20) in Compact and Classic layouts, and as text labels in Minimal layout."
+    status: done
+    plan: "plans/frontend-engine.md"
+    depends_on: [REQ-006]
+
+  - id: REQ-013
+    name: "Signatures in main navigation"
+    description: "A 'Signatures' item appears in the main navigation for all authenticated users, between Dashboard and admin routes."
+    status: pending
+    plan: "plans/frontend-views.md"
+    depends_on: []
+
+  - id: REQ-014
+    name: "Internationalization support"
+    description: "All user-facing text in the signatures feature uses i18n keys with English translations provided."
+    status: pending
+    plan: "plans/frontend-views.md"
+    depends_on: []

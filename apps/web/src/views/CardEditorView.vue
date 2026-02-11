@@ -202,6 +202,16 @@ onMounted(() => {
                 rows="3"
               />
             </div>
+            <div class="editor__field">
+              <label class="editor__label" for="pronouns">{{ $t('editor.basicInfo.pronouns') }}</label>
+              <input
+                id="pronouns"
+                v-model="form.pronouns"
+                type="text"
+                class="editor__input"
+                :placeholder="$t('editor.basicInfo.pronounsPlaceholder')"
+              />
+            </div>
           </div>
         </div>
 
@@ -249,6 +259,27 @@ onMounted(() => {
             />
           </button>
           <div v-show="expandedSections.webSocial" class="editor__section-body">
+            <div class="editor__field">
+              <label class="editor__label" for="calendarUrl">{{ $t('editor.webSocial.calendarUrl') }}</label>
+              <input
+                id="calendarUrl"
+                v-model="form.calendarUrl"
+                type="url"
+                class="editor__input"
+                :placeholder="$t('editor.webSocial.calendarUrlPlaceholder')"
+              />
+            </div>
+            <div v-if="form.calendarUrl" class="editor__field">
+              <label class="editor__label" for="calendarText">{{ $t('editor.webSocial.calendarText') }}</label>
+              <input
+                id="calendarText"
+                v-model="form.calendarText"
+                type="text"
+                class="editor__input"
+                :placeholder="$t('editor.webSocial.calendarTextPlaceholder')"
+                maxlength="50"
+              />
+            </div>
             <SocialLinksEditor
               :social-links="form.socialLinks"
               :websites="form.websites"
@@ -625,11 +656,18 @@ onMounted(() => {
   top: var(--space-6);
 }
 
+.editor__preview-sticky {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 2 * var(--space-6));
+}
+
 .editor__preview-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: var(--space-3);
+  flex-shrink: 0;
 }
 
 .editor__preview-label {
@@ -667,6 +705,25 @@ onMounted(() => {
   background: var(--color-bg-muted);
   border-radius: var(--radius-xl);
   padding: var(--space-4);
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.editor__preview-frame::-webkit-scrollbar {
+  width: 6px;
+}
+
+.editor__preview-frame::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editor__preview-frame::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.editor__preview-frame::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
 }
 
 @media (max-width: 900px) {

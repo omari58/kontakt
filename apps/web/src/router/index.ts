@@ -23,6 +23,24 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
+      path: '/signatures',
+      name: 'signatures',
+      component: () => import('@/views/SignaturesView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/signatures/new',
+      name: 'signature-new',
+      component: () => import('@/views/SignatureEditorView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/signatures/:id',
+      name: 'signature-edit',
+      component: () => import('@/views/SignatureEditorView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
       path: '/admin/cards',
       name: 'admin-cards',
       component: () => import('@/views/AdminCardsView.vue'),

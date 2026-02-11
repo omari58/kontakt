@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Req,
   Res,
   UnauthorizedException,
@@ -64,24 +63,35 @@ export class AuthController {
       `${req.protocol}://${req.get('host')}${req.originalUrl}`,
     );
 
-    const { token } = await this.authService.handleCallback(currentUrl, codeVerifier, storedState);
+    const { token, idToken } = await this.authService.handleCallback(currentUrl, codeVerifier, storedState);
 
     // Set session JWT in HTTP-only cookie with configured lifetime
-    res.cookie(SESSION_COOKIE, token, sessionCookieOptions(this.sessionMaxAge, this.isProduction));
+    const cookieOpts = sessionCookieOptions(this.sessionMaxAge, this.isProduction);
+    res.cookie(SESSION_COOKIE, token, cookieOpts);
+
+    // Store OIDC id_token for silent logout (id_token_hint)
+    if (idToken) {
+      res.cookie('oidc_id_token', idToken, cookieOpts);
+    }
 
     // Clean up OIDC flow cookies with matching options
     res.clearCookie('oidc_code_verifier', clearSessionCookieOptions(this.isProduction));
     res.clearCookie('oidc_state', clearSessionCookieOptions(this.isProduction));
 
     // Redirect to frontend dashboard
-    res.redirect('/');
+    const frontendUrl = this.configService.get<string>('CORS_ORIGIN', 'http://localhost:5173');
+    res.redirect(frontendUrl);
   }
 
-  @Post('auth/logout')
+  @Get('auth/logout')
   @UseGuards(JwtAuthGuard)
-  logout(@Res() res: Response): void {
+  async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const idToken = req.cookies?.oidc_id_token;
     res.clearCookie(SESSION_COOKIE, clearSessionCookieOptions(this.isProduction));
-    res.json({ message: 'Logged out' });
+    res.clearCookie('oidc_id_token', clearSessionCookieOptions(this.isProduction));
+    const frontendUrl = this.configService.get<string>('CORS_ORIGIN', 'http://localhost:5173');
+    const logoutUrl = await this.authService.getLogoutUrl(frontendUrl, idToken);
+    res.redirect(logoutUrl);
   }
 
   @Get('me')

@@ -8,6 +8,9 @@ export interface CardFormData {
   jobTitle: string;
   company: string;
   bio: string;
+  pronouns: string;
+  calendarUrl: string;
+  calendarText: string;
   phones: Phone[];
   emails: Email[];
   address: Address;
@@ -31,6 +34,9 @@ function createEmptyForm(): CardFormData {
     jobTitle: '',
     company: '',
     bio: '',
+    pronouns: '',
+    calendarUrl: '',
+    calendarText: '',
     phones: [],
     emails: [],
     address: { street: '', city: '', country: '', zip: '' },
@@ -130,6 +136,9 @@ export function useCardForm(cardId?: string) {
       form.jobTitle = card.jobTitle ?? '';
       form.company = card.company ?? '';
       form.bio = card.bio ?? '';
+      form.pronouns = card.pronouns ?? '';
+      form.calendarUrl = card.calendarUrl ?? '';
+      form.calendarText = card.calendarText ?? '';
       form.phones = card.phones ?? [];
       form.emails = card.emails ?? [];
       form.address = card.address ?? { street: '', city: '', country: '', zip: '' };
@@ -164,6 +173,9 @@ export function useCardForm(cardId?: string) {
     if (form.jobTitle) payload.jobTitle = form.jobTitle;
     if (form.company) payload.company = form.company;
     if (form.bio) payload.bio = form.bio;
+    if (form.pronouns) payload.pronouns = form.pronouns;
+    if (form.calendarUrl) payload.calendarUrl = form.calendarUrl;
+    if (form.calendarText) payload.calendarText = form.calendarText;
     if (form.phones.length) payload.phones = form.phones;
     if (form.emails.length) payload.emails = form.emails;
     if (form.address.street || form.address.city || form.address.country || form.address.zip) {

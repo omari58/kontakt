@@ -13,9 +13,10 @@
     "chooseFile": "Elegir archivo"
   },
   "nav": {
-    "dashboard": "Panel",
+    "dashboard": "Tarjetas",
     "allCards": "Todas las tarjetas",
-    "settings": "Configuración"
+    "settings": "Configuración",
+    "signatures": "Firmas"
   },
   "auth": {
     "logOut": "Cerrar sesión"
@@ -62,7 +63,9 @@
       "company": "Empresa",
       "companyPlaceholder": "Nombre de la empresa",
       "bio": "Bio",
-      "bioPlaceholder": "Una breve biografía o descripción"
+      "bioPlaceholder": "Una breve biografía o descripción",
+      "pronouns": "Pronombres",
+      "pronounsPlaceholder": "ej. él, ella, elle"
     },
     "contact": {
       "title": "Contacto",
@@ -82,6 +85,10 @@
     },
     "webSocial": {
       "title": "Web y redes sociales",
+      "calendarUrl": "Enlace de calendario / reserva",
+      "calendarUrlPlaceholder": "ej. https://cal.com/tunombre",
+      "calendarText": "Texto del enlace de calendario",
+      "calendarTextPlaceholder": "ej. Reservar una reunión",
       "websites": "Sitios web",
       "label": "Etiqueta",
       "addWebsite": "Añadir sitio web",
@@ -126,7 +133,8 @@
     "phone": "Teléfono",
     "email": "Correo",
     "website": "Sitio web",
-    "address": "Dirección"
+    "address": "Dirección",
+    "bookMeeting": "Reservar una reunión"
   },
   "admin": {
     "settings": {
@@ -181,6 +189,7 @@
     "failedUpload": "Error al subir {type}: {detail}",
     "failedDelete": "Error al eliminar {type}",
     "failedLoadCards": "Error al cargar las tarjetas",
+    "failedLoadSignatures": "Error al cargar las firmas",
     "failedLoadSettings": "Error al cargar la configuración",
     "failedSaveSettings": "Error al guardar la configuración",
     "uploadFailed": "Error al subir",
@@ -203,10 +212,70 @@
     "settingsSaved": "Configuración guardada correctamente",
     "cardSaved": "Tarjeta guardada correctamente.",
     "imageUploaded": "Imagen subida.",
-    "imageDeleted": "Imagen eliminada."
+    "imageDeleted": "Imagen eliminada.",
+    "signatureDeleted": "Firma eliminada.",
+    "signatureSaved": "Firma guardada."
   },
   "home": {
     "tagline": "Plataforma de tarjetas de visita digitales"
+  },
+  "signatures": {
+    "title": "Firmas",
+    "createNew": "Crear firma",
+    "empty": {
+      "title": "Aún no hay firmas",
+      "description": "Crea una firma de correo a partir de una de tus tarjetas."
+    },
+    "noCards": {
+      "title": "Crea una tarjeta primero",
+      "description": "Necesitas al menos una tarjeta para crear una firma."
+    },
+    "editor": {
+      "title": "Editar firma",
+      "newTitle": "Nueva firma",
+      "name": "Nombre de la firma",
+      "namePlaceholder": "ej. Trabajo formal",
+      "selectCard": "Seleccionar tarjeta",
+      "layout": "Diseño",
+      "layouts": {
+        "compact": "Compacto",
+        "classic": "Clásico",
+        "minimal": "Minimal"
+      },
+      "fields": "Campos visibles",
+      "fieldLabels": {
+        "avatar": "Foto de perfil",
+        "phone": "Teléfono",
+        "email": "Correo electrónico",
+        "website": "Sitio web",
+        "socials": "Redes sociales",
+        "pronouns": "Pronombres",
+        "calendar": "Enlace de reserva",
+        "disclaimer": "Aviso legal",
+        "cardLink": "Enlace a la tarjeta digital"
+      },
+      "contactColumns": "Diseño de contacto",
+      "contactColumns1": "Una columna",
+      "contactColumns2": "Dos columnas",
+      "cardLinkText": "Texto del enlace",
+      "cardLinkTextPlaceholder": "Ver mi tarjeta",
+      "calendarText": "Texto del enlace de calendario",
+      "calendarTextPlaceholder": "Reservar una reunión",
+      "avatarShape": "Forma del avatar",
+      "avatarShapeCircle": "Círculo",
+      "avatarShapeRounded": "Cuadrado redondeado",
+      "disclaimer": "Texto del aviso legal",
+      "disclaimerPlaceholder": "Aviso de confidencialidad...",
+      "accentColor": "Color de acento",
+      "preview": "Vista previa",
+      "copyHtml": "Copiar al portapapeles",
+      "copied": "¡Copiado!",
+      "copyFallback": "Copia el HTML de abajo y pégalo en tu cliente de correo."
+    },
+    "delete": {
+      "confirm": "¿Eliminar esta firma?",
+      "message": "Esta acción no se puede deshacer."
+    }
   },
   "qrModal": {
     "title": "Código QR",

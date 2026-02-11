@@ -11,6 +11,7 @@ import { RenderModule } from './render/render.module';
 import { ContactsModule } from './contacts/contacts.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { SettingsModule } from './settings/settings.module';
+import { SignaturesModule } from './signatures/signatures.module';
 import { StorageModule } from './storage/storage.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { StorageModule } from './storage/storage.module';
     ContactsModule,
     AnalyticsModule,
     SettingsModule,
+    SignaturesModule,
   ],
   controllers: [AppController],
 })

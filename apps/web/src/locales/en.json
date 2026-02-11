@@ -13,9 +13,10 @@
     "chooseFile": "Choose File"
   },
   "nav": {
-    "dashboard": "Dashboard",
+    "dashboard": "Cards",
     "allCards": "All Cards",
-    "settings": "Settings"
+    "settings": "Settings",
+    "signatures": "Signatures"
   },
   "auth": {
     "logOut": "Log out"
@@ -62,7 +63,9 @@
       "company": "Company",
       "companyPlaceholder": "Company name",
       "bio": "Bio",
-      "bioPlaceholder": "A short bio or description"
+      "bioPlaceholder": "A short bio or description",
+      "pronouns": "Pronouns",
+      "pronounsPlaceholder": "e.g. he/him, she/her, they/them"
     },
     "contact": {
       "title": "Contact",
@@ -82,6 +85,10 @@
     },
     "webSocial": {
       "title": "Web & Social",
+      "calendarUrl": "Calendar / Booking Link",
+      "calendarUrlPlaceholder": "e.g. https://cal.com/yourname",
+      "calendarText": "Calendar Link Text",
+      "calendarTextPlaceholder": "e.g. Book a meeting",
       "websites": "Websites",
       "label": "Label",
       "addWebsite": "Add Website",
@@ -126,7 +133,8 @@
     "phone": "Phone",
     "email": "Email",
     "website": "Website",
-    "address": "Address"
+    "address": "Address",
+    "bookMeeting": "Book a meeting"
   },
   "admin": {
     "settings": {
@@ -181,6 +189,7 @@
     "failedUpload": "Failed to upload {type}: {detail}",
     "failedDelete": "Failed to delete {type}",
     "failedLoadCards": "Failed to load cards",
+    "failedLoadSignatures": "Failed to load signatures",
     "failedLoadSettings": "Failed to load settings",
     "failedSaveSettings": "Failed to save settings",
     "uploadFailed": "Upload failed",
@@ -203,7 +212,9 @@
     "settingsSaved": "Settings saved successfully",
     "cardSaved": "Card saved successfully.",
     "imageUploaded": "Image uploaded.",
-    "imageDeleted": "Image removed."
+    "imageDeleted": "Image removed.",
+    "signatureDeleted": "Signature deleted.",
+    "signatureSaved": "Signature saved."
   },
   "home": {
     "tagline": "Digital business card platform"
@@ -217,5 +228,63 @@
     "vcardInlineHint": "Includes name, phone, email, title, and company only.",
     "showLogo": "Show logo",
     "download": "Download PNG"
+  },
+  "signatures": {
+    "title": "Signatures",
+    "createNew": "Create Signature",
+    "empty": {
+      "title": "No signatures yet",
+      "description": "Create an email signature from one of your cards."
+    },
+    "noCards": {
+      "title": "Create a card first",
+      "description": "You need at least one card to create a signature."
+    },
+    "editor": {
+      "title": "Edit Signature",
+      "newTitle": "New Signature",
+      "name": "Signature name",
+      "namePlaceholder": "e.g., Work formal",
+      "selectCard": "Select a card",
+      "layout": "Layout",
+      "layouts": {
+        "compact": "Compact",
+        "classic": "Classic",
+        "minimal": "Minimal"
+      },
+      "fields": "Visible fields",
+      "fieldLabels": {
+        "avatar": "Profile photo",
+        "phone": "Phone number",
+        "email": "Email address",
+        "website": "Website",
+        "socials": "Social links",
+        "pronouns": "Pronouns",
+        "calendar": "Booking link",
+        "disclaimer": "Disclaimer",
+        "cardLink": "Link to digital card"
+      },
+      "contactColumns": "Contact layout",
+      "contactColumns1": "Single column",
+      "contactColumns2": "Two columns",
+      "cardLinkText": "Card link text",
+      "cardLinkTextPlaceholder": "View my card",
+      "calendarText": "Calendar link text",
+      "calendarTextPlaceholder": "Book a meeting",
+      "avatarShape": "Avatar shape",
+      "avatarShapeCircle": "Circle",
+      "avatarShapeRounded": "Rounded square",
+      "disclaimer": "Disclaimer text",
+      "disclaimerPlaceholder": "Confidentiality notice...",
+      "accentColor": "Accent color",
+      "preview": "Preview",
+      "copyHtml": "Copy to Clipboard",
+      "copied": "Copied!",
+      "copyFallback": "Copy the HTML below and paste into your email client."
+    },
+    "delete": {
+      "confirm": "Delete this signature?",
+      "message": "This cannot be undone."
+    }
   }
 }
